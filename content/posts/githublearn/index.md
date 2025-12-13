@@ -54,6 +54,7 @@ git push -u origin master
 ```
 > -u 的意思是：以后你只需要 git push 就行。
 
+关于配置SSH，可以参考 [# Github配置ssh key的步骤（大白话+包含原理解释）](https://blog.csdn.net/weixin_42310154/article/details/118340458)
 ## 0x04后续操作
 ```bash
 git add .

@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://www.ctfhub.cn/'
 languageCode = 'zh-cn'
 title = '扬名立万_ymlw'
 theme = 'PaperMod'
