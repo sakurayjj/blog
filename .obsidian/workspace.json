@@ -1,0 +1,208 @@
+{
+  "main": {
+    "id": "0d27c884620ae6c2",
+    "type": "split",
+    "children": [
+      {
+        "id": "4d169bd78cb3fe54",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c6f7e5b91ffad36f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/posts/githublearn/index.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "index"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fb7f1a7047bba33b",
+    "type": "split",
+    "children": [
+      {
+        "id": "252692d8e2fcad75",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9d43a5830954e298",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "7c9039313a661d37",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "37a7677eb2072a95",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "be13f699e55a7826",
+    "type": "split",
+    "children": [
+      {
+        "id": "7ebc0c416a763728",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "60cc289c85fb29a3",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "content/posts/test-markdown.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "test-markdown 的反向链接列表"
+            }
+          },
+          {
+            "id": "235defcc79fe502a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "content/posts/test-markdown.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "test-markdown 的出链列表"
+            }
+          },
+          {
+            "id": "ada6d7ade1448639",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "49e14287f38602a8",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "60c984051aa18e82",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "content/posts/test-markdown.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "test-markdown 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:创建新数据库": false
+    }
+  },
+  "active": "c6f7e5b91ffad36f",
+  "lastOpenFiles": [
+    "public/categories/测试/page/1/index.html",
+    "public/categories/debug/page/1/index.html",
+    "public/categories/测试/page/1",
+    "public/categories/debug/page/1",
+    "public/categories/测试/page",
+    "public/categories/测试/index.xml",
+    "public/categories/测试/index.html",
+    "public/categories/debug/page",
+    "public/categories/debug/index.xml",
+    "public/categories/debug/index.html",
+    "public/categories/测试",
+    "public/posts/test-markdown/test.jpg",
+    "content/posts/test-markdown/index.md",
+    "content/posts/githublearn/index.md",
+    "content/posts/test-markdown/test.jpg",
+    "content/posts/first-post.md",
+    "content/posts/test-markdown.md",
+    "content/posts/test-markdown/test-markdown.md",
+    "assets/images/20251213/test.jpg"
+  ]
+}

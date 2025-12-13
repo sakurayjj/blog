@@ -1,0 +1,87 @@
+baseURL = 'http://example.org/'
+languageCode = 'zh-cn'
+title = '扬名立万_ymlw'
+theme = 'PaperMod'
+
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+# 【新增】开启 JSON 输出，用于支持搜索
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[params]
+  env = "production"
+  title = "我的博客"
+  description = "这是我的个人博客"
+  keywords = ["Blog", "Portfolio", "PaperMod"]
+  author = "Me"
+  DateFormat = "2006-01-02"
+  defaultTheme = "auto" 
+  disableThemeToggle = false
+
+  # 【新增】搜索优化配置
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 2
+    keys = ["title", "permalink", "summary", "content"]
+
+  # 1. Profile Mode (已关闭)
+  [params.profileMode]
+    enabled = false
+    title = "欢迎来到我的博客"
+    subtitle = "这里记录我的学习与生活"
+
+  # 2. Home-Info Mode (已启用)
+  [params.homeInfoParams]
+    Title = "你知道的越多，你不知道的越多。"
+    Content = """
+欢迎来到我的博客。
+
+这里主要用来记录我在学习与项目实践中的思考、踩坑与总结。
+
+**欢迎交流与指正** 。
+"""
+
+  # 3. 社交图标
+  [[params.socialIcons]]
+    name = "Github"
+    url = "https://github.com/yourname"
+
+  [[params.socialIcons]]
+    name = "Twitter"
+    url = "https://twitter.com/yourname"
+    
+  [[params.socialIcons]]
+    name = "Bilibili"
+    url = "https://bilibili.com/"
+
+# 4. 菜单配置
+[menu]
+  [[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories/"
+    weight = 10
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 20
+  [[menu.main]]
+    identifier = "archives"
+    name = "归档"
+    url = "/archives/"
+    weight = 30
+  # 【新增】搜索菜单
+  [[menu.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search/"
+    weight = 40
