@@ -2,6 +2,9 @@ baseURL = 'https://www.ctfhub.cn/'
 languageCode = 'zh-cn'
 title = '扬名立万_ymlw'
 theme = 'PaperMod'
+# 👇 【添加这一行】备案号配置
+# 注意：这会覆盖默认的 "© 2025 扬名立万_ymlw" 显示，所以我们需要手动把版权声明也写在这里
+copyright = "© 2025 扬名立万_ymlw &nbsp; <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a>"
 
 enableRobotsTXT = true
 buildDrafts = false
