@@ -5,7 +5,6 @@ draft: false
 tags:
   - CVE-2025-55182
 categories:
-  - 漏洞复现
 summary: React Server Components中存在一个未授权的远程代码执行漏洞。攻击者可以向任何Server Function端点发送精心构造的恶意HTTP请求，当React对该请求进行反序列化时，即可在服务器上实现远程代码执行。该漏洞影响react-server-dom-webpack、react-server-dom-parcel和react-server-dom-turbopack的19.0到19.2.0版本，以及依赖这些包的框架（如Next.js）。
 ---
 
