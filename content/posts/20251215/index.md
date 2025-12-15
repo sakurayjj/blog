@@ -1,16 +1,16 @@
 ---
 title: CVE-2025-55182
-date: 2025-12-15T16:20:00+08:00
+date: 2025-12-15T12:13:00+08:00
 draft: false
 tags:
-  - CVE-2025-55182
+  - 
 categories:
-  - CVE-2025-55182
-summary: React Server Components中存在一个未授权的远程代码执行漏洞。
+  - 漏洞复现
+summary: 。
 cover:
-  image: 
-  alt: 
-  caption: 
+  image:
+  alt:
+  caption:
   relative: false
 ---
 
