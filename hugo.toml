@@ -88,3 +88,9 @@ buildExpired = false
     name = "搜索"
     url = "/search/"
     weight = 40
+
+# 确保这段代码在 hugo.toml 的最底部
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
