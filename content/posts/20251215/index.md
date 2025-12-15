@@ -1,11 +1,12 @@
 ---
-title: React Server Components Flight 协议反序列化代码执行（CVE-2025-55182）
+title: CVE-2025-55182
 date: 2025-12-15T16:20:00+08:00
 draft: false
 tags:
   - CVE-2025-55182
 categories:
-summary: React Server Components中存在一个未授权的远程代码执行漏洞。攻击者可以向任何Server Function端点发送精心构造的恶意HTTP请求，当React对该请求进行反序列化时，即可在服务器上实现远程代码执行。该漏洞影响react-server-dom-webpack、react-server-dom-parcel和react-server-dom-turbopack的19.0到19.2.0版本，以及依赖这些包的框架（如Next.js）。
+  - CVE-2025-55182
+summary: React Server Components中存在一个未授权的远程代码执行漏洞。
 cover:
   image: 
   alt: 
@@ -94,7 +95,7 @@ Content-Length: 76
 ```
 检查是否有`E{"digest"`和500状态码，有的话即代表存在漏洞。
 存在即可以使用 POC 进行RCE。
-	注：Burp自2025.10.7后更新可以检测CVE-2025-55182, CVE-2025-66478
+注：Burp自2025.10.7后更新可以检测CVE-2025-55182, CVE-2025-66478
 
 参考链接：
 - https://github.com/vulhub/vulhub/tree/c0e208052006459cfeedefa8daab8f790809e874/react/CVE-2025-55182
