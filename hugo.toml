@@ -89,6 +89,10 @@ buildExpired = false
     url = "/search/"
     weight = 40
 
+params:
+  assets:
+    favicon: /favicon.ico
+
 # 确保这段代码在 hugo.toml 的最底部
 [markup]
   [markup.goldmark]
