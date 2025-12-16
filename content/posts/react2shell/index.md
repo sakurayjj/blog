@@ -53,3 +53,11 @@ Content-Length: 76
 1:E{"digest":"2971658870"}
 ```
 即代表存在。
+对于POC，各大POC均有不同，为了让请求流程进入Flight的解析流程中，需要满足：
+1.必须是POST方法
+2.包含一个不为空的Next-Action(尽管在执行前，根本不会达到验证Next-Action，但是它必须要存在)
+3.Content-Type必须是multipart/form-data。
+
+参考文章：
+- https://slcyber.io/research-center/high-fidelity-detection-mechanism-for-rsc-next-js-rce-cve-2025-55182-cve-2025-66478/
+- 代码审计
