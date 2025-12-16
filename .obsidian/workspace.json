@@ -181,6 +181,10 @@
   },
   "active": "c6f7e5b91ffad36f",
   "lastOpenFiles": [
+    "content/posts/cve-2025-55182/index.md",
+    "content/posts/1/index.md",
+    "content/posts/1",
+    "content/categories/_index.md",
     "content/posts/test/index.md",
     "content/posts/test",
     "content/posts/20251215/index.md",
@@ -192,7 +196,6 @@
     "public/page",
     "public/index.xml",
     "public/index.json",
-    "public/archives/index.html",
     "public/posts/test-markdown/test.jpg",
     "content/posts/githublearn/index.md",
     "content/posts/test-markdown/index.md",
