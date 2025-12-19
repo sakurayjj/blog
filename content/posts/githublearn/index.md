@@ -1,16 +1,12 @@
 ---
-title: Github本地文件上传
-date: 2025-12-13T12:13:00+08:00
-draft: false
+categories:
+- Debug
+date: "2025-12-12"
+description: 记录GitHub本地上传的一些命令。
+slug: githublocalshell
 tags:
-  - GitHub
-categories: ["debug"]
-summary: 这是一篇用于记录本地文件夹内容如何直接push到GitHub的教程。
-cover:
-  image:
-  alt:
-  caption:
-  relative: false
+- GitHub
+title: Github本地上传笔记
 ---
 
 ## 0x00本地初始化 Git 仓库
