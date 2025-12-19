@@ -1,17 +1,12 @@
 ---
-title: CVE-2025-55182
-date: 2025-12-16T11:00:00+08:00
-draft: false
-tags:
-  - 
 categories:
-  - 网络安全
-summary: 这是一篇用于记录CVE-2025-55182的文章
-cover:
-  image:
-  alt:
-  caption:
-  relative: false
+- 网络安全
+date: "2025-12-16"
+description: CVE-2025-55182
+slug: cve-2025-55182
+tags:
+- CVE
+title: CVE-2025-55182
 ---
 
 ## 0x00漏洞原因

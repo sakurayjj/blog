@@ -1,18 +1,13 @@
 ---
-title: 从DVWA开始学习漏洞原理-Brute Force
-date: 2025-12-19T11:07:00+08:00
-draft: false
-tags:
-  - DVWA
 categories:
-  - 靶场
-  - 网络安全
-summary: 这是一篇DVWA靶场学习日记
-cover:
-  image:
-  alt:
-  caption:
-  relative: false
+- 网络安全
+- 靶场
+date: "2025-12-19"
+description: 通过DVWA靶场学习代码审计。
+slug: dvwabruteforce
+tags:
+- DVWA
+title: 从DVWA开始学习漏洞原理-Brute Force
 ---
 
 ## 0x00Brute Force
