@@ -5,7 +5,7 @@ draft: false
 tags:
   - GitHub
 categories:
-  - ["Debug"]
+  - Debug
 summary: 这是一篇用于记录本地文件夹内容如何直接push到GitHub的教程。
 cover:
   image:
