@@ -4,8 +4,7 @@ date: 2025-12-13T12:13:00+08:00
 draft: false
 tags:
   - GitHub
-categories:
-  - Debug
+categories: ["Debug"]
 summary: 这是一篇用于记录本地文件夹内容如何直接push到GitHub的教程。
 cover:
   image:
