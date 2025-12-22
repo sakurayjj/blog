@@ -70,3 +70,97 @@ SELECT * FROM `users` WHERE user = 'admin' #' AND password = '...';
 SELECT * FROM `users` WHERE user = '' UNION SELECT 1, user(), database(), 4, 5 #' AND password = '...';
 ```
 ## 0x02Medium级别
+**不同点1**：引入了 `mysqli_real_escape_string` 函数。这个函数会对传入的`$user`变量中的特殊字符进行转义处理，比如单引号 `'`、双引号 `"`、反斜杠 `\` 等。修复了SQL注入。
+```php
+$user = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $_GET[ 'username' ] );
+```
+**不同点2**：增加了延时机制。
+```php
+if( $result && mysqli_num_rows( $result ) == 1 ) {
+    // 登录成功逻辑...
+}
+else {
+    // Login failed
+    sleep( 2 ); // <--- 关键新增代码
+    echo "<pre><br />Username and/or password incorrect.</pre>";
+}
+```
+不过只能缓解暴力破解的速度。
+综合来看：
+```php
+<?php
+
+  
+
+if( isset( $_GET[ 'Login' ] ) ) {   //依然使用了GET型传递参数。
+
+    // Sanitise username input
+
+    $user = $_GET[ 'username' ];    //username和password都进行了保护，引入了 mysqli_real_escape_string 函数，该函数能对一些特殊字符进行转义当作正常字符，修复了Low级SQL注入的问题。
+
+    $user = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $user ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+  
+
+    // Sanitise password input
+
+    $pass = $_GET[ 'password' ];
+
+    $pass = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $pass ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+    $pass = md5( $pass );   //仍然存在md5。
+
+  
+
+    // Check the database
+
+    $query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
+
+    $result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+
+  
+
+    if( $result && mysqli_num_rows( $result ) == 1 ) {
+
+        // Get users details
+
+        $row    = mysqli_fetch_assoc( $result );
+
+        $avatar = $row["avatar"];
+
+  
+
+        // Login successful
+
+        $html .= "<p>Welcome to the password protected area {$user}</p>";
+
+        $html .= "<img src=\"{$avatar}\" />";
+
+    }
+
+    else {
+
+        // Login failed
+
+        sleep( 2 ); //防止爆破而做的延时机制，如果账号密码错误，服务器会强制暂停处理脚本 2 秒钟，然后才返回错误信息。增加了爆破的时间成本，仍然可以爆破。
+
+        $html .= "<pre><br />Username and/or password incorrect.</pre>";
+
+    }
+
+  
+
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
+
+}
+
+  
+
+?>
+```
+问题仍然存在：
+- 延时过短，没有从逻辑上阻断攻击。
+- 依然使用GET传输请求。
+- 依然使用MD5。
+## 0x03High
+
