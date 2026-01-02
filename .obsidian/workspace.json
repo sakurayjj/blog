@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/xiaodiweb/index.md",
+                "file": "content/posts/小迪web攻防42天/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -185,21 +185,27 @@
   },
   "active": "c6f7e5b91ffad36f",
   "lastOpenFiles": [
+    "content/posts/小迪web攻防42天/6.png",
+    "content/posts/小迪web攻防42天/5.png",
+    "content/posts/小迪web攻防42天/4.png",
+    "content/posts/小迪web攻防42天/3.png",
+    "content/posts/小迪web攻防42天/2.png",
+    "content/posts/小迪web攻防42天/1.png",
+    "content/posts/xiaodiweb/index.md",
+    "content/posts/小迪web攻防42天/index.md",
+    "content/posts/githublearn/index.md",
+    "content/posts/小迪web攻防42天",
     "content/posts/xiaodiweb/3.png",
     "content/posts/xiaodiweb/2.png",
     "content/posts/test-markdown/index.md",
     "content/posts/test-markdown/test.jpg",
-    "content/posts/xiaodiweb/index.md",
     "content/posts/xiaodiweb/1.png",
-    "content/posts/githublearn/index.md",
     "content/posts/rustlearn/index.md",
     "content/posts/xiaodiweb",
     "content/posts/rustlearn/2.png",
-    "content/posts/rustlearn/1.png",
     "content/posts/react2shell/index.md",
     "content/posts/1/index.md",
     "content/posts/rustlearn",
-    "content/posts/1/1.png",
     "content/posts/1",
     "content/posts/react2shell",
     "content/posts/cve-2025-55182/index.md",
@@ -211,14 +217,10 @@
     "public/index.html",
     "public/search/index.html",
     "public/search",
-    "public/page/1/index.html",
-    "public/posts/test-markdown/test.jpg",
     "content/posts/CVE-2025-55182/index.md",
-    "content/posts/CVE-2025-55182/1.png",
     "content/posts/CVE-2025-55182/未命名.md",
     "content/posts/first-post.md",
     "content/posts/test-markdown.md",
-    "content/posts/test-markdown/test-markdown.md",
-    "assets/images/20251213/test.jpg"
+    "content/posts/test-markdown/test-markdown.md"
   ]
 }
