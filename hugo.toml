@@ -1,5 +1,6 @@
 baseURL = 'https://www.ctfhub.cn/'
 languageCode = 'zh-cn'
+defaultContentLanguage = 'zh-cn'
 title = '扬名立万_ymlw'
 theme = 'shoka'
 # 👇 【添加这一行】备案号配置
@@ -11,6 +12,11 @@ buildDrafts = false
 buildFuture = true
 buildExpired = false
 
+[languages]
+  [languages.zh-cn]
+    languageName = "Simplified Chinese"
+    weight = 1
+
 # 【新增】开启 JSON 输出，用于支持搜索
 [outputs]
 home = ["HTML", "RSS", "JSON"]
@@ -21,7 +27,7 @@ home = ["HTML", "RSS", "JSON"]
   description = "网安 & 取证的学习笔记"
   keywords = ["Blog", "Portfolio", "PaperMod"]
   author = "扬名立万"
-  DateFormat = "2006-01-02"
+  DateFormat = "2026-01-02"
   defaultTheme = "auto" 
   disableThemeToggle = false
 
