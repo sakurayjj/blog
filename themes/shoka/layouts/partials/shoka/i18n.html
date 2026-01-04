@@ -1,0 +1,19 @@
+{{- $ctx := .ctx | default . -}}
+{{- $key := .key | default "" -}}
+{{- $lang := $ctx.Site.Language.Lang | default $ctx.Site.LanguageCode | default "en" -}}
+{{- $path := partial "shoka/lang-file.html" (dict "lang" $lang "ctx" $ctx) -}}
+{{- $data := dict -}}
+{{- if and $path (fileExists $path) -}}
+  {{- $data = (readFile $path | transform.Unmarshal) -}}
+{{- end -}}
+{{- $value := $data -}}
+{{- range (split $key ".") -}}
+  {{- if $value -}}
+    {{- $value = index $value . -}}
+  {{- end -}}
+{{- end -}}
+{{- $out := $value | default $key -}}
+{{- with .arg -}}
+  {{- $out = printf $out . -}}
+{{- end -}}
+{{- $out -}}

@@ -1,0 +1,9 @@
+{{- $ctx := .Page -}}
+{{- $dest := .Destination | safeURL -}}
+{{- $alt := .Text | plainify -}}
+{{- $title := .Title -}}
+{{- $img := dict "src" $dest "relative" true -}}
+{{- $url := partial "shoka/image-url.html" (dict "img" $img "ctx" $ctx) -}}
+{{- if $url -}}
+<img src="{{ $url }}" data-src="{{ $url }}" loading="lazy" alt="{{ $alt }}"{{ if $title }} title="{{ $title }}"{{ end }}>
+{{- end -}}

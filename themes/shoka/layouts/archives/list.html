@@ -1,0 +1,11 @@
+{{ define "title" }}
+  {{ partial "shoka/i18n.html" (dict "key" "title.archive" "ctx" .) }} |
+{{ end }}
+
+{{ define "header" }}
+  <h1 itemprop="name headline">{{ partial "shoka/i18n.html" (dict "key" "title.archive" "ctx" .) }}</h1>
+{{ end }}
+
+{{ define "content" }}
+  {{ partial "archives/list.html" . }}
+{{ end }}

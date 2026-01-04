@@ -7,6 +7,9 @@ slug: rust
 tags:
   - Rust
 title: Rust学习
+cover:
+  image: "1.png"
+  relative: true
 ---
 
 ## 函数的返回需要确定

@@ -1,0 +1,102 @@
+{{ define "title" }}
+  {{- if eq .Data.Plural "tags" -}}
+    {{- printf "%s%s" (partial "shoka/i18n.html" (dict "key" "title.all" "ctx" .)) (partial "shoka/i18n.html" (dict "key" "title.tag" "ctx" .)) -}} |
+  {{- else if eq .Data.Plural "categories" -}}
+    {{- printf "%s%s" (partial "shoka/i18n.html" (dict "key" "title.all" "ctx" .)) (partial "shoka/i18n.html" (dict "key" "title.category" "ctx" .)) -}} |
+  {{- else -}}
+    {{ .Title }} |
+  {{- end -}}
+{{ end }}
+
+{{ define "header" }}
+  <h1 itemprop="name headline">
+    {{- if eq .Data.Plural "tags" -}}
+      {{- printf "%s%s" (partial "shoka/i18n.html" (dict "key" "title.all" "ctx" .)) (partial "shoka/i18n.html" (dict "key" "title.tag" "ctx" .)) -}}
+    {{- else if eq .Data.Plural "categories" -}}
+      {{- printf "%s%s" (partial "shoka/i18n.html" (dict "key" "title.all" "ctx" .)) (partial "shoka/i18n.html" (dict "key" "title.category" "ctx" .)) -}}
+    {{- else -}}
+      {{ .Title }}
+    {{- end -}}
+  </h1>
+{{ end }}
+
+{{ define "content" }}
+  {{- $theme := .Site.Data.shoka -}}
+  {{- if eq .Data.Plural "tags" -}}
+  <div class="collapse wrap">
+    <h2 class="item title"><a href="{{ "/" | relURL }}">{{ partial "shoka/i18n.html" (dict "key" "menu.home" "ctx" .) }}</a> <small>/</small> {{ partial "shoka/i18n_p.html" (dict "key" "counter.tag_cloud" "ctx" . "count" (len .Site.Taxonomies.tags)) }}</h2>
+    <div class="tag cloud">
+      {{- $tagCfg := $theme.tagcloud | default dict -}}
+      {{- $minFont := $tagCfg.min | default 16 -}}
+      {{- $maxFont := $tagCfg.max | default 22 -}}
+      {{- $startColor := $tagCfg.start | default "#72cecf" -}}
+      {{- $endColor := $tagCfg.end | default "#ffbac3" -}}
+      {{- $amount := $tagCfg.amount | default 200 -}}
+
+      {{- $tags := slice -}}
+      {{- range $name, $taxonomy := .Site.Taxonomies.tags -}}
+        {{- $tags = $tags | append (dict "name" $name "count" (len $taxonomy) "sort" (lower $name)) -}}
+      {{- end -}}
+      {{- $tagsByCount := sort $tags "count" "desc" -}}
+      {{- if and $amount (gt (len $tagsByCount) $amount) -}}
+        {{- $tagsByCount = first $amount $tagsByCount -}}
+      {{- end -}}
+
+      {{- $minCount := 0 -}}
+      {{- $maxCount := 0 -}}
+      {{- if gt (len $tagsByCount) 0 -}}
+        {{- $minCount = (index $tagsByCount 0).count -}}
+        {{- $maxCount = (index $tagsByCount 0).count -}}
+        {{- range $tagsByCount -}}
+          {{- if lt .count $minCount -}}{{- $minCount = .count -}}{{- end -}}
+          {{- if gt .count $maxCount -}}{{- $maxCount = .count -}}{{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $spread := sub $maxCount $minCount -}}
+
+      {{- $hexMap := dict "0" 0 "1" 1 "2" 2 "3" 3 "4" 4 "5" 5 "6" 6 "7" 7 "8" 8 "9" 9 "a" 10 "b" 11 "c" 12 "d" 13 "e" 14 "f" 15 -}}
+      {{- $startHex := strings.TrimPrefix "#" (lower $startColor) -}}
+      {{- $endHex := strings.TrimPrefix "#" (lower $endColor) -}}
+      {{- $sr := add (mul (index $hexMap (substr $startHex 0 1)) 16) (index $hexMap (substr $startHex 1 1)) -}}
+      {{- $sg := add (mul (index $hexMap (substr $startHex 2 1)) 16) (index $hexMap (substr $startHex 3 1)) -}}
+      {{- $sb := add (mul (index $hexMap (substr $startHex 4 1)) 16) (index $hexMap (substr $startHex 5 1)) -}}
+      {{- $er := add (mul (index $hexMap (substr $endHex 0 1)) 16) (index $hexMap (substr $endHex 1 1)) -}}
+      {{- $eg := add (mul (index $hexMap (substr $endHex 2 1)) 16) (index $hexMap (substr $endHex 3 1)) -}}
+      {{- $eb := add (mul (index $hexMap (substr $endHex 4 1)) 16) (index $hexMap (substr $endHex 5 1)) -}}
+
+      {{- $tagsSorted := sort $tagsByCount "sort" -}}
+      {{- range $tagsSorted -}}
+        {{- $ratio := 0.5 -}}
+        {{- if gt $spread 0 -}}
+          {{- $ratio = div (sub (float .count) (float $minCount)) (float $spread) -}}
+        {{- end -}}
+        {{- $size := add (float $minFont) (mul (sub (float $maxFont) (float $minFont)) $ratio) -}}
+        {{- $r := add (float $sr) (mul (sub (float $er) (float $sr)) $ratio) -}}
+        {{- $g := add (float $sg) (mul (sub (float $eg) (float $sg)) $ratio) -}}
+        {{- $b := add (float $sb) (mul (sub (float $eb) (float $sb)) $ratio) -}}
+        {{- $color := printf "rgb(%d,%d,%d)" (int $r) (int $g) (int $b) -}}
+        {{- $sizePx := printf "%.0fpx" $size -}}
+        {{- $style := printf "font-size: %s; color: %s;" $sizePx $color -}}
+        <a style="{{ $style | safeCSS }}" href="{{ printf "/tags/%s/" (urlize .name) | relURL }}">{{ .name }}</a>
+      {{- end -}}
+    </div>
+  </div>
+  {{- else if eq .Data.Plural "categories" -}}
+  <div class="collapse wrap">
+    <h2 class="item title"><a href="{{ "/" | relURL }}">{{ partial "shoka/i18n.html" (dict "key" "menu.home" "ctx" .) }}</a> <small>/</small> {{ partial "shoka/i18n_p.html" (dict "key" "counter.categories" "ctx" . "count" (len .Site.Taxonomies.categories)) }}</h2>
+    {{- $cats := slice -}}
+    {{- range $name, $taxonomy := .Site.Taxonomies.categories -}}
+      {{- $cats = $cats | append (dict "name" $name "count" (len $taxonomy)) -}}
+    {{- end -}}
+    {{- range sort $cats "name" -}}
+      <div>
+        <h2 class="item header"><a itemprop="url" href="{{ printf "/categories/%s/" (urlize .name) | relURL }}">{{ .name }}</a><small>( {{ .count }} )</small></h2>
+      </div>
+    {{- end -}}
+  </div>
+  {{- else -}}
+  <div class="page wrap">
+    {{ .Content }}
+  </div>
+  {{- end -}}
+{{ end }}

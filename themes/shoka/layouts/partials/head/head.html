@@ -1,0 +1,55 @@
+{{- $theme := .Site.Data.shoka -}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+
+{{- if $theme.favicon.apple_touch_icon -}}
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ partial "shoka/image-url.html" (dict "img" (printf "%s%s" ($theme.images | default "images") $theme.favicon.apple_touch_icon) "ctx" .) }}">
+{{- end -}}
+
+<link rel="icon" type="image/ico" sizes="32x32" href="{{ partial "shoka/image-url.html" (dict "img" (printf "%s/favicon.ico" ($theme.images | default "images")) "ctx" .) }}">
+
+{{- if $theme.favicon.safari_pinned_tab -}}
+  <link rel="mask-icon" href="{{ partial "shoka/image-url.html" (dict "img" (printf "%s%s" ($theme.images | default "images") $theme.favicon.safari_pinned_tab) "ctx" .) }}" color="{{ $theme.android_chrome_color }}">
+{{- end -}}
+{{- if $theme.favicon.android_manifest -}}
+  <link rel="manifest" href="{{ partial "shoka/image-url.html" (dict "img" (printf "%s%s" ($theme.images | default "images") $theme.favicon.android_manifest) "ctx" .) }}">
+{{- end -}}
+{{- if $theme.favicon.ms_browserconfig -}}
+  <meta name="msapplication-config" content="{{ partial "shoka/image-url.html" (dict "img" (printf "%s%s" ($theme.images | default "images") $theme.favicon.ms_browserconfig) "ctx" .) }}">
+{{- end -}}
+
+{{- if $theme.disable_baidu_transformation -}}
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+{{- end -}}
+{{- if $theme.google_site_verification -}}
+  <meta name="google-site-verification" content="{{ $theme.google_site_verification }}">
+{{- end -}}
+{{- if $theme.bing_site_verification -}}
+  <meta name="msvalidate.01" content="{{ $theme.bing_site_verification }}">
+{{- end -}}
+{{- if $theme.yandex_site_verification -}}
+  <meta name="yandex-verification" content="{{ $theme.yandex_site_verification }}">
+{{- end -}}
+{{- if $theme.baidu_site_verification -}}
+  <meta name="baidu-site-verification" content="{{ $theme.baidu_site_verification }}">
+{{- end -}}
+
+{{- with $.Site.Home.OutputFormats.Get "RSS" -}}
+  <link rel="alternate" type="{{ .MediaType.Type }}" title="{{ $.Site.Title }}" href="{{ .RelPermalink }}">
+{{- end -}}
+{{- with $.Site.Home.OutputFormats.Get "JSON" -}}
+  <link rel="alternate" type="{{ .MediaType.Type }}" title="{{ $.Site.Title }}" href="{{ .RelPermalink }}">
+{{- end -}}
+
+{{ partial "shoka/vendor-font.html" . }}
+{{- $font := $theme.font | default dict -}}
+{{- if and $font (index $font "enable") (index $font "local") -}}
+  <link rel="stylesheet" href="{{ "css/local-fonts.css" | relURL }}">
+{{- end -}}
+
+<link rel="stylesheet" href="{{ "css/app.css" | relURL }}">
+{{ partial "head/font-override.html" . }}
+{{ partial "head/highlight-override.html" . }}
+{{ partial "head/search-override.html" . }}

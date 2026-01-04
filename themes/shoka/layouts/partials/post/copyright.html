@@ -1,0 +1,41 @@
+{{- $post := .post -}}
+{{- $ctx := .ctx -}}
+{{- $theme := $ctx.Site.Data.shoka -}}
+{{- $siteTitle := $ctx.Site.Title -}}
+{{- $siteAuthor := $ctx.Site.Params.author | default $ctx.Site.Author.name | default "" -}}
+{{- if ne $post.Params.copyright false -}}
+  {{- $cc := $theme.creative_commons | default dict -}}
+  {{- $ccLicense := index $cc "license" -}}
+  {{- $ccLang := index $cc "language" | default "" -}}
+  {{- $ccURL := "" -}}
+  {{- if $ccLicense -}}
+    {{- if eq $ccLicense "zero" -}}
+      {{- $ccURL = printf "https://creativecommons.org/publicdomain/zero/1.0/%s" $ccLang -}}
+    {{- else -}}
+      {{- $ccURL = printf "https://creativecommons.org/licenses/%s/4.0/%s" $ccLicense $ccLang -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $ccIcon := "<i class=\"ic i-creative-commons\"><em>(CC)</em></i>" -}}
+  {{- $ccText := upper $ccLicense -}}
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>{{ partial "shoka/i18n.html" (dict "key" "post.copyright.author" "ctx" $ctx) }}{{ partial "shoka/i18n.html" (dict "key" "symbol.colon" "ctx" $ctx) }} </strong>
+    {{- $post.Params.author | default $siteAuthor }} <i class="ic i-at"><em>@</em></i> {{- $siteTitle }}
+  </li>
+  <li class="link">
+    <strong>{{ partial "shoka/i18n.html" (dict "key" "post.copyright.link" "ctx" $ctx) }}{{ partial "shoka/i18n.html" (dict "key" "symbol.colon" "ctx" $ctx) }}</strong>
+    {{- partial "shoka/url.html" (dict "href" $post.Permalink "text" $post.Permalink "title" $post.Title "ctx" $ctx) -}}
+  </li>
+  <li class="license">
+    <strong>{{ partial "shoka/i18n.html" (dict "key" "post.copyright.license_title" "ctx" $ctx) }}{{ partial "shoka/i18n.html" (dict "key" "symbol.colon" "ctx" $ctx) }} </strong>
+    {{- if eq $post.Params.copyright true -}}
+      {{- partial "shoka/i18n.html" (dict "key" "post.copyright.nocopy" "ctx" $ctx) -}}
+    {{- else -}}
+      {{- $ccLink := partial "shoka/url.html" (dict "href" $ccURL "text" (printf "%s%s" $ccIcon $ccText) "ctx" $ctx) -}}
+      {{- partial "shoka/i18n.html" (dict "key" "post.copyright.license_content" "ctx" $ctx "arg" $ccLink) | htmlUnescape | safeHTML -}}
+    {{- end -}}
+  </li>
+</ul>
+</div>
+{{- end -}}

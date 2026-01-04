@@ -1,12 +1,15 @@
 ---
 categories:
   - 网络安全
-date: 2025-12-28
+date: 2025-12-29
 description: 小迪secWeb攻防学习笔记
 slug: 3
 tags:
   - 
 title: Web攻防-42天
+cover:
+  image: "1.png"
+  relative: true
 ---
 
 # 数据库管理模式（MySQL）

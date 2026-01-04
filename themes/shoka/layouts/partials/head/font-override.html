@@ -1,0 +1,94 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $font := $theme.font | default dict -}}
+{{- if and $font (index $font "enable") -}}
+  {{- $sansFallback := "-apple-system,\"PingFang SC\",\"Microsoft YaHei\",sans-serif" -}}
+  {{- $monoFallback := "consolas,Menlo,\"PingFang SC\",\"Microsoft YaHei\",monospace" -}}
+
+  {{- $global := index $font "global" | default dict -}}
+  {{- $logo := index $font "logo" | default dict -}}
+  {{- $title := index $font "title" | default dict -}}
+  {{- $headings := index $font "headings" | default dict -}}
+  {{- $posts := index $font "posts" | default dict -}}
+  {{- $codes := index $font "codes" | default dict -}}
+
+  {{- $globalFamily := index $global "family" | default "" -}}
+  {{- $logoFamily := index $logo "family" | default "" -}}
+  {{- $titleFamily := index $title "family" | default "" -}}
+  {{- $headingsFamily := index $headings "family" | default "" -}}
+  {{- $postsFamily := index $posts "family" | default "" -}}
+  {{- $codesFamily := index $codes "family" | default "" -}}
+
+  {{- $globalFamily = trim $globalFamily " \t\r\n" -}}
+  {{- $logoFamily = trim $logoFamily " \t\r\n" -}}
+  {{- $titleFamily = trim $titleFamily " \t\r\n" -}}
+  {{- $headingsFamily = trim $headingsFamily " \t\r\n" -}}
+  {{- $postsFamily = trim $postsFamily " \t\r\n" -}}
+  {{- $codesFamily = trim $codesFamily " \t\r\n" -}}
+
+  {{- if and $globalFamily (not (strings.Contains $globalFamily ",")) -}}
+    {{- $globalFamily = printf "\"%s\"" $globalFamily -}}
+  {{- end -}}
+  {{- if and $logoFamily (not (strings.Contains $logoFamily ",")) -}}
+    {{- $logoFamily = printf "\"%s\"" $logoFamily -}}
+  {{- end -}}
+  {{- if and $titleFamily (not (strings.Contains $titleFamily ",")) -}}
+    {{- $titleFamily = printf "\"%s\"" $titleFamily -}}
+  {{- end -}}
+  {{- if and $headingsFamily (not (strings.Contains $headingsFamily ",")) -}}
+    {{- $headingsFamily = printf "\"%s\"" $headingsFamily -}}
+  {{- end -}}
+  {{- if and $postsFamily (not (strings.Contains $postsFamily ",")) -}}
+    {{- $postsFamily = printf "\"%s\"" $postsFamily -}}
+  {{- end -}}
+  {{- if and $codesFamily (not (strings.Contains $codesFamily ",")) -}}
+    {{- $codesFamily = printf "\"%s\"" $codesFamily -}}
+  {{- end -}}
+
+  {{- if or $globalFamily $logoFamily $titleFamily $headingsFamily $postsFamily $codesFamily -}}
+    {{- $globalFont := "" -}}
+    {{- $logoFont := "" -}}
+    {{- $titleFont := "" -}}
+    {{- $headingsFont := "" -}}
+    {{- $postsFont := "" -}}
+    {{- $codesFont := "" -}}
+    {{- if $globalFamily -}}
+      {{- $globalFont = printf "%s, %s" $globalFamily $sansFallback -}}
+    {{- end -}}
+    {{- if $logoFamily -}}
+      {{- $logoFont = printf "%s, %s" $logoFamily $sansFallback -}}
+    {{- end -}}
+    {{- if $titleFamily -}}
+      {{- $titleFont = printf "%s, %s" $titleFamily $sansFallback -}}
+    {{- end -}}
+    {{- if $headingsFamily -}}
+      {{- $headingsFont = printf "%s, %s" $headingsFamily $sansFallback -}}
+    {{- end -}}
+    {{- if $postsFamily -}}
+      {{- $postsFont = printf "%s, %s" $postsFamily $sansFallback -}}
+    {{- end -}}
+    {{- if $codesFamily -}}
+      {{- $codesFont = printf "%s, %s" $codesFamily $monoFallback -}}
+    {{- end -}}
+    <style>
+      {{- if $globalFont -}}
+      body { font-family: {{ $globalFont | safeCSS }}; }
+      {{- end -}}
+      {{- if $logoFont -}}
+      #brand .artboard { font-family: {{ $logoFont | safeCSS }}; }
+      {{- end -}}
+      {{- if $titleFont -}}
+      #brand h1,
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title { font-family: {{ $titleFont | safeCSS }}; }
+      {{- end -}}
+      {{- if $headingsFont -}}
+      h1, h2, h3, h4, h5, h6 { font-family: {{ $headingsFont | safeCSS }}; }
+      {{- end -}}
+      {{- if $postsFont -}}
+      .md { font-family: {{ $postsFont | safeCSS }}; }
+      {{- end -}}
+      {{- if $codesFont -}}
+      code, pre, kbd, samp, .highlight code, .highlight pre, .code-container { font-family: {{ $codesFont | safeCSS }}; }
+      {{- end -}}
+    </style>
+  {{- end -}}
+{{- end -}}

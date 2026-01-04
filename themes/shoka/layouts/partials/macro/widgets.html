@@ -1,0 +1,24 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $widgets := $theme.widgets | default dict -}}
+{{- if index $widgets "random_posts" -}}
+<div class="rpost pjax">
+  <h2>{{ partial "shoka/i18n.html" (dict "key" "index.random_posts" "ctx" .) }}</h2>
+  <ul>
+    {{- $posts := where .Site.RegularPages "Section" "posts" -}}
+    {{- range first 10 (shuffle $posts) -}}
+      <li class="item">
+        {{- partial "macro/breadcrumb.html" (dict "page" . "home" false "ctx" $) -}}
+        {{- $postText := .Title | default (partial "shoka/i18n.html" (dict "key" "post.untitled" "ctx" $)) -}}
+        <span>{{ partial "shoka/url.html" (dict "href" .RelPermalink "text" $postText "title" $postText "ctx" $) }}</span>
+      </li>
+    {{- end -}}
+  </ul>
+</div>
+{{- end -}}
+
+{{- if index $widgets "recent_comments" -}}
+<div>
+  <h2>{{ partial "shoka/i18n.html" (dict "key" "index.recent_comments" "ctx" .) }}</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+{{- end -}}

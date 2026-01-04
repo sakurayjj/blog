@@ -1,0 +1,34 @@
+{{ define "title" }}
+  {{- $pageTitle := .Title -}}
+  {{- with .Params.categories -}}
+    {{- $catList := delimit . " - " -}}
+    {{- $pageTitle = printf "%s - %s" $pageTitle $catList -}}
+  {{- end -}}
+  {{ $pageTitle }} |
+{{ end }}
+
+{{ define "header" }}
+  <h1 itemprop="name headline">
+    {{- if .Params.link -}}
+      {{- $postTitleIcon := "<i class=\"ic i-link-alt\"></i>" -}}
+      {{- $postText := .Title | default .Params.link -}}
+      {{- partial "shoka/url.html" (dict "href" .Params.link "text" (printf "%s%s" $postText $postTitleIcon) "class" "link external" "itemprop" "url" "ctx" .) -}}
+    {{- else -}}
+      {{- .Title -}}
+    {{- end -}}
+  </h1>
+  {{ partial "macro/postmeta.html" (dict "page" . "full" true "ctx" .) }}
+{{ end }}
+
+{{ define "content" }}
+  <div class="article wrap">
+    {{ partial "macro/breadcrumb.html" (dict "page" . "home" true "ctx" .) }}
+    {{ partial "post/post.html" (dict "post" . "ctx" .) }}
+  </div>
+  {{ partial "post/nav.html" . }}
+  {{ partial "macro/comment.html" . }}
+{{ end }}
+
+{{ define "sidebar" }}
+  {{ partial "macro/sidebar.html" (dict "page" . "display_toc" true "ctx" .) }}
+{{ end }}

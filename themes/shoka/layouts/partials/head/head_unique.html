@@ -1,0 +1,19 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- if .Params.keywords -}}
+  {{- if (reflect.IsSlice .Params.keywords) -}}
+    <meta name="keywords" content="{{ delimit .Params.keywords "," }}">
+  {{- else -}}
+    <meta name="keywords" content="{{ .Params.keywords }}">
+  {{- end -}}
+{{- else if .Params.tags -}}
+  <meta name="keywords" content="{{ delimit .Params.tags "," }}">
+{{- else if $theme.keywords -}}
+  <meta name="keywords" content="{{ $theme.keywords }}">
+{{- end -}}
+
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- if $theme.open_graph -}}
+  {{ template "_internal/opengraph.html" . }}
+  {{ template "_internal/twitter_cards.html" . }}
+{{- end -}}

@@ -1,0 +1,38 @@
+{{- $page := .page -}}
+{{- $full := .full | default false -}}
+{{- $theme := .ctx.Site.Data.shoka -}}
+{{- $dateFormat := .ctx.Site.Params.DateFormat | default "2006-01-02" -}}
+<div class="meta">
+  {{- $createdTitle := printf "%s%s%s" (partial "shoka/i18n.html" (dict "key" "post.created" "ctx" .ctx)) (partial "shoka/i18n.html" (dict "key" "symbol.colon" "ctx" .ctx)) ($page.Date.Format $dateFormat) -}}
+  <span class="item" title="{{ $createdTitle }}">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    {{- if $full -}}
+      <span class="text">{{ partial "shoka/i18n.html" (dict "key" "post.posted" "ctx" .ctx) }}</span>
+    {{- end -}}
+    <time itemprop="dateCreated datePublished" datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format $dateFormat }}</time>
+  </span>
+  {{- if $theme.post.count -}}
+    <span class="item" title="{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.count" "ctx" .ctx) }}">
+      <span class="icon">
+        <i class="ic i-pen"></i>
+      </span>
+      {{- if $full -}}
+        <span class="text">{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.count" "ctx" .ctx) }}</span>
+      {{- end -}}
+      <span>{{ $page.WordCount }}</span>
+      <span class="text">{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.word" "ctx" .ctx) }}</span>
+    </span>
+    <span class="item" title="{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.time" "ctx" .ctx) }}">
+      <span class="icon">
+        <i class="ic i-clock"></i>
+      </span>
+      {{- if $full -}}
+        <span class="text">{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.time" "ctx" .ctx) }}</span>
+      {{- end -}}
+      <span>{{ $page.ReadingTime }}</span>
+      <span class="text">{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.time_minutes" "ctx" .ctx) }}</span>
+    </span>
+  {{- end -}}
+</div>

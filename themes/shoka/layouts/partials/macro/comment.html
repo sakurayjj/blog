@@ -1,0 +1,8 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $valine := $theme.valine | default dict -}}
+{{- $appId := index $valine "appId" | default "" -}}
+{{- $appKey := index $valine "appKey" | default "" -}}
+{{- $valineEnabled := and (ne (strings.TrimSpace (printf "%v" $appId)) "") (ne (strings.TrimSpace (printf "%v" $appKey)) "") -}}
+{{- if and $valineEnabled (ne .Params.comment false) -}}
+  <div class="wrap" id="comments"></div>
+{{- end -}}

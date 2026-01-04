@@ -1,0 +1,55 @@
+{{ define "title" }}
+  {{- $singular := .Data.Singular -}}
+  {{- $titleKey := cond (eq $singular "tag") "title.tag" "title.category" -}}
+  {{- partial "shoka/i18n.html" (dict "key" $titleKey "ctx" .) }}{{ partial "shoka/i18n.html" (dict "key" "symbol.colon" "ctx" .) }}{{ .Data.Term }} |
+{{ end }}
+
+{{ define "header" }}
+  {{- $singular := .Data.Singular -}}
+  {{- $titleInKey := cond (eq $singular "tag") "title.tag_in" "title.category_in" -}}
+  <h1 itemprop="name headline">
+    {{ partial "shoka/i18n.html" (dict "key" $titleInKey "ctx" . "arg" .Data.Term) }}
+  </h1>
+{{ end }}
+
+{{ define "content" }}
+  {{- $singular := .Data.Singular -}}
+  {{- $titleKey := cond (eq $singular "tag") "title.tag" "title.category" -}}
+  {{- $paginator := .Paginate .Pages -}}
+  <div class="collapse wrap">
+    <h2 class="item header">
+      <a href="{{ printf "/%s/" .Data.Plural | relURL }}">{{ partial "shoka/i18n.html" (dict "key" "title.all" "ctx" .) }}</a>
+      <small>/</small>
+      {{ .Data.Term }}
+      <small>{{ partial "shoka/i18n.html" (dict "key" $titleKey "ctx" .) }}</small>
+    </h2>
+
+    {{- range $paginator.Pages -}}
+      <article class="item normal" itemscope itemtype="http://schema.org/Article">
+        <div class="meta">
+          <time itemprop="dateCreated" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" content="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "2006-01-02" }}
+          </time>
+          {{- with .Params.categories -}}
+            {{- $last := index . (sub (len .) 1) -}}
+            <span><a href="{{ printf "/categories/%s/" (urlize $last) | relURL }}">{{ $last }}</a></span>
+          {{- end -}}
+        </div>
+
+        <div class="title">
+          {{- if .Params.link -}}
+            {{- $postTitleIcon := "<i class=\"ic i-link-alt\"></i>" -}}
+            {{- $postText := .Title | default .Params.link -}}
+            {{- partial "shoka/url.html" (dict "href" .Params.link "text" (printf "%s%s" $postText $postTitleIcon) "class" "external" "itemprop" "url" "ctx" $) -}}
+          {{- else -}}
+            <a href="{{ .RelPermalink }}" itemprop="url">
+              <span itemprop="name">{{ .Title | default (partial "shoka/i18n.html" (dict "key" "post.untitled" "ctx" $)) }}</span>
+            </a>
+          {{- end -}}
+        </div>
+      </article>
+    {{- end -}}
+  </div>
+
+  {{ partial "pagination.html" . }}
+{{ end }}

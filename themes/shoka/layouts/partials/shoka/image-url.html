@@ -1,0 +1,38 @@
+{{- $img := .img | default "" -}}
+{{- $ctx := .ctx | default . -}}
+{{- if reflect.IsMap $img -}}
+  {{- $map := $img -}}
+  {{- $candidate := "" -}}
+  {{- if isset $map "image" -}}
+    {{- $candidate = index $map "image" -}}
+  {{- else if isset $map "src" -}}
+    {{- $candidate = index $map "src" -}}
+  {{- else if isset $map "url" -}}
+    {{- $candidate = index $map "url" -}}
+  {{- else if isset $map "path" -}}
+    {{- $candidate = index $map "path" -}}
+  {{- end -}}
+  {{- $img = $candidate | default "" -}}
+  {{- $relative := false -}}
+  {{- if isset $map "relative" -}}
+    {{- $relative = index $map "relative" -}}
+  {{- end -}}
+  {{- if and $relative $img (not (strings.HasPrefix $img "http")) (not (strings.HasPrefix $img "//")) -}}
+    {{- with $ctx.Resources.GetMatch $img -}}
+      {{- $img = .RelPermalink -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $img -}}
+{{- else if or (strings.HasPrefix $img "http") (strings.HasPrefix $img "//") -}}
+  {{- $img -}}
+{{- else -}}
+  {{- $theme := $ctx.Site.Data.shoka -}}
+  {{- $statics := $theme.statics | default "/" -}}
+  {{- if or (strings.HasPrefix $statics "http") (strings.HasPrefix $statics "//") -}}
+    {{- printf "%s/%s" (strings.TrimSuffix "/" $statics) (strings.TrimPrefix "/" $img) -}}
+  {{- else -}}
+    {{- $path := printf "%s/%s" (strings.TrimSuffix "/" $statics) (strings.TrimPrefix "/" $img) -}}
+    {{- relURL $path -}}
+  {{- end -}}
+{{- end -}}

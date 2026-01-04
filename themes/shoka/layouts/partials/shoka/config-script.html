@@ -1,0 +1,143 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $version := partial "shoka/theme-version.html" . -}}
+{{- $base := urls.Parse .Site.BaseURL -}}
+{{- $root := $base.Path | default "/" -}}
+{{- if not (strings.HasSuffix $root "/") -}}
+  {{- $root = printf "%s/" $root -}}
+{{- end -}}
+{{- $statics := $theme.statics | default $root -}}
+{{- $imagesDir := $theme.images | default "images" -}}
+{{- $cssDir := $theme.css | default "css" -}}
+{{- $jsDir := $theme.js | default "js" -}}
+{{- $vendorsJs := $theme.vendors.js | default dict -}}
+{{- $vendorsCss := $theme.vendors.css | default dict -}}
+{{- $quicklink := $theme.quicklink | default dict -}}
+{{- $widgets := $theme.widgets | default dict -}}
+{{- $hostname := strings.TrimSuffix "/" .Site.BaseURL -}}
+{{- $config := dict
+  "version" $version
+  "hostname" $hostname
+  "root" $root
+  "statics" $statics
+  "favicon" (dict "normal" (printf "%s/favicon.ico" $imagesDir) "hidden" (printf "%s/failure.ico" $imagesDir))
+  "darkmode" ($theme.darkmode | default false)
+  "auto_scroll" ($theme.auto_scroll | default true)
+  "js" (dict
+    "valine" (index $vendorsJs "valine")
+    "chart" (index $vendorsJs "chart")
+    "copy_tex" (index $vendorsJs "copy_tex")
+    "fancybox" (index $vendorsJs "fancybox")
+  )
+  "css" (dict
+    "valine" (printf "%s/comment.css" $cssDir)
+    "katex" (index $vendorsCss "katex")
+    "mermaid" (printf "%s/mermaid.css" $cssDir)
+    "fancybox" (index $vendorsCss "fancybox")
+  )
+  "loader" ($theme.loader | default dict)
+  "valine" ($theme.valine | default dict)
+  "quicklink" (dict
+    "timeout" (index $quicklink "timeout")
+    "priority" (index $quicklink "priority")
+  )
+-}}
+{{- $search := (index (dict) "missing") -}}
+{{- $searchConfig := $theme.search | default dict -}}
+{{- with .Site.Params.algolia -}}
+  {{- $search = dict "appID" .appId "apiKey" .apiKey "indexName" .indexName "hits" (index $searchConfig "hits" | default dict) -}}
+{{- end -}}
+{{- $config = merge $config (dict "search" $search) -}}
+{{- with $theme.audio -}}
+  {{- $config = merge $config (dict "audio" .) -}}
+{{- end -}}
+{{- if and $theme.fireworks $theme.fireworks.enable -}}
+  {{- $colors := $theme.fireworks.color | default (slice "rgba(255,182,185,.9)" "rgba(250,227,217,.9)" "rgba(187,222,214,.9)" "rgba(138,198,209,.9)") -}}
+  {{- $config = merge $config (dict "fireworks" $colors) -}}
+{{- end -}}
+
+{{- $local := dict -}}
+{{- $local = merge $local (dict
+  "path" (strings.TrimPrefix "/" .RelPermalink)
+  "favicon" (dict
+    "show" (partial "shoka/i18n.html" (dict "key" "favicon.show" "ctx" .))
+    "hide" (partial "shoka/i18n.html" (dict "key" "favicon.hide" "ctx" .))
+  )
+  "search" (dict
+    "placeholder" (partial "shoka/i18n.html" (dict "key" "search.placeholder" "ctx" .))
+    "empty" (partial "shoka/i18n.html" (dict "key" "search.empty" "ctx" .))
+    "stats" (partial "shoka/i18n.html" (dict "key" "search.stats" "ctx" .))
+  )
+) -}}
+
+{{- $valineConfig := $theme.valine | default dict -}}
+{{- $valineAppId := index $valineConfig "appId" | default "" -}}
+{{- $valineAppKey := index $valineConfig "appKey" | default "" -}}
+{{- $valineEnabled := and (ne (strings.TrimSpace (printf "%v" $valineAppId)) "") (ne (strings.TrimSpace (printf "%v" $valineAppKey)) "") -}}
+{{- if and $valineEnabled (or (index $widgets "recent_comments") (and .IsPage (ne .Params.comment false))) -}}
+  {{- $valineLocal := true -}}
+  {{- with .Params.valine -}}
+    {{- $valineLocal = . -}}
+  {{- end -}}
+  {{- $local = merge $local (dict "valine" $valineLocal) -}}
+{{- end -}}
+{{- if .Params.chart -}}
+  {{- $local = merge $local (dict "chart" true) -}}
+{{- end -}}
+{{- if .Params.math -}}
+  {{- $local = merge $local (dict "copy_tex" true "katex" true) -}}
+{{- end -}}
+{{- if .Params.mermaid -}}
+  {{- $local = merge $local (dict "mermaid" true) -}}
+{{- end -}}
+{{- if .Params.audio -}}
+  {{- $local = merge $local (dict "audio" .Params.audio) -}}
+{{- end -}}
+{{- if eq .Params.audio false -}}
+  {{- $local = merge $local (dict "audio" dict) -}}
+{{- end -}}
+{{- if ne .Params.fancybox false -}}
+  {{- $local = merge $local (dict "fancybox" true) -}}
+{{- end -}}
+{{- if ne .Params.copyright false -}}
+  {{- $ccLicense := $theme.creative_commons.license -}}
+  {{- $ccLang := $theme.creative_commons.language | default "" -}}
+  {{- $ccURL := "" -}}
+  {{- if $ccLicense -}}
+    {{- if eq $ccLicense "zero" -}}
+      {{- $ccURL = printf "https://creativecommons.org/publicdomain/zero/1.0/%s" $ccLang -}}
+    {{- else -}}
+      {{- $ccURL = printf "https://creativecommons.org/licenses/%s/4.0/%s" $ccLicense $ccLang -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $ccIcon := "<i class=\"ic i-creative-commons\"></i>" -}}
+  {{- $ccText := upper $ccLicense -}}
+  {{- $ccLink := partial "shoka/url.html" (dict "href" $ccURL "text" (printf "%s%s" $ccIcon $ccText) "ctx" .) -}}
+  {{- if eq .Params.copyright true -}}
+    {{- $local = merge $local (dict "nocopy" true "copyright" (partial "shoka/i18n.html" (dict "key" "tips.nocopy" "ctx" .))) -}}
+  {{- else -}}
+    {{- $local = merge $local (dict "copyright" (partial "shoka/i18n.html" (dict "key" "tips.copyright" "ctx" . "arg" $ccLink) | htmlUnescape)) -}}
+  {{- end -}}
+{{- end -}}
+{{- if .Params.quiz -}}
+  {{- $local = merge $local (dict "quiz" (dict
+    "choice" (partial "shoka/i18n.html" (dict "key" "quiz.choice" "ctx" .))
+    "multiple" (partial "shoka/i18n.html" (dict "key" "quiz.multiple" "ctx" .))
+    "true_false" (partial "shoka/i18n.html" (dict "key" "quiz.true_false" "ctx" .))
+    "essay" (partial "shoka/i18n.html" (dict "key" "quiz.essay" "ctx" .))
+    "gap_fill" (partial "shoka/i18n.html" (dict "key" "quiz.gap_fill" "ctx" .))
+    "mistake" (partial "shoka/i18n.html" (dict "key" "quiz.mistake" "ctx" .))
+  )) -}}
+{{- end -}}
+
+<script data-config type="text/javascript">
+  var CONFIG = {{ $config | jsonify | safeJS }};
+  var LOCAL = {{ $local | jsonify | safeJS }};
+  LOCAL.ignores = [
+    function(uri) {
+      return uri.includes('#');
+    },
+    function(uri) {
+      return new RegExp(LOCAL.path + '$').test(uri);
+    }
+  ];
+</script>

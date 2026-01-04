@@ -1,0 +1,9 @@
+{{- $version := "0.0.0" -}}
+{{- $path := "themes/shoka/package.json" -}}
+{{- if fileExists $path -}}
+  {{- $pkg := readFile $path | transform.Unmarshal -}}
+  {{- with (index $pkg "version") -}}
+    {{- $version = . -}}
+  {{- end -}}
+{{- end -}}
+{{- $version -}}

@@ -1,0 +1,21 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $reward := $theme.reward | default dict -}}
+{{- if ne .Params.reward false -}}
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> {{ partial "shoka/i18n.html" (dict "key" "reward.donate" "ctx" .) }}</button>
+  <p>{{ partial "shoka/i18n.html" (dict "key" "reward.text" "ctx" .) }}</p>
+  <div id="qr">
+    {{- range $name, $image := $reward.account -}}
+      {{- $builtin := slice "wechatpay" "alipay" "paypal" "bitcoin" -}}
+      {{- $label := $name -}}
+      {{- if in $builtin $name -}}
+        {{- $label = partial "shoka/i18n.html" (dict "key" (printf "reward.%s" $name) "ctx" $) -}}
+      {{- end -}}
+      <div>
+        <img data-src="{{ partial "shoka/image-url.html" (dict "img" (printf "%s%s" ($theme.images | default "images") $image) "ctx" $) }}" alt="{{ $label }}">
+        <p>{{ $label }}</p>
+      </div>
+    {{- end -}}
+  </div>
+</div>
+{{- end -}}

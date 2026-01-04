@@ -1,0 +1,53 @@
+{{- $page := .page -}}
+{{- $ctx := .ctx -}}
+{{- $displayToc := .display_toc | default false -}}
+{{- $toc := "" -}}
+{{- if $displayToc -}}
+  {{- $toc = $page.TableOfContents -}}
+  {{- $toc = replaceRE "<nav id=\"TableOfContents\">" "<nav id=\"TableOfContents\" class=\"toc\">" $toc -}}
+  {{- $toc = replaceRE "<a href" "<a class=\"toc-link\" href" $toc -}}
+{{- end -}}
+{{- $relatedPages := slice -}}
+{{- with $page.Params.categories -}}
+  {{- $relatedPages = where $page.Site.RegularPages "Params.categories" "intersect" . -}}
+{{- end -}}
+{{- $relatedPages = where $relatedPages "Permalink" "ne" $page.Permalink | first 5 -}}
+<div class="inner">
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="{{ partial "shoka/i18n.html" (dict "key" "sidebar.toc" "ctx" $ctx) }}">
+        {{- if and $displayToc (gt (len $toc) 0) -}}
+          {{ $toc | safeHTML }}
+        {{- end -}}
+      </div>
+      <div class="related panel pjax" data-title="{{ partial "shoka/i18n.html" (dict "key" "sidebar.related" "ctx" $ctx) }}">
+        {{- if gt (len $relatedPages) 0 -}}
+        <ul>
+          {{- range $relatedPages -}}
+            <li>{{ partial "shoka/url.html" (dict "href" .RelPermalink "text" .Title "title" .Title "ctx" $ctx) }}</li>
+          {{- end -}}
+        </ul>
+        {{- end -}}
+      </div>
+      <div class="overview panel" data-title="{{ partial "shoka/i18n.html" (dict "key" "sidebar.overview" "ctx" $ctx) }}">
+        {{ partial "sidebar/overview.html" $ctx }}
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+      {{- with $page.PrevInSection -}}
+        {{- partial "shoka/url.html" (dict "href" .RelPermalink "text" "<i class=\"ic i-chevron-left\"></i>" "rel" "prev" "title" (partial "shoka/i18n.html" (dict "key" "post.prev" "ctx" $ctx)) "ctx" $ctx) -}}
+      {{- end -}}
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+      {{- with $page.NextInSection -}}
+        {{- partial "shoka/url.html" (dict "href" .RelPermalink "text" "<i class=\"ic i-chevron-right\"></i>" "rel" "next" "title" (partial "shoka/i18n.html" (dict "key" "post.next" "ctx" $ctx)) "ctx" $ctx) -}}
+      {{- end -}}
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>

@@ -1,7 +1,7 @@
 baseURL = 'https://www.ctfhub.cn/'
 languageCode = 'zh-cn'
 title = '扬名立万_ymlw'
-theme = 'PaperMod'
+theme = 'shoka'
 # 👇 【添加这一行】备案号配置
 # 注意：这会覆盖默认的 "© 2025 扬名立万_ymlw" 显示，所以我们需要手动把版权声明也写在这里
 copyright = "© 2025 扬名立万_ymlw &nbsp; <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a>"
@@ -13,14 +13,14 @@ buildExpired = false
 
 # 【新增】开启 JSON 输出，用于支持搜索
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+home = ["HTML", "RSS", "JSON"]
 
 [params]
   env = "production"
   title = "我的博客"
-  description = "这是我的个人博客"
+  description = "网安 & 取证的学习笔记"
   keywords = ["Blog", "Portfolio", "PaperMod"]
-  author = "Me"
+  author = "扬名立万"
   DateFormat = "2006-01-02"
   defaultTheme = "auto" 
   disableThemeToggle = false

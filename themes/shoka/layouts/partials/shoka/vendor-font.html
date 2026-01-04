@@ -1,0 +1,17 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $font := $theme.font -}}
+{{- if and $font $font.enable -}}
+  {{- $families := slice -}}
+  {{- range $name := (slice "global" "logo" "title" "headings" "posts" "codes") -}}
+    {{- $item := index $font $name -}}
+    {{- if and $item $item.external $item.family -}}
+      {{- $families = $families | append (printf "%s:300,300italic,400,400italic,700,700italic" $item.family) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $families = uniq $families -}}
+  {{- if gt (len $families) 0 -}}
+    {{- $host := $font.host | default "//fonts.googleapis.com" -}}
+    {{- $host = strings.TrimSuffix "/" $host -}}
+    <link rel="stylesheet" href="{{ printf "%s/css?family=%s&display=swap&subset=latin,latin-ext" $host (urlquery (delimit $families "|")) }}">
+  {{- end -}}
+{{- end -}}

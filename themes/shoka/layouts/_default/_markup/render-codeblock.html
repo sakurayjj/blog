@@ -1,0 +1,34 @@
+{{- $lang := .Type | default "text" -}}
+{{- $options := "linenos=table,noClasses=true" -}}
+{{- $highlighted := highlight .Inner $lang $options -}}
+{{- $code := $highlighted -}}
+{{- $code = $code | replaceRE `(?s).*?<td[^>]*>\s*<pre[^>]*>\s*<code[^>]*>.*?</code>\s*</pre>\s*</td>\s*<td[^>]*>\s*<pre[^>]*>\s*<code[^>]*>` "" -}}
+{{- $code = $code | replaceRE `(?s)</code>\s*</pre>\s*</td>.*` "" -}}
+{{- $code = $code | replaceRE `(?s)<span style="display:flex;?">` "__HUGO_LINE__" -}}
+{{- $lines := split $code "__HUGO_LINE__" -}}
+<figure class="highlight {{ $lang }}">
+  <figcaption data-lang="{{ $lang }}">
+    {{- with .Attributes.title -}}
+      <span>{{ . }}</span>
+    {{- end -}}
+  </figcaption>
+  <table>
+    {{- if not (in $code "__HUGO_LINE__") -}}
+      <tr>
+        <td data-num="1"></td>
+        <td><pre>{{ $code | safeHTML }}</pre></td>
+      </tr>
+    {{- else -}}
+      {{- range $idx, $line := $lines -}}
+        {{- if gt $idx 0 -}}
+          {{- $line = $line | replaceRE `</span>\s*$` "" -}}
+          {{- $line = $line | replaceRE `[\r\n]+` "" -}}
+          <tr>
+            <td data-num="{{ $idx }}"></td>
+            <td><pre>{{ $line | safeHTML }}</pre></td>
+          </tr>
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  </table>
+</figure>

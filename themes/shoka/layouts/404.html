@@ -1,0 +1,13 @@
+{{ define "title" }}
+  {{ partial "shoka/i18n.html" (dict "key" "title.not_found" "ctx" .) }} |
+{{ end }}
+
+{{ define "header" }}
+  <h1 itemprop="name headline">{{ partial "shoka/i18n.html" (dict "key" "title.not_found" "ctx" .) }}</h1>
+{{ end }}
+
+{{ define "content" }}
+  <div class="page wrap">
+    <div class="notfound">{{ partial "shoka/i18n.html" (dict "key" "title.not_found" "ctx" .) }}</div>
+  </div>
+{{ end }}

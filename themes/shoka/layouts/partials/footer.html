@@ -1,0 +1,53 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $footer := $theme.footer | default dict -}}
+{{- $title := .Site.Title -}}
+{{- $alternate := $theme.alternate | default "" -}}
+{{- $author := .Site.Params.author | default .Site.Author.name | default "" -}}
+{{- $customCopyright := .Site.Copyright | default "" -}}
+{{- $year := now.Year -}}
+<div class="status">
+  <div class="copyright">
+    &copy; {{- if and (index $footer "since") (ne (index $footer "since") $year) }}{{ index $footer "since" }} - {{ end -}}
+    <span itemprop="copyrightYear">{{ $year }}</span>
+    {{- $icon := index $footer "icon" | default dict -}}
+    <span class="with-love">
+      <i class="ic i-{{ $icon.name | default "sakura rotate" }}"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">{{ $author }} @ {{ if $alternate }}{{ $alternate }}{{ else }}{{ $title }}{{ end }}</span>
+    {{- if $customCopyright -}}
+      <br>
+      <span class="copyright-extra">{{ $customCopyright | htmlUnescape | safeHTML }}</span>
+    {{- end -}}
+  </div>
+
+  {{- if index $footer "count" -}}
+    {{- $scratch := newScratch -}}
+    {{- range .Site.RegularPages -}}
+      {{- $scratch.Add "words" .WordCount -}}
+      {{- $scratch.Add "reading" .ReadingTime -}}
+    {{- end -}}
+    {{- $totalWords := $scratch.Get "words" | default 0 -}}
+    {{- $totalReading := $scratch.Get "reading" | default 0 -}}
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.count_total" "ctx" .) }}">{{ $totalWords }} {{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.word" "ctx" .) }}</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.time_total" "ctx" .) }}">{{ $totalReading }} {{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.time_minutes" "ctx" .) }}</span>
+  </div>
+  {{- end -}}
+
+  {{- if index $footer "powered" -}}
+  <div class="powered-by">
+    {{- $hugoLink := partial "shoka/url.html" (dict "href" "https://gohugo.io" "text" "Hugo" "ctx" .) -}}
+    {{- $themeLink := partial "shoka/url.html" (dict "href" "https://github.com/amehime/hexo-theme-shoka" "text" "Shoka" "ctx" .) -}}
+    {{- $powered := partial "shoka/i18n.html" (dict "key" "footer.powered" "ctx" . "arg" $hugoLink) -}}
+    {{- $powered | htmlUnescape | safeHTML }} & Theme.{{ $themeLink | safeHTML }}
+  </div>
+  {{- end -}}
+</div>

@@ -1,0 +1,20 @@
+{{- $p := .Paginator -}}
+{{- if or $p.HasPrev $p.HasNext -}}
+<nav class="pagination">
+  <div class="inner">
+    {{- if $p.HasPrev -}}
+      <a class="prev page-number" href="{{ $p.Prev.URL }}" aria-label="{{ partial "shoka/i18n.html" (dict "key" "accessibility.prev_page" "ctx" .) }}">
+        <i class="ic i-angle-left"></i>
+      </a>
+    {{- end -}}
+    {{- range $p.Pagers -}}
+      <a class="page-number{{ if eq . $p }} current{{ end }}" href="{{ .URL }}">{{ .PageNumber }}</a>
+    {{- end -}}
+    {{- if $p.HasNext -}}
+      <a class="next page-number" href="{{ $p.Next.URL }}" aria-label="{{ partial "shoka/i18n.html" (dict "key" "accessibility.next_page" "ctx" .) }}">
+        <i class="ic i-angle-right"></i>
+      </a>
+    {{- end -}}
+  </div>
+</nav>
+{{- end -}}

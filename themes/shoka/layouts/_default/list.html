@@ -1,0 +1,19 @@
+{{ define "title" }}
+  {{ .Title }} |
+{{ end }}
+
+{{ define "header" }}
+  <h1 itemprop="name headline">{{ .Title }}</h1>
+{{ end }}
+
+{{ define "content" }}
+  {{- $paginator := .Paginate .Pages -}}
+  <div class="index wrap">
+    <div class="segments posts">
+      {{- range $paginator.Pages -}}
+        {{- partial "macro/segment.html" (dict "page" . "ctx" $) -}}
+      {{- end -}}
+    </div>
+  </div>
+  {{ partial "pagination.html" . }}
+{{ end }}

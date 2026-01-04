@@ -1,0 +1,24 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $alternate := $theme.alternate -}}
+<nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="{{ partial "shoka/i18n.html" (dict "key" "accessibility.nav_toggle" "ctx" .) }}">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="{{ "/" | relURL }}" rel="start">{{ $alternate | default .Site.Title }}</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>

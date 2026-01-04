@@ -1,0 +1,38 @@
+{{- $post := .page -}}
+{{- $ctx := .ctx -}}
+{{- $postTitleIcon := "" -}}
+{{- if $post.Params.link -}}
+  {{- $postTitleIcon = "<i class=\"ic i-link-alt\"></i>" -}}
+{{- end -}}
+{{- $postText := $post.Title | default $post.Params.link | default (partial "shoka/i18n.html" (dict "key" "post.untitled" "ctx" $ctx)) -}}
+{{- $link := $post.Params.link | default $post.RelPermalink -}}
+<article class="item">
+  <div class="cover">
+    {{- $cover := partial "shoka/cover.html" (dict "page" $post "ctx" $ctx) -}}
+    {{- if $cover -}}
+      {{- partial "shoka/url.html" (dict "href" $link "text" (printf "<img src=\"%s\" data-src=\"%s\" loading=\"lazy\">" $cover $cover) "title" $postText "itemprop" "url" "ctx" $ctx) -}}
+    {{- end -}}
+  </div>
+  <div class="info">
+    {{- partial "macro/postmeta.html" (dict "page" $post "full" false "ctx" $ctx) -}}
+    <h3>{{ partial "shoka/url.html" (dict "href" $link "text" (printf "%s%s" $postText $postTitleIcon) "title" $postText "itemprop" "url" "ctx" $ctx) }}</h3>
+    <div class="excerpt">
+      {{- if $post.Params.description -}}
+        {{ $post.Params.description }}
+      {{- else if $post.Summary -}}
+        {{ $post.Summary }}
+      {{- else -}}
+        {{ $post.Plain | truncate 300 }}
+      {{- end -}}
+    </div>
+    {{- with $post.Params.categories -}}
+      {{- $last := index . (sub (len .) 1) -}}
+    <div class="meta footer">
+      <span>
+        {{- partial "shoka/url.html" (dict "href" (printf "/categories/%s/" (urlize $last)) "text" (printf "<i class=\"ic i-flag\"></i>%s" $last) "title" $last "itemprop" "url" "ctx" $ctx) -}}
+      </span>
+    </div>
+    {{- end -}}
+    {{- partial "shoka/url.html" (dict "href" $link "text" "more..." "title" $postText "itemprop" "url" "class" "btn" "ctx" $ctx) -}}
+  </div>
+</article>

@@ -1,0 +1,17 @@
+{{- $ctx := .ctx | default . -}}
+{{- $page := .page | default $ctx -}}
+{{- $cover := "" -}}
+{{- if $page.Params.cover -}}
+  {{- if (reflect.IsSlice $page.Params.cover) -}}
+    {{- $cover = index $page.Params.cover 0 -}}
+  {{- else -}}
+    {{- $cover = $page.Params.cover -}}
+  {{- end -}}
+{{- else if $page.Params.photos -}}
+  {{- $cover = index $page.Params.photos 0 -}}
+{{- else if $ctx.Site.Params.cover -}}
+  {{- $cover = $ctx.Site.Params.cover -}}
+{{- end -}}
+{{- if $cover -}}
+  {{- partial "shoka/image-url.html" (dict "img" $cover "ctx" $page) -}}
+{{- end -}}

@@ -1,0 +1,56 @@
+{{- $post := .post -}}
+{{- $ctx := .ctx -}}
+{{- $siteTitle := $ctx.Site.Title -}}
+{{- $siteSubtitle := $ctx.Site.Params.subtitle | default "" -}}
+{{- $siteAuthor := $ctx.Site.Params.author | default $ctx.Site.Author.name | default "" -}}
+{{- $siteDescription := $ctx.Site.Params.description | default $ctx.Site.Params.desc | default "" -}}
+<article itemscope itemtype="http://schema.org/Article" class="post block" lang="{{ $post.Lang | default $ctx.Site.Language.Lang }}">
+  <link itemprop="mainEntityOfPage" href="{{ $post.Permalink }}">
+
+  {{- $theme := $ctx.Site.Data.shoka -}}
+  {{- $sidebar := $theme.sidebar | default dict -}}
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="{{ partial "shoka/image-url.html" (dict "img" (printf "%s/%s" ($theme.images | default "images") (index $sidebar "avatar" | default "avatar.jpg")) "ctx" $ctx) }}">
+    <meta itemprop="name" content="{{ $siteAuthor }}">
+    <meta itemprop="description" content="{{ $siteSubtitle }}, {{ $siteDescription }}">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="{{ $siteTitle }}">
+  </span>
+
+  <div class="body md{{ if eq (lower $post.Params.direction) "rtl" }} rtl{{ end }}" itemprop="articleBody">
+    {{- with $post.Params.photos -}}
+      <div class="gallery" itemscope itemtype="http://schema.org/ImageGallery">
+        {{- range . -}}
+          <img data-src="{{ partial "shoka/image-url.html" (dict "img" . "ctx" $ctx) }}" itemprop="contentUrl">
+        {{- end -}}
+      </div>
+    {{- end -}}
+
+    {{ $post.Content }}
+
+    {{- with $post.Params.tags -}}
+      <div class="tags">
+        {{- range . -}}
+          <a href="{{ printf "/tags/%s/" (urlize .) | relURL }}" rel="tag"><i class="ic i-tag"></i> {{ . }}</a>
+        {{- end -}}
+      </div>
+    {{- end -}}
+  </div>
+
+  <footer>
+    {{ partial "post/footer.html" $ctx }}
+
+    {{- $reward := $theme.reward | default dict -}}
+    {{- if index $reward "enable" -}}
+      {{ partial "post/reward.html" $ctx }}
+    {{- end -}}
+
+    {{- $cc := $theme.creative_commons | default dict -}}
+    {{- if index $cc "license" -}}
+      {{ partial "post/copyright.html" (dict "post" $post "ctx" $ctx) }}
+    {{- end -}}
+  </footer>
+
+</article>

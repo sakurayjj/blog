@@ -1,0 +1,115 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $title := .Site.Title -}}
+{{- $subtitle := .Site.Params.subtitle | default "" -}}
+{{- $alternate := $theme.alternate | default "" -}}
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang | default .Site.LanguageCode }}">
+<head>
+  {{ partial "head/head.html" . }}
+  {{ partial "head/head_unique.html" . }}
+  <title>{{ block "title" . }}{{ end }}{{ if $alternate }}{{ $alternate }} = {{ end }}{{ $title }}{{ if $subtitle }} = {{ $subtitle }}{{ end }}</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          {{ block "header" . }}
+            {{- $theme := .Site.Data.shoka -}}
+            {{- $title := .Site.Title -}}
+            {{- $subtitle := .Site.Params.subtitle | default "" -}}
+            {{- $alternate := $theme.alternate | default "" -}}
+            <a href="{{ "/" | relURL }}" class="logo" rel="start">
+              {{- if $alternate }}<p class="artboard">{{ $alternate }}</p>{{- end -}}
+              <h1 itemprop="name headline" class="title">{{ $title }}</h1>
+            </a>
+            {{- if $subtitle -}}
+            <p class="meta" itemprop="description">= {{ $subtitle }} =</p>
+            {{- end -}}
+          {{ end }}
+          </div>
+        </div>
+        {{ partial "header.html" . }}
+      </div>
+      <div id="imgs" class="pjax">
+        {{- $covers := .Params.covers | default .Site.Params.covers -}}
+        {{- if and $covers (ge (len $covers) 6) -}}
+          <ul>
+            {{- range first 6 $covers -}}
+              <li class="item" data-background-image="{{ partial "shoka/image-url.html" (dict "img" . "ctx" $) }}"></li>
+            {{- end -}}
+          </ul>
+        {{- else -}}
+          {{- $cover := partial "shoka/cover.html" (dict "page" . "ctx" .) -}}
+          {{- if $cover -}}
+            <img src="{{ $cover }}">
+          {{- end -}}
+        {{- end -}}
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          {{ block "content" . }}{{ end }}
+        </div>
+        <div id="sidebar">
+          {{ block "sidebar" . }}{{ partial "macro/sidebar.html" (dict "page" . "display_toc" false "ctx" .) }}{{ end }}
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          {{ partial "macro/widgets.html" . }}
+        </div>
+        {{ partial "footer.html" . }}
+      </div>
+    </footer>
+  </div>
+
+  {{ partial "shoka/config-script.html" . }}
+
+  {{ partial "shoka/vendor-js.html" . }}
+
+  <script src="{{ "js/app.js" | relURL }}"></script>
+  {{- if and $theme.fireworks $theme.fireworks.enable -}}
+    <script src="{{ "js/fireworks.js" | relURL }}"></script>
+  {{- end -}}
+
+  {{ partial "third-party/baidu-analytics.html" . }}
+
+</body>
+</html>

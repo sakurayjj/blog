@@ -1,0 +1,26 @@
+{{ define "title" }}
+  {{ .Title }} |
+{{ end }}
+
+{{ define "header" }}
+  <h1 itemprop="name headline">
+    {{- if .Params.link -}}
+      {{- $postTitleIcon := "<i class=\"ic i-link-alt\"></i>" -}}
+      {{- $postText := .Title | default .Params.link -}}
+      {{- partial "shoka/url.html" (dict "href" .Params.link "text" (printf "%s%s" $postText $postTitleIcon) "class" "link external" "itemprop" "url" "ctx" .) -}}
+    {{- else -}}
+      {{- .Title -}}
+    {{- end -}}
+  </h1>
+{{ end }}
+
+{{ define "content" }}
+  <div class="page wrap">
+    {{ partial "post/post.html" (dict "post" . "ctx" .) }}
+  </div>
+  {{ partial "macro/comment.html" . }}
+{{ end }}
+
+{{ define "sidebar" }}
+  {{ partial "macro/sidebar.html" (dict "page" . "display_toc" true "ctx" .) }}
+{{ end }}

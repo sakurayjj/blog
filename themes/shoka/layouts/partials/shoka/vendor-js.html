@@ -1,0 +1,16 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $vendors := $theme.vendors.js -}}
+{{- if $vendors -}}
+  {{- $order := slice "pace" "pjax" "fetch" "anime" "algolia" "instantsearch" "lazyload" "quicklink" -}}
+  {{- $list := slice -}}
+  {{- range $name := $order -}}
+    {{- $val := index $vendors $name -}}
+    {{- if $val -}}
+      {{- $list = $list | append $val -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $list = uniq $list -}}
+  {{- if gt (len $list) 0 -}}
+    <script src="//cdn.jsdelivr.net/combine/{{ delimit $list "," }}"></script>
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,26 @@
+{{- $page := .page -}}
+{{- $home := .home | default false -}}
+{{- $ctx := .ctx -}}
+{{- if $home -}}
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="{{ "/" | relURL }}">{{ partial "shoka/i18n.html" (dict "key" "menu.home" "ctx" $ctx) }}</a></span>
+{{- else -}}
+<div class="breadcrumb">
+{{- end -}}
+{{- with $page.Params.categories -}}
+  {{- $catLen := len . -}}
+  {{- if $home -}}<i class="ic i-angle-right"></i>{{- end -}}
+  {{- range $index, $cat := . -}}
+    {{- $catURL := printf "/categories/%s/" (urlize $cat) -}}
+    {{- if $home -}}
+      <span {{ if eq (add $index 1) $catLen }}class="current"{{ end }} itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="{{ $catURL | relURL }}" itemprop="item" rel="index" title="{{ partial "shoka/i18n.html" (dict "key" "post.in" "ctx" $ctx) }} {{ $cat }}"><span itemprop="name">{{ $cat }}</span></a><meta itemprop="position" content="{{ add $index 1 }}"></span>
+    {{- else -}}
+      <a href="{{ $catURL | relURL }}" title="{{ partial "shoka/i18n.html" (dict "key" "post.in" "ctx" $ctx) }} {{ $cat }}">{{ $cat }}</a>
+    {{- end -}}
+    {{- if and (gt $catLen 1) (ne (add $index 1) $catLen) -}}
+      <i class="ic i-angle-right"></i>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+</div>

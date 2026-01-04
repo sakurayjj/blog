@@ -1,0 +1,35 @@
+{{- $path := .Get 0 -}}
+{{- if not $path -}}
+  {{- return -}}
+{{- end -}}
+{{- if not (fileExists $path) -}}
+  {{- return -}}
+{{- end -}}
+{{- $content := readFile $path -}}
+{{- if not $content -}}
+  {{- return -}}
+{{- end -}}
+{{- $list := $content | transform.Unmarshal -}}
+{{- if not $list -}}
+  {{- return -}}
+{{- end -}}
+{{- $theme := .Page.Site.Data.shoka -}}
+<div class="links">
+  {{- range $list -}}
+    {{- if and .url .site -}}
+      {{- $itemImage := .image | default (printf "%s/404.png" ($theme.images | default "images")) -}}
+      {{- $itemImage = partial "shoka/image-url.html" (dict "img" $itemImage "ctx" $) -}}
+      {{- $style := "" -}}
+      {{- if .color -}}
+        {{- $style = printf " style=\"--block-color:%s;\"" .color -}}
+      {{- end -}}
+      <div class="item" title="{{ .owner | default .site }}"{{ $style | safeHTMLAttr }}>
+        {{- partial "shoka/url.html" (dict "href" .url "text" "" "class" "image" "background" $itemImage "ctx" $) -}}
+        <div class="info">
+          {{- partial "shoka/url.html" (dict "href" .url "text" .site "class" "title" "ctx" $) -}}
+          <p class="desc">{{ .desc | default .url }}</p>
+        </div>
+      </div>
+    {{- end -}}
+  {{- end -}}
+</div>

@@ -1,0 +1,26 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $valine := $theme.valine | default dict -}}
+{{- $dateFormat := .Site.Params.DateFormat | default "2006-01-02" -}}
+<div class="meta">
+  {{- if ne (.Lastmod.Format $dateFormat) (.Date.Format $dateFormat) -}}
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">{{ partial "shoka/i18n.html" (dict "key" "post.edited" "ctx" .) }}</span>
+    <time title="{{ partial "shoka/i18n.html" (dict "key" "post.modified" "ctx" .) }}{{ partial "shoka/i18n.html" (dict "key" "symbol.colon" "ctx" .) }}{{ .Lastmod.Format $dateFormat }}" itemprop="dateModified" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod.Format $dateFormat }}</time>
+  </span>
+  {{- end -}}
+
+  {{- if and (index $valine "appId") (index $valine "appKey") (index $valine "visitor") -}}
+  {{- $visitorsId := strings.TrimPrefix "/" (strings.TrimSuffix "/" .RelPermalink) -}}
+  <span id="{{ $visitorsId }}" class="item leancloud_visitors" data-flag-title="{{ .Title }}" title="{{ partial "shoka/i18n.html" (dict "key" "post.views" "ctx" .) }}">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">{{ partial "shoka/i18n.html" (dict "key" "post.views" "ctx" .) }}</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">{{ partial "shoka/i18n.html" (dict "key" "symbols_count_time.view" "ctx" .) }}</span>
+  </span>
+  {{- end -}}
+</div>

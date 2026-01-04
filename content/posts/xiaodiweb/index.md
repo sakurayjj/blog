@@ -7,6 +7,9 @@ slug: 2
 tags:
   - 
 title: Web攻防-41天
+cover:
+  image: "1.png"
+  relative: true
 ---
 
 # ASP默认安装-MDB数据库泄露下载

@@ -1,0 +1,78 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- if .Site.Menus.main -}}
+  {{- $iconMap := dict "home" "home" "categories" "th" "tags" "tags" "archives" "list-alt" "search" "search" -}}
+  {{- range .Site.Menus.main -}}
+    {{- $identifier := .Identifier | default "" -}}
+    {{- $icon := index $iconMap $identifier | default "link" -}}
+    {{- $isSearch := eq (lower $identifier) "search" -}}
+    {{- $itemURL := .URL -}}
+    {{- $class := "" -}}
+    {{- if $isSearch -}}
+      {{- $itemURL = "javascript:void(0);" -}}
+      {{- $class = "search" -}}
+    {{- end -}}
+    {{- $iconHtml := printf "<i class=\"ic i-%s\"></i>" $icon -}}
+    <li class="item">
+      {{- if $isSearch -}}
+        <a href="javascript:void(0);" class="search" rel="section">{{ $iconHtml | safeHTML }}{{ .Name }}</a>
+      {{- else -}}
+        {{- partial "shoka/url.html" (dict "href" $itemURL "text" (printf "%s%s" $iconHtml .Name) "class" $class "rel" "section" "ctx" $) -}}
+      {{- end -}}
+    </li>
+  {{- end -}}
+{{- else -}}
+  {{- range $name, $value := $theme.menu -}}
+    {{- if (reflect.IsMap $value) -}}
+      {{- $default := index $value "default" -}}
+      {{- if $default -}}
+        {{- $parts := split $default "||" -}}
+        {{- $itemURL := trim (index $parts 0) " " -}}
+        {{- if and $itemURL (not (strings.HasPrefix $itemURL "http")) -}}
+          {{- $itemURL = replace $itemURL "//" "/" -}}
+        {{- end -}}
+        {{- $icon := trim (index $parts 1) " " -}}
+        {{- $label := partial "shoka/i18n.html" (dict "key" (printf "menu.%s" $name) "ctx" $) -}}
+        {{- $label = replace $label "menu." "" -}}
+        {{- $iconHtml := printf "<i class=\"ic i-%s\"></i>" $icon -}}
+        <li class="item dropdown">
+          {{- if eq $itemURL "/" -}}
+            <a href="javascript:void(0);">{{ $iconHtml | safeHTML }}{{ $label }}</a>
+          {{- else -}}
+            {{- partial "shoka/url.html" (dict "href" $itemURL "text" (printf "%s%s" $iconHtml $label) "rel" "section" "ctx" $) -}}
+          {{- end -}}
+          <ul class="submenu">
+            {{- range $subname, $subvalue := $value -}}
+              {{- if ne $subname "default" -}}
+                {{- $subparts := split $subvalue "||" -}}
+                {{- $subURL := trim (index $subparts 0) " " -}}
+                {{- if and $subURL (not (strings.HasPrefix $subURL "http")) -}}
+                  {{- $subURL = replace $subURL "//" "/" -}}
+                {{- end -}}
+                {{- $subicon := trim (index $subparts 1) " " -}}
+                {{- $sublabel := partial "shoka/i18n.html" (dict "key" (printf "menu.%s" $subname) "ctx" $) -}}
+                {{- $sublabel = replace $sublabel "menu." "" -}}
+                {{- $subiconHtml := printf "<i class=\"ic i-%s\"></i>" $subicon -}}
+                <li class="item">
+                  {{- partial "shoka/url.html" (dict "href" $subURL "text" (printf "%s%s" $subiconHtml $sublabel) "rel" "section" "ctx" $) -}}
+                </li>
+              {{- end -}}
+            {{- end -}}
+          </ul>
+        </li>
+      {{- end -}}
+    {{- else -}}
+      {{- $parts := split $value "||" -}}
+      {{- $itemURL := trim (index $parts 0) " " -}}
+      {{- if and $itemURL (not (strings.HasPrefix $itemURL "http")) -}}
+        {{- $itemURL = replace $itemURL "//" "/" -}}
+      {{- end -}}
+      {{- $icon := trim (index $parts 1) " " -}}
+      {{- $label := partial "shoka/i18n.html" (dict "key" (printf "menu.%s" $name) "ctx" $) -}}
+      {{- $label = replace $label "menu." "" -}}
+      {{- $iconHtml := printf "<i class=\"ic i-%s\"></i>" $icon -}}
+      <li class="item">
+        {{- partial "shoka/url.html" (dict "href" $itemURL "text" (printf "%s%s" $iconHtml $label) "rel" "section" "ctx" $) -}}
+      </li>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

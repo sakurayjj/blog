@@ -1,0 +1,18 @@
+{{- $lang := .lang | default "en" -}}
+{{- $ctx := .ctx -}}
+{{- $parts := split $lang "-" -}}
+{{- if gt (len $parts) 1 -}}
+  {{- $lang = printf "%s-%s" (index $parts 0) (upper (index $parts 1)) -}}
+{{- end -}}
+{{- $path := printf "themes/shoka/languages/%s.yml" $lang -}}
+{{- if not (fileExists $path) -}}
+  {{- $defaultPath := "themes/shoka/languages/default.yml" -}}
+  {{- if fileExists $defaultPath -}}
+    {{- $defaultFile := trim (readFile $defaultPath) " \r\n\t" -}}
+    {{- $path = printf "themes/shoka/languages/%s" $defaultFile -}}
+  {{- end -}}
+{{- end -}}
+{{- if not (fileExists $path) -}}
+  {{- $path = "themes/shoka/languages/en.yml" -}}
+{{- end -}}
+{{- $path -}}

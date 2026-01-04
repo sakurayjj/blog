@@ -1,0 +1,50 @@
+{{ define "content" }}
+  {{- $allPosts := where .Site.RegularPages "Section" "posts" -}}
+  {{- $posts := where $allPosts "Params.sticky" "ne" true -}}
+  {{- $paginator := .Paginate $posts -}}
+  {{- $sticky := where $allPosts "Params.sticky" true -}}
+  {{- $catList := slice -}}
+  {{- range $name, $tax := .Site.Taxonomies.categories -}}
+    {{- $catList = $catList | append (dict "name" $name "page" $tax.Page "pages" $tax.Pages "count" (len $tax.Pages)) -}}
+  {{- end -}}
+  {{- $catList = sort $catList "count" "desc" -}}
+  <div class="index wrap">
+    {{- if eq $paginator.PageNumber 1 -}}
+      {{- if gt (len $sticky) 0 -}}
+      <h2 class="divider">{{ partial "shoka/i18n.html" (dict "key" "index.sticky" "ctx" .) }}</h2>
+      <div class="segments sticky">
+        {{- range $sticky -}}
+          {{- partial "macro/segment.html" (dict "page" . "ctx" $) -}}
+        {{- end -}}
+      </div>
+      {{- end -}}
+
+      {{- $featuredCats := first 6 $catList -}}
+      {{- if gt (len $featuredCats) 0 -}}
+      {{- $categoryTitle := partial "shoka/i18n.html" (dict "key" "index.category" "ctx" .) -}}
+      {{- if eq $categoryTitle "Categories" -}}
+        {{- $categoryTitle = "精选分类" -}}
+      {{- end -}}
+      <h2 class="divider">{{ $categoryTitle }}</h2>
+      <div class="cards">
+        {{- range $featuredCats -}}
+          {{- partial "macro/card.html" (dict "item" . "ctx" $) -}}
+        {{- end -}}
+      </div>
+      {{- end -}}
+    {{- end -}}
+
+    {{- if gt (len $paginator.Pages) 0 -}}
+      {{- if eq $paginator.PageNumber 1 -}}
+      <h2 class="divider">{{ partial "shoka/i18n.html" (dict "key" "index.posts" "ctx" .) }}</h2>
+      {{- end -}}
+      <div class="segments posts">
+        {{- range $paginator.Pages -}}
+          {{- partial "macro/segment.html" (dict "page" . "ctx" $) -}}
+        {{- end -}}
+      </div>
+    {{- end -}}
+  </div>
+
+  {{ partial "pagination.html" . }}
+{{ end }}

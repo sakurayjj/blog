@@ -1,0 +1,49 @@
+{{- $ctx := .ctx | default . -}}
+{{- $href := .href | default "" -}}
+{{- if $href -}}
+  {{- $text := .text | default $href -}}
+  {{- $title := .title | default "" -}}
+  {{- $class := .class | default "" -}}
+  {{- $itemprop := .itemprop | default "" -}}
+  {{- $rel := .rel | default "" -}}
+  {{- $background := .background | default "" -}}
+  {{- $theme := $ctx.Site.Data.shoka -}}
+  {{- $exturl := $theme.exturl | default false -}}
+  {{- $base := urls.Parse $ctx.Site.BaseURL -}}
+  {{- $siteHost := $base.Host | default $ctx.Site.BaseURL -}}
+  {{- $link := urls.Parse $href -}}
+  {{- $isExternal := and $link.Scheme (ne $link.Host $siteHost) (ne $link.Scheme "javascript") -}}
+  {{- $classAttr := "" -}}
+  {{- if $class -}}
+    {{- $classAttr = printf " class=\"%s\"" (htmlEscape $class) -}}
+  {{- end -}}
+  {{- $titleAttr := "" -}}
+  {{- if $title -}}
+    {{- $titleAttr = printf " title=\"%s\"" (htmlEscape $title) -}}
+  {{- end -}}
+  {{- $itempropAttr := "" -}}
+  {{- if $itemprop -}}
+    {{- $itempropAttr = printf " itemprop=\"%s\"" (htmlEscape $itemprop) -}}
+  {{- end -}}
+  {{- $backgroundAttr := "" -}}
+  {{- if $background -}}
+    {{- $backgroundAttr = printf " data-background-image=\"%s\"" (htmlEscape $background) -}}
+  {{- end -}}
+  {{- if and $isExternal $exturl -}}
+    {{- $dataUrl := base64Encode $href -}}
+    {{- $html := printf "<span class=\"exturl%s\" data-url=\"%s\"%s%s%s>%s</span>" (cond $class (print " " (htmlEscape $class)) "") $dataUrl $titleAttr $itempropAttr $backgroundAttr ($text | safeHTML) -}}
+    {{- $html | safeHTML -}}
+  {{- else -}}
+    {{- $attrs := "" -}}
+    {{- if and $rel (not $isExternal) -}}
+      {{- $attrs = printf "%s rel=\"%s\"" $attrs (htmlEscape $rel) -}}
+    {{- else if $isExternal -}}
+      {{- $attrs = printf "%s rel=\"noopener\"" $attrs -}}
+    {{- end -}}
+    {{- if and $isExternal (not $exturl) -}}
+      {{- $attrs = printf "%s target=\"_blank\"" $attrs -}}
+    {{- end -}}
+    {{- $html := printf "<a href=\"%s\"%s%s%s%s%s>%s</a>" (htmlEscape $href) $classAttr $titleAttr $itempropAttr $backgroundAttr $attrs ($text | safeHTML) -}}
+    {{- $html | safeHTML -}}
+  {{- end -}}
+{{- end -}}

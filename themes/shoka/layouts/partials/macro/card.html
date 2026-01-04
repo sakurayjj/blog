@@ -1,0 +1,45 @@
+{{- $item := .item -}}
+{{- $ctx := .ctx -}}
+{{- $name := $item.name -}}
+{{- $page := $item.page -}}
+{{- $slug := urlize $name -}}
+{{- $cover := "" -}}
+{{- with $page.Params.cover -}}
+  {{- $cover = partial "shoka/image-url.html" (dict "img" . "ctx" $page) -}}
+{{- else -}}
+  {{- $jpg := printf "static/%s/cover.jpg" $slug -}}
+  {{- $png := printf "static/%s/cover.png" $slug -}}
+  {{- $jpgTheme := printf "themes/shoka/static/%s/cover.jpg" $slug -}}
+  {{- $pngTheme := printf "themes/shoka/static/%s/cover.png" $slug -}}
+  {{- if or (fileExists $jpg) (fileExists $jpgTheme) -}}
+    {{- $cover = printf "/%s/cover.jpg" $slug -}}
+  {{- else if or (fileExists $png) (fileExists $pngTheme) -}}
+    {{- $cover = printf "/%s/cover.png" $slug -}}
+  {{- end -}}
+{{- end -}}
+<section class="item">
+  <div class="cover"{{ if $cover }} data-background-image="{{ $cover }}"{{ end }}>
+    <h2 class="title">{{ $name }}</h2>
+  </div>
+  <div class="info">
+    {{- $postTitleIcon := "" -}}
+    {{- if $page.Params.link -}}
+      {{- $postTitleIcon = "<i class=\"ic i-link-alt\"></i>" -}}
+    {{- end -}}
+    {{- $postText := $name | default (partial "shoka/i18n.html" (dict "key" "post.untitled" "ctx" $ctx)) -}}
+    <div class="ribbon">{{ partial "shoka/url.html" (dict "href" $page.RelPermalink "text" (printf "%s%s" $postText $postTitleIcon) "title" $postText "itemprop" "url" "ctx" $ctx) }}</div>
+    <div class="inner">
+      <ul class="posts">
+        {{- range first 6 $item.pages -}}
+          <li><a title="{{ .Title }}" href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{- end -}}
+      </ul>
+      <div class="meta footer">
+        <span>
+          <i class="ic i-file"></i>{{ len $item.pages }}
+        </span>
+      </div>
+      {{- partial "shoka/url.html" (dict "href" $page.RelPermalink "text" "more..." "title" $name "itemprop" "url" "class" "btn" "ctx" $ctx) -}}
+    </div>
+  </div>
+</section>

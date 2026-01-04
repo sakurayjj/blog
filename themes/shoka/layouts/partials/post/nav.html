@@ -1,0 +1,27 @@
+{{- $ctx := . -}}
+<div class="post-nav">
+  <div class="item left">
+    {{- with .PrevInSection -}}
+      {{- $postText := .Title | default (partial "shoka/i18n.html" (dict "key" "post.untitled" "ctx" $ctx)) -}}
+      {{- $lastcat := "" -}}
+      {{- with .Params.categories -}}
+        {{- $lastcat = index . (sub (len .) 1) -}}
+      {{- end -}}
+      {{- $cover := partial "shoka/cover.html" (dict "page" . "ctx" $ctx) -}}
+      {{- $itemLink := printf "<span class=\"type\">%s</span><span class=\"category\"><i class=\"ic i-flag\"></i> %s</span><h3>%s</h3>" (partial "shoka/i18n.html" (dict "key" "post.prev" "ctx" $ctx)) $lastcat $postText -}}
+      {{- partial "shoka/url.html" (dict "href" .RelPermalink "text" $itemLink "itemprop" "url" "rel" "prev" "background" $cover "title" $postText "ctx" $ctx) -}}
+    {{- end -}}
+  </div>
+  <div class="item right">
+    {{- with .NextInSection -}}
+      {{- $postText := .Title | default (partial "shoka/i18n.html" (dict "key" "post.untitled" "ctx" $ctx)) -}}
+      {{- $lastcat := "" -}}
+      {{- with .Params.categories -}}
+        {{- $lastcat = index . (sub (len .) 1) -}}
+      {{- end -}}
+      {{- $cover := partial "shoka/cover.html" (dict "page" . "ctx" $ctx) -}}
+      {{- $itemLink := printf "<span class=\"type\">%s</span><span class=\"category\"><i class=\"ic i-flag\"></i> %s</span><h3>%s</h3>" (partial "shoka/i18n.html" (dict "key" "post.next" "ctx" $ctx)) $lastcat $postText -}}
+      {{- partial "shoka/url.html" (dict "href" .RelPermalink "text" $itemLink "itemprop" "url" "rel" "next" "background" $cover "title" $postText "ctx" $ctx) -}}
+    {{- end -}}
+  </div>
+</div>

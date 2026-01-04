@@ -1,0 +1,57 @@
+{{- $theme := .Site.Data.shoka -}}
+{{- $sidebar := $theme.sidebar | default dict -}}
+{{- $author := .Site.Params.author | default .Site.Author.name | default "" -}}
+{{- $description := .Site.Params.description | default .Site.Params.desc | default "" -}}
+<div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="{{ $author }}"
+      data-src="{{ partial "shoka/image-url.html" (dict "img" (printf "%s/%s" ($theme.images | default "images") (index $sidebar "avatar" | default "avatar.jpg")) "ctx" .) }}">
+  <p class="name" itemprop="name">{{ $author }}</p>
+  <div class="description" itemprop="description">{{ $description }}</div>
+</div>
+
+<nav class="state">
+  {{- $posts := where .Site.RegularPages "Section" "posts" -}}
+  {{- if gt (len $posts) 0 -}}
+    <div class="item posts">
+      <a href="{{ "/archives/" | relURL }}">
+        <span class="count">{{ len $posts }}</span>
+        <span class="name">{{ partial "shoka/i18n.html" (dict "key" "state.posts" "ctx" .) }}</span>
+      </a>
+    </div>
+  {{- end -}}
+
+  {{- if gt (len .Site.Taxonomies.categories) 0 -}}
+    <div class="item categories">
+      <a href="{{ "/categories/" | relURL }}">
+        <span class="count">{{ len .Site.Taxonomies.categories }}</span>
+        <span class="name">{{ partial "shoka/i18n.html" (dict "key" "state.categories" "ctx" .) }}</span>
+      </a>
+    </div>
+  {{- end -}}
+
+  {{- if gt (len .Site.Taxonomies.tags) 0 -}}
+    <div class="item tags">
+      <a href="{{ "/tags/" | relURL }}">
+        <span class="count">{{ len .Site.Taxonomies.tags }}</span>
+        <span class="name">{{ partial "shoka/i18n.html" (dict "key" "state.tags" "ctx" .) }}</span>
+      </a>
+    </div>
+  {{- end -}}
+</nav>
+
+<div class="social">
+  {{- range $name, $link := $theme.social -}}
+    {{- $parts := split $link "||" -}}
+    {{- $url := trim (index $parts 0) " " -}}
+    {{- $icon := trim (index $parts 1) " " -}}
+    {{- if $url -}}
+      {{- $iconHtml := printf "<i class=\"ic i-%s\"></i>" $icon -}}
+      {{- $cls := printf "item %s" $name -}}
+      {{- partial "shoka/url.html" (dict "href" $url "text" $iconHtml "title" $url "class" $cls "ctx" $) -}}
+    {{- end -}}
+  {{- end -}}
+</div>
+
+<ul class="menu">
+  {{ partial "sidebar/menu.html" . }}
+</ul>
