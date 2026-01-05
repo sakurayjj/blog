@@ -261,3 +261,6 @@ sqlmap有默认指纹：
     - 使用哪些 payload（是否用高危 payload）
 ```
 备注：`*` 的优先级会高于level,risk。没有 `*` 会默认自动分析所有参数，即 `--level` 生效；但当 `*` 存在，`--level` 基本等于无效。当自己不确定注入点，就可以使用 `--level` 来让sqlmap自己找。
+
+参考文章：
+- https://www.cnblogs.com/bmjoker/p/9326258.html
