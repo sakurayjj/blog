@@ -11,12 +11,14 @@
             "id": "c6f7e5b91ffad36f",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "content/categories/学习笔记/cover.jpg"
+                "file": "content/posts/小迪web46天sqlmap/index.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-image",
-              "title": "cover"
+              "icon": "lucide-file",
+              "title": "index"
             }
           }
         ]
@@ -181,19 +183,25 @@
       "bases:创建新数据库": false
     }
   },
-  "active": "9d43a5830954e298",
+  "active": "c6f7e5b91ffad36f",
   "lastOpenFiles": [
+    "content/posts/小迪web46天sqlmap/3.png",
+    "content/posts/小迪web46天sqlmap/2.png",
+    "content/posts/小迪web46天sqlmap/1.png",
+    "content/posts/小迪web46天sqlmap/未确认 854471.crdownload",
+    "content/posts/小迪web攻防42天/index.md",
+    "content/posts/小迪web46天sqlmap/index.md",
+    "content/posts/1/index.md",
+    "content/categories/学习笔记/cover.jpg",
+    "content/posts/小迪web46天sqlmap",
+    "content/posts/小迪web",
+    "content/posts/新建文件夹",
     "public/tags/test/page/1/index.html",
     "public/tags/papermod/page/1/index.html",
     "public/tags/rust/page/1/index.html",
     "public/tags/markdown/page/1/index.html",
     "public/tags/github/page/1/index.html",
     "public/tags/dvwa/page/1/index.html",
-    "public/tags/cve/page/1/index.html",
-    "public/categories/靶场/page/1/index.html",
-    "public/categories/网络安全/page/1/index.html",
-    "public/categories/测试/page/1/index.html",
-    "public/categories/学习笔记/page/1/index.html",
     "public/posts/test-markdown/test.jpg",
     "public/posts/rust/2.png",
     "public/posts/rust/1.png",
@@ -201,15 +209,11 @@
     "public/posts/3/5.png",
     "public/posts/3/4.png",
     "public/posts/3/3.png",
-    "public/posts/3/2.png",
-    "public/posts/3/1.png",
-    "public/posts/2/3.png",
     "content/categories/靶场/_index.md",
     "content/categories/网络安全/_index.md",
     "content/categories/debug/_index.md",
     "content/categories/学习笔记/_index.md",
     "content/categories/_index.md",
-    "content/posts/小迪web攻防42天/index.md",
     "content/categories/未命名.md",
     "content/posts/xiaodiweb/index.md",
     "content/posts/test-markdown/index.md",
@@ -218,7 +222,6 @@
     "content/posts/githublearn/index.md",
     "content/archives.md",
     "content/tags/_index.md",
-    "content/posts/1/index.md",
     "content/posts/cve-2025-55182/index.md",
     "content/posts/test/index.md",
     "content/posts/20251215/index.md",
