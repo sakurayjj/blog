@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color=""><meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss&#43;xml" title="扬名立万_ymlw" href="/index.xml"><link rel="alternate" type="application/json" title="扬名立万_ymlw" href="/index.json"><link rel="stylesheet" href="/css/local-fonts.css"><link rel="stylesheet" href="/css/app.css">
+<style>body { font-family: "Mulish", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand .artboard { font-family: "Fredericka the Great", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand h1,
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title { font-family: Mulish, "Noto Serif JP", "Noto Serif SC", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }h1, h2, h3, h4, h5, h6 { font-family: Mulish, "Noto Serif SC", "Noto Serif JP", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }code, pre, kbd, samp, .highlight code, .highlight pre, .code-container { font-family: "Inconsolata", consolas,Menlo,"PingFang SC","Microsoft YaHei",monospace; }</style>
+<style>
+  .highlight pre span[style*="background-color"] {
+    background-color: transparent !important;
+    color: inherit !important;
+  }
+</style>
+
+<style>
+  #search .search-highlight {
+    background: var(--color-red-a1);
+    border-radius: .2rem;
+    color: inherit;
+    font-style: normal;
+    padding: 0 .2rem;
+  }
+
+  #search-hits .search-snippet {
+    color: var(--grey-6);
+    font-size: 80%;
+    line-height: 1.6;
+    margin-top: .2rem;
+  }
+</style>
+
+
+  <meta name="keywords" content="DVWA"><link rel="canonical" href="http://localhost:1313/posts/dvwabruteforce/"><meta property="og:url" content="http://localhost:1313/posts/dvwabruteforce/">
+  <meta property="og:site_name" content="扬名立万_ymlw">
+  <meta property="og:title" content="从DVWA开始学习漏洞原理-Brute Force">
+  <meta property="og:description" content="通过DVWA靶场学习代码审计。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-19T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-19T00:00:00+00:00">
+    <meta property="article:tag" content="DVWA">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.jpg">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.jpg">
+  <meta name="twitter:title" content="从DVWA开始学习漏洞原理-Brute Force">
+  <meta name="twitter:description" content="通过DVWA靶场学习代码审计。">
+
+  <title>从DVWA开始学习漏洞原理-Brute Force - 网络安全 - 靶场 |
+YMLW Shoka = 扬名立万_ymlw</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">从DVWA开始学习漏洞原理-Brute Force</h1>
+  <div class="meta"><span class="item" title="创建时间：19196-12-19">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2025-12-19T00:00:00Z">19196-12-19</time>
+  </span></div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">YMLW Shoka</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax"></div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    <div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" itemprop="item" rel="index" title="分类于 网络安全"><span itemprop="name">网络安全</span></a><meta itemprop="position" content="1"></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/%E9%9D%B6%E5%9C%BA/" itemprop="item" rel="index" title="分类于 靶场"><span itemprop="name">靶场</span></a><meta itemprop="position" content="2"></span></div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-cn">
+  <link itemprop="mainEntityOfPage" href="http://localhost:1313/posts/dvwabruteforce/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/1.jpg">
+    <meta itemprop="name" content="扬名立万">
+    <meta itemprop="description" content=", 网安 &amp; 取证的学习笔记">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬名立万_ymlw">
+  </span>
+
+  <div class="body md" itemprop="articleBody"><h2 id="0x00brute-force">
+  <a class="anchor" href="#0x00brute-force" aria-label="Anchor"></a>
+  0x00Brute Force
+</h2>
+<p>暴力破解</p>
+<h2 id="0x01low级别">
+  <a class="anchor" href="#0x01low%e7%ba%a7%e5%88%ab" aria-label="Anchor"></a>
+  0x01Low级别
+</h2>
+<p><strong>代码审计</strong>：
+整体逻辑：接收账号密码 -&gt; 查询数据库 -&gt; 匹配则登录成功，否则登陆失败。
+<strong>危害点1</strong>：存在暴力破解：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">isset</span>( $_GET[ <span style="color:#e6db74">&#39;Login&#39;</span> ] ) )</span></pre></td>
+          </tr></table>
+</figure>
+<p>这个 <strong>if</strong> 只是判断了用户是否提交表单，也就是是否登录。没有进行任何校验，也就是存在以下安全问题：</p>
+<ul>
+<li>没有验证码 (CAPTCHA)。（例如：人机验证）</li>
+<li>没有请求速率限制 (Rate Limiting)。（这样爆破速度非常快）</li>
+<li>没有账号锁定机制 (例如：输错3次锁定15分钟)。
+攻击者可以通过信息收集构造一个字典，通过工具进行无限次尝试，直到得到账号密码。
+<strong>危害点2</strong>：使用GET型方式提交账号密码，造成敏感信息泄露：</li>
+</ul>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>$user <span style="color:#f92672">=</span> $_GET[ <span style="color:#e6db74">&#39;username&#39;</span> ];</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>$pass <span style="color:#f92672">=</span> $_GET[ <span style="color:#e6db74">&#39;password&#39;</span> ];</span></pre></td>
+          </tr></table>
+</figure>
+<ul>
+<li>账号密码会直接出现在url当中。</li>
+<li>浏览器会保存历史纪录。</li>
+<li>Web服务器的access log 记录。</li>
+<li>同一网络下会被抓包，如果是HTTP明文传输，会直接暴露账号密码。</li>
+<li>代理 / CDN / 防火墙日志记录。
+示例：
+浏览器地址会显示：</li>
+</ul>
+<figure class="highlight http">
+  <figcaption data-lang="http"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#960050;background-color:#1e0010">/vulnerabilities/brute/?username=admin&amp;password=123456&amp;Login=Login#</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>危害点3：弱加密算法：MD5</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>$pass <span style="color:#f92672">=</span> <span style="color:#a6e22e">md5</span>( $pass );</span></pre></td>
+          </tr></table>
+</figure>
+<p>虽然这里的 MD5 主要用于数据库比对<code>AND password = '$pass';&quot;;</code>，但如果数据库被脱库，可以极快地将数据库中的 MD5 哈希值还原为明文密码。更关键的一点是，MD5没有salt，可以被彩虹表秒破、GPU并行爆破。
+<strong>危害点3</strong>：SQL注入，尽管这个模块叫暴力破解，但登录框存在严重的sql注入，甚至不需要密码就可以登录管理员：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>$query <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT * FROM `users` WHERE user = &#39;</span><span style="color:#e6db74">$user</span><span style="color:#e6db74">&#39; AND password = &#39;</span><span style="color:#e6db74">$pass</span><span style="color:#e6db74">&#39;;&#34;</span>;</span></pre></td>
+          </tr></table>
+</figure>
+<p>让代码明了一点：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>$query <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT * FROM `users`</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#e6db74">          WHERE user = &#39;</span><span style="color:#e6db74">$user</span><span style="color:#e6db74">&#39;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#e6db74">          AND password = &#39;</span><span style="color:#e6db74">$pass</span><span style="color:#e6db74">&#39;&#34;</span>;</span></pre></td>
+          </tr></table>
+</figure>
+<p>程序把用户输入当成了sql语句的一部分，也就是说，<code>$user</code>、<code>$pass</code>都来自用户，但程序默认相信他们是安全字符串。变量 <code>$user</code> 直接拼接进了 SQL 语句中，没有使用 <code>mysqli_real_escape_string</code> 进行转义，也没有使用预编译语句 (Prepared Statements)。
+攻击构造举例：
+1.万能密码，绕过密码登录
+构造payload：在 Username 输入框填入 <code>admin' #</code>
+后端实际执行的SQL：</p>
+<figure class="highlight sql">
+  <figcaption data-lang="sql"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> <span style="color:#f92672">`</span>users<span style="color:#f92672">`</span> <span style="color:#66d9ef">WHERE</span> <span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;admin&#39;</span> <span style="color:#f92672">#</span><span style="color:#e6db74">&#39; AND password = &#39;</span>...<span style="color:#e6db74">&#39;;</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>结果：只要admin用户存在，SQL语句就成立，数据库返回该用户信息，攻击者成功登录，根本不需要知道密码。
+2.利用SQL注入联合查询
+构造 Payload： 在 Username 输入框填入 <code>' UNION SELECT 1, user(), database(), 4, 5 #</code>
+后端实际执行的SQL：</p>
+<figure class="highlight sql">
+  <figcaption data-lang="sql"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> <span style="color:#f92672">`</span>users<span style="color:#f92672">`</span> <span style="color:#66d9ef">WHERE</span> <span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">UNION</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#ae81ff">1</span>, <span style="color:#66d9ef">user</span>(), <span style="color:#66d9ef">database</span>(), <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span> <span style="color:#f92672">#</span><span style="color:#e6db74">&#39; AND password = &#39;</span>...<span style="color:#e6db74">&#39;;</span></span></pre></td>
+          </tr></table>
+</figure>
+<h2 id="0x02medium级别">
+  <a class="anchor" href="#0x02medium%e7%ba%a7%e5%88%ab" aria-label="Anchor"></a>
+  0x02Medium级别
+</h2>
+<p><strong>不同点1</strong>：引入了 <code>mysqli_real_escape_string</code> 函数。这个函数会对传入的<code>$user</code>变量中的特殊字符进行转义处理，比如单引号 <code>'</code>、双引号 <code>&quot;</code>、反斜杠 <code>\</code> 等。修复了SQL注入。</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>$user <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysqli_real_escape_string</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>], $_GET[ <span style="color:#e6db74">&#39;username&#39;</span> ] );</span></pre></td>
+          </tr></table>
+</figure>
+<p><strong>不同点2</strong>：增加了延时机制。</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">if</span>( $result <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">mysqli_num_rows</span>( $result ) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> ) {</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>    <span style="color:#75715e">// 登录成功逻辑...</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#75715e"></span>}</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#66d9ef">else</span> {</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>    <span style="color:#75715e">// Login failed</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">sleep</span>( <span style="color:#ae81ff">2</span> ); <span style="color:#75715e">// &lt;--- 关键新增代码</span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;/pre&gt;&#34;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr></table>
+</figure>
+<p>不过只能缓解暴力破解的速度。
+综合来看：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">isset</span>( $_GET[ <span style="color:#e6db74">&#39;Login&#39;</span> ] ) ) {   <span style="color:#75715e">//依然使用了GET型传递参数。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>    <span style="color:#75715e">// Sanitise username input</span></span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span>    $user <span style="color:#f92672">=</span> $_GET[ <span style="color:#e6db74">&#39;username&#39;</span> ];    <span style="color:#75715e">//username和password都进行了保护，引入了 mysqli_real_escape_string 函数，该函数能对一些特殊字符进行转义当作正常字符，修复了Low级SQL注入的问题。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span>    $user <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">isset</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>]) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">is_object</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>])) <span style="color:#f92672">?</span> <span style="color:#a6e22e">mysqli_real_escape_string</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>],  $user ) <span style="color:#f92672">:</span> ((<span style="color:#a6e22e">trigger_error</span>(<span style="color:#e6db74">&#34;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&#34;</span>, <span style="color:#a6e22e">E_USER_ERROR</span>)) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&#34;</span>));</span></pre></td>
+          </tr><tr>
+            <td data-num="12"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="13"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="14"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="15"></td>
+            <td><pre><span>    <span style="color:#75715e">// Sanitise password input</span></span></pre></td>
+          </tr><tr>
+            <td data-num="16"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="17"></td>
+            <td><pre><span>    $pass <span style="color:#f92672">=</span> $_GET[ <span style="color:#e6db74">&#39;password&#39;</span> ];</span></pre></td>
+          </tr><tr>
+            <td data-num="18"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="19"></td>
+            <td><pre><span>    $pass <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">isset</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>]) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">is_object</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>])) <span style="color:#f92672">?</span> <span style="color:#a6e22e">mysqli_real_escape_string</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>],  $pass ) <span style="color:#f92672">:</span> ((<span style="color:#a6e22e">trigger_error</span>(<span style="color:#e6db74">&#34;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&#34;</span>, <span style="color:#a6e22e">E_USER_ERROR</span>)) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&#34;</span>));</span></pre></td>
+          </tr><tr>
+            <td data-num="20"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="21"></td>
+            <td><pre><span>    $pass <span style="color:#f92672">=</span> <span style="color:#a6e22e">md5</span>( $pass );   <span style="color:#75715e">//仍然存在md5。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="22"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="23"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="24"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="25"></td>
+            <td><pre><span>    <span style="color:#75715e">// Check the database</span></span></pre></td>
+          </tr><tr>
+            <td data-num="26"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="27"></td>
+            <td><pre><span>    $query  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT * FROM `users` WHERE user = &#39;</span><span style="color:#e6db74">$user</span><span style="color:#e6db74">&#39; AND password = &#39;</span><span style="color:#e6db74">$pass</span><span style="color:#e6db74">&#39;;&#34;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="28"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="29"></td>
+            <td><pre><span>    $result <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysqli_query</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>],  $query ) <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">die</span>( <span style="color:#e6db74">&#39;&lt;pre&gt;&#39;</span> <span style="color:#f92672">.</span> ((<span style="color:#a6e22e">is_object</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>])) <span style="color:#f92672">?</span> <span style="color:#a6e22e">mysqli_error</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>]) <span style="color:#f92672">:</span> (($___mysqli_res <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysqli_connect_error</span>()) <span style="color:#f92672">?</span> $___mysqli_res <span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>)) <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;&lt;/pre&gt;&#39;</span> );</span></pre></td>
+          </tr><tr>
+            <td data-num="30"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="31"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="32"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="33"></td>
+            <td><pre><span>    <span style="color:#66d9ef">if</span>( $result <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">mysqli_num_rows</span>( $result ) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> ) {</span></pre></td>
+          </tr><tr>
+            <td data-num="34"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="35"></td>
+            <td><pre><span>        <span style="color:#75715e">// Get users details</span></span></pre></td>
+          </tr><tr>
+            <td data-num="36"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="37"></td>
+            <td><pre><span>        $row    <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysqli_fetch_assoc</span>( $result );</span></pre></td>
+          </tr><tr>
+            <td data-num="38"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="39"></td>
+            <td><pre><span>        $avatar <span style="color:#f92672">=</span> $row[<span style="color:#e6db74">&#34;avatar&#34;</span>];</span></pre></td>
+          </tr><tr>
+            <td data-num="40"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="41"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="42"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="43"></td>
+            <td><pre><span>        <span style="color:#75715e">// Login successful</span></span></pre></td>
+          </tr><tr>
+            <td data-num="44"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="45"></td>
+            <td><pre><span>        $html <span style="color:#f92672">.=</span> <span style="color:#e6db74">&#34;&lt;p&gt;Welcome to the password protected area </span><span style="color:#e6db74">{</span>$user<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/p&gt;&#34;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="46"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="47"></td>
+            <td><pre><span>        $html <span style="color:#f92672">.=</span> <span style="color:#e6db74">&#34;&lt;img src=</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">{</span>$avatar<span style="color:#e6db74">}</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> /&gt;&#34;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="48"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="49"></td>
+            <td><pre><span>    }</span></pre></td>
+          </tr><tr>
+            <td data-num="50"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="51"></td>
+            <td><pre><span>    <span style="color:#66d9ef">else</span> {</span></pre></td>
+          </tr><tr>
+            <td data-num="52"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="53"></td>
+            <td><pre><span>        <span style="color:#75715e">// Login failed</span></span></pre></td>
+          </tr><tr>
+            <td data-num="54"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="55"></td>
+            <td><pre><span>        <span style="color:#a6e22e">sleep</span>( <span style="color:#ae81ff">2</span> ); <span style="color:#75715e">//防止爆破而做的延时机制，如果账号密码错误，服务器会强制暂停处理脚本 2 秒钟，然后才返回错误信息。增加了爆破的时间成本，仍然可以爆破。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="56"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="57"></td>
+            <td><pre><span>        $html <span style="color:#f92672">.=</span> <span style="color:#e6db74">&#34;&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;/pre&gt;&#34;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="58"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="59"></td>
+            <td><pre><span>    }</span></pre></td>
+          </tr><tr>
+            <td data-num="60"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="61"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="62"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="63"></td>
+            <td><pre><span>    ((<span style="color:#a6e22e">is_null</span>($___mysqli_res <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysqli_close</span>($GLOBALS[<span style="color:#e6db74">&#34;___mysqli_ston&#34;</span>]))) <span style="color:#f92672">?</span> <span style="color:#66d9ef">false</span> <span style="color:#f92672">:</span> $___mysqli_res);</span></pre></td>
+          </tr><tr>
+            <td data-num="64"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="65"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr><tr>
+            <td data-num="66"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="67"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="68"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="69"></td>
+            <td><pre><span><span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010"></span></span></pre></td>
+          </tr></table>
+</figure>
+<p>问题仍然存在：</p>
+<ul>
+<li>延时过短，没有从逻辑上阻断攻击。</li>
+<li>依然使用GET传输请求。</li>
+<li>依然使用MD5。</li>
+</ul>
+<h2 id="0x03high">
+  <a class="anchor" href="#0x03high" aria-label="Anchor"></a>
+  0x03High
+</h2>
+<div class="tags"><a href="/tags/dvwa/" rel="tag"><i class="ic i-tag"></i> DVWA</a></div></div>
+
+  <footer>
+    <div class="meta"></div>
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr"><div>
+        <img data-src="/images/alipay.jpg" alt="支付宝">
+        <p>支付宝</p>
+      </div><div>
+        <img data-src="/images/paypal.jpg" alt="贝宝">
+        <p>贝宝</p>
+      </div><div>
+        <img data-src="/images/wechatpay.jpg" alt="微信支付">
+        <p>微信支付</p>
+      </div></div>
+</div><div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>扬名立万 <i class="ic i-at"><em>@</em></i>扬名立万_ymlw
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong><a href="http://localhost:1313/posts/dvwabruteforce/" title="从DVWA开始学习漏洞原理-Brute Force">http://localhost:1313/posts/dvwabruteforce/</a></li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div></footer>
+
+</article>
+
+  </div>
+  <div class="post-nav">
+  <div class="item left"><a href="/posts/cve-2025-55182/" title="CVE-2025-55182" itemprop="url" rel="prev"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>CVE-2025-55182</h3></a></div>
+  <div class="item right"><a href="/posts/rust/" title="Rust学习" itemprop="url" data-background-image="/posts/rust/1.png" rel="next"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i> 学习笔记</span><h3>Rust学习</h3></a></div>
+</div>
+
+  
+
+        </div>
+        <div id="sidebar">
+          
+  <div class="inner">
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录"><nav id="TableOfContents" class="toc">
+  <ul>
+    <li><a class="toc-link" href="#0x00brute-force">0x00Brute Force</a></li>
+    <li><a class="toc-link" href="#0x01low级别">0x01Low级别</a></li>
+    <li><a class="toc-link" href="#0x02medium级别">0x02Medium级别</a></li>
+    <li><a class="toc-link" href="#0x03high">0x03High</a></li>
+  </ul>
+</nav></div>
+      <div class="related panel pjax" data-title="系列文章"><ul><li><a href="/posts/4/" title="Web攻防-46天-sqlmap使用">Web攻防-46天-sqlmap使用</a></li><li><a href="/posts/3/" title="Web攻防-42天">Web攻防-42天</a></li><li><a href="/posts/2/" title="Web攻防-41天">Web攻防-41天</a></li><li><a href="/posts/cve-2025-55182/" title="CVE-2025-55182">CVE-2025-55182</a></li></ul></div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="扬名立万"
+      data-src="/images/1.jpg">
+  <p class="name" itemprop="name">扬名立万</p>
+  <div class="description" itemprop="description">网安 &amp; 取证的学习笔记</div>
+</div>
+
+<nav class="state"><div class="item posts">
+      <a href="/archives/">
+        <span class="count">8</span>
+        <span class="name">文章</span>
+      </a>
+    </div><div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div><div class="item tags">
+      <a href="/tags/">
+        <span class="count">7</span>
+        <span class="name">标签</span>
+      </a>
+    </div></nav>
+
+<div class="social"><span class="exturl item email" data-url="bWFpbHRvOnlvdXJuYW1lQG1haWwuY29t" title="mailto:yourname@mail.com"><i class="ic i-envelope"></i></span><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL3lvdXJuYW1l" title="https://github.com/yourname"><i class="ic i-github"></i></span><span class="exturl item instagram" data-url="aHR0cHM6Ly9pbnN0YWdyYW0uY29tL3lvdXJuYW1l" title="https://instagram.com/yourname"><i class="ic i-instagram"></i></span><span class="exturl item x" data-url="aHR0cHM6Ly94LmNvbS95b3VybmFtZQ==" title="https://x.com/yourname"><i class="ic i-x"></i></span></div>
+
+<ul class="menu">
+  <li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="javascript:void(0);" class="search" rel="section"><i class="ic i-search"></i>搜索</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax"><a href="/posts/cve-2025-55182/" title="上一篇" rel="prev"><i class="ic i-chevron-left"></i></a></li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax"><a href="/posts/rust/" title="下一篇" rel="next"><i class="ic i-chevron-right"></i></a></li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          <div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/2/" title="Web攻防-41天">Web攻防-41天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/cve-2025-55182/" title="CVE-2025-55182">CVE-2025-55182</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/debug/" title="分类于 Debug">Debug</a></div>
+<span><a href="/posts/githublocalshell/" title="Github本地上传笔记">Github本地上传笔记</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="分类于 学习笔记">学习笔记</a></div>
+<span><a href="/posts/rust/" title="Rust学习">Rust学习</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a><i class="ic i-angle-right"></i><a href="/categories/%E9%9D%B6%E5%9C%BA/" title="分类于 靶场">靶场</a></div>
+<span><a href="/posts/dvwabruteforce/" title="从DVWA开始学习漏洞原理-Brute Force">从DVWA开始学习漏洞原理-Brute Force</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/3/" title="Web攻防-42天">Web攻防-42天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/4/" title="Web攻防-46天-sqlmap使用">Web攻防-46天-sqlmap使用</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%B5%8B%E8%AF%95/" title="分类于 测试">测试</a></div>
+<span><a href="/posts/test-markdown/" title="Markdown 样式与功能测试">Markdown 样式与功能测试</a></span>
+      </li></ul>
+</div><div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+        </div>
+        <div class="status">
+  <div class="copyright">
+    &copy;<span itemprop="copyrightYear">2026</span><span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">扬名立万 @ YMLW Shoka</span><br>
+      <span class="copyright-extra">© 2025 扬名立万_ymlw   <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a></span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9nb2h1Z28uaW8=">Hugo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div></div>
+
+      </div>
+    </footer>
+  </div>
+
+  <script data-config type="text/javascript">
+  var CONFIG = {"auto_scroll":true,"css":{"fancybox":"vendor/fancybox.bundle.min.css","katex":"vendor/katex.min.css","mermaid":"css/mermaid.css","valine":"css/comment.css"},"darkmode":false,"favicon":{"hidden":"images/failure.ico","normal":"images/favicon.ico"},"fireworks":["rgba(255,182,185,.9)","rgba(250,227,217,.9)","rgba(187,222,214,.9)","rgba(138,198,209,.9)"],"hostname":"http://localhost:1313","js":{"chart":"vendor/frappe-charts.min.iife.min.js","copy_tex":"vendor/katex-copy-tex.min.js","fancybox":"vendor/fancybox.bundle.min.js","valine":"vendor/minivaline.min.js"},"loader":{"start":true,"switch":true},"quicklink":{"priority":true,"timeout":3000},"root":"/","search":null,"statics":"/","valine":{"NoRecordIP":false,"appId":null,"appKey":null,"avatar":"mp","lang":"en","pageSize":10,"placeholder":"ヽ(○´∀`)ﾉ♪","powerMode":true,"serverURLs":null,"tagColor":{"friend":"var(--color-aqua)","investor":"var(--color-pink)","master":"var(--color-orange)"},"tagMember":{"friend":null,"investor":null,"master":null},"tagMeta":{"friend":"小伙伴","investor":"金主粑粑","master":"主人","visitor":"新朋友"},"visitor":true},"version":"0.2.5"};
+  var LOCAL = {"copyright":"复制成功，转载请遵守 \u003cspan class=\"exturl\" data-url=\"aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo\"\u003e\u003ci class=\"ic i-creative-commons\"\u003e\u003c/i\u003eBY-NC-SA\u003c/span\u003e 协议。","fancybox":true,"favicon":{"hide":"(´Д｀)大変だ！","show":"（●´3｀●）やれやれだぜ"},"path":"posts/dvwabruteforce/","search":{"empty":"关于 「 ${query} 」，什么也没搜到","placeholder":"文章搜索","stats":"${time} ms 内找到 ${hits} 条结果"}};
+  LOCAL.ignores = [
+    function(uri) {
+      return uri.includes('#');
+    },
+    function(uri) {
+      return new RegExp(LOCAL.path + '$').test(uri);
+    }
+  ];
+</script>
+
+
+  <script src="/vendor/pace.min.js"></script><script src="/vendor/pjax.min.js"></script><script src="/vendor/fetch.umd.min.js"></script><script src="/vendor/anime.min.js"></script><script src="/vendor/algoliasearch-lite.umd.js"></script><script src="/vendor/instantsearch.production.min.js"></script><script src="/vendor/lozad.min.js"></script><script src="/vendor/quicklink.umd.js"></script>
+
+  <script src="/js/app.js"></script><script src="/js/fireworks.js"></script>
+
+</body>
+</html>

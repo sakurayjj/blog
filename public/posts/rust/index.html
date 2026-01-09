@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color=""><meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss&#43;xml" title="扬名立万_ymlw" href="/index.xml"><link rel="alternate" type="application/json" title="扬名立万_ymlw" href="/index.json"><link rel="stylesheet" href="/css/local-fonts.css"><link rel="stylesheet" href="/css/app.css">
+<style>body { font-family: "Mulish", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand .artboard { font-family: "Fredericka the Great", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand h1,
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title { font-family: Mulish, "Noto Serif JP", "Noto Serif SC", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }h1, h2, h3, h4, h5, h6 { font-family: Mulish, "Noto Serif SC", "Noto Serif JP", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }code, pre, kbd, samp, .highlight code, .highlight pre, .code-container { font-family: "Inconsolata", consolas,Menlo,"PingFang SC","Microsoft YaHei",monospace; }</style>
+<style>
+  .highlight pre span[style*="background-color"] {
+    background-color: transparent !important;
+    color: inherit !important;
+  }
+</style>
+
+<style>
+  #search .search-highlight {
+    background: var(--color-red-a1);
+    border-radius: .2rem;
+    color: inherit;
+    font-style: normal;
+    padding: 0 .2rem;
+  }
+
+  #search-hits .search-snippet {
+    color: var(--grey-6);
+    font-size: 80%;
+    line-height: 1.6;
+    margin-top: .2rem;
+  }
+</style>
+
+
+  <meta name="keywords" content="Rust"><link rel="canonical" href="http://localhost:1313/posts/rust/"><meta property="og:url" content="http://localhost:1313/posts/rust/">
+  <meta property="og:site_name" content="扬名立万_ymlw">
+  <meta property="og:title" content="Rust学习">
+  <meta property="og:description" content="学习Rust语言。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-22T00:00:00+00:00">
+    <meta property="article:tag" content="Rust">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.jpg">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.jpg">
+  <meta name="twitter:title" content="Rust学习">
+  <meta name="twitter:description" content="学习Rust语言。">
+
+  <title>Rust学习 - 学习笔记 |
+YMLW Shoka = 扬名立万_ymlw</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Rust学习</h1>
+  <div class="meta"><span class="item" title="创建时间：22226-12-22">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2025-12-22T00:00:00Z">22226-12-22</time>
+  </span></div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">YMLW Shoka</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax"><img src="/posts/rust/1.png"></div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    <div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="item" rel="index" title="分类于 学习笔记"><span itemprop="name">学习笔记</span></a><meta itemprop="position" content="1"></span></div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-cn">
+  <link itemprop="mainEntityOfPage" href="http://localhost:1313/posts/rust/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/1.jpg">
+    <meta itemprop="name" content="扬名立万">
+    <meta itemprop="description" content=", 网安 &amp; 取证的学习笔记">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬名立万_ymlw">
+  </span>
+
+  <div class="body md" itemprop="articleBody"><h2 id="函数的返回需要确定">
+  <a class="anchor" href="#%e5%87%bd%e6%95%b0%e7%9a%84%e8%bf%94%e5%9b%9e%e9%9c%80%e8%a6%81%e7%a1%ae%e5%ae%9a" aria-label="Anchor"></a>
+  函数的返回需要确定
+</h2>
+<figure class="highlight rust">
+  <figcaption data-lang="rust"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">add</span>(a:<span style="color:#66d9ef">i32</span>,b:<span style="color:#66d9ef">i32</span>) -&gt;<span style="color:#66d9ef">i32</span>{</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>    a <span style="color:#f92672">+</span> b</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span>    <span style="color:#a6e22e">println!</span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>,add(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>));</span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr></table>
+</figure>
+<p>在Rust中， <code>fn</code> 用来定义函数。Rust不会自动推断函数的返回类型，故 <code>-&gt;i32</code> 只在函数定义的时候需要。一般定义变量时，</p>
+<figure class="highlight rust">
+  <figcaption data-lang="rust"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">let</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> y <span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>;</span></pre></td>
+          </tr></table>
+</figure>
+<p>Rust会自动推断。</p>
+<p><strong><code>-&gt; i32</code> 一定要吗？为什么函数必须写？</strong>
+因为 <strong>函数是对外接口</strong>。
+如果不写，那么Rust就不知道返回什么，他不会选择自己推断，而是让我们自己选择。如果不写返回值，就会返回<code>()</code>。
+<img src="/posts/rust/1.png" data-src="/posts/rust/1.png" loading="lazy" alt="">
+<strong><code>()</code> 到底是什么？</strong>
+答案：返回 <code>()</code>，表示“我完成了，但没有有用的值”
+<strong>常见整数类型对照表：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>含义</th>
+          <th>范围</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>i32</code></td>
+          <td>有符号 32 位</td>
+          <td>-21 亿 ~ +21 亿</td>
+      </tr>
+      <tr>
+          <td><code>u32</code></td>
+          <td>无符号 32 位</td>
+          <td>0 ~ 42 亿</td>
+      </tr>
+      <tr>
+          <td><code>i64</code></td>
+          <td>有符号 64 位</td>
+          <td>很大</td>
+      </tr>
+      <tr>
+          <td><code>i128</code></td>
+          <td>有符号 128 位</td>
+          <td>非常大</td>
+      </tr>
+      <tr>
+          <td><code>usize</code></td>
+          <td>平台相关</td>
+          <td>用于索引</td>
+      </tr>
+      <tr>
+          <td>这是Rust 的<strong>整数类型系统</strong>，非常严谨。</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>因为 Rust 追求：</td>
+          <td></td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<ul>
+<li>
+<p><strong>性能</strong></p>
+</li>
+<li>
+<p><strong>内存可控</strong></p>
+</li>
+<li>
+<p><strong>行为确定</strong></p>
+</li>
+</ul>
+<p>你用什么类型，Rust 就给你什么行为。
+<img src="/posts/rust/2.png" data-src="/posts/rust/2.png" loading="lazy" alt=""></p>
+<ul>
+<li><code>i</code> 是 <code>i32</code></li>
+<li>索引必须是 <code>usize</code>
+必须写成：</li>
+</ul>
+<figure class="highlight rust">
+  <figcaption data-lang="rust"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>    <span style="color:#66d9ef">let</span> v <span style="color:#f92672">=</span> <span style="color:#a6e22e">vec!</span>[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>];</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>    <span style="color:#66d9ef">let</span> i: <span style="color:#66d9ef">usize</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>    v[i];</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr></table>
+</figure>
+<p>这是Rust在防止写Bug。</p>
+<div class="tags"><a href="/tags/rust/" rel="tag"><i class="ic i-tag"></i> Rust</a></div></div>
+
+  <footer>
+    <div class="meta"></div>
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr"><div>
+        <img data-src="/images/alipay.jpg" alt="支付宝">
+        <p>支付宝</p>
+      </div><div>
+        <img data-src="/images/paypal.jpg" alt="贝宝">
+        <p>贝宝</p>
+      </div><div>
+        <img data-src="/images/wechatpay.jpg" alt="微信支付">
+        <p>微信支付</p>
+      </div></div>
+</div><div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>扬名立万 <i class="ic i-at"><em>@</em></i>扬名立万_ymlw
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong><a href="http://localhost:1313/posts/rust/" title="Rust学习">http://localhost:1313/posts/rust/</a></li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div></footer>
+
+</article>
+
+  </div>
+  <div class="post-nav">
+  <div class="item left"><a href="/posts/dvwabruteforce/" title="从DVWA开始学习漏洞原理-Brute Force" itemprop="url" rel="prev"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i> 靶场</span><h3>从DVWA开始学习漏洞原理-Brute Force</h3></a></div>
+  <div class="item right"><a href="/posts/2/" title="Web攻防-41天" itemprop="url" data-background-image="/posts/2/1.png" rel="next"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>Web攻防-41天</h3></a></div>
+</div>
+
+  
+
+        </div>
+        <div id="sidebar">
+          
+  <div class="inner">
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录"><nav id="TableOfContents" class="toc">
+  <ul>
+    <li><a class="toc-link" href="#函数的返回需要确定">函数的返回需要确定</a></li>
+  </ul>
+</nav></div>
+      <div class="related panel pjax" data-title="系列文章"></div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="扬名立万"
+      data-src="/images/1.jpg">
+  <p class="name" itemprop="name">扬名立万</p>
+  <div class="description" itemprop="description">网安 &amp; 取证的学习笔记</div>
+</div>
+
+<nav class="state"><div class="item posts">
+      <a href="/archives/">
+        <span class="count">8</span>
+        <span class="name">文章</span>
+      </a>
+    </div><div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div><div class="item tags">
+      <a href="/tags/">
+        <span class="count">7</span>
+        <span class="name">标签</span>
+      </a>
+    </div></nav>
+
+<div class="social"><span class="exturl item email" data-url="bWFpbHRvOnlvdXJuYW1lQG1haWwuY29t" title="mailto:yourname@mail.com"><i class="ic i-envelope"></i></span><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL3lvdXJuYW1l" title="https://github.com/yourname"><i class="ic i-github"></i></span><span class="exturl item instagram" data-url="aHR0cHM6Ly9pbnN0YWdyYW0uY29tL3lvdXJuYW1l" title="https://instagram.com/yourname"><i class="ic i-instagram"></i></span><span class="exturl item x" data-url="aHR0cHM6Ly94LmNvbS95b3VybmFtZQ==" title="https://x.com/yourname"><i class="ic i-x"></i></span></div>
+
+<ul class="menu">
+  <li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="javascript:void(0);" class="search" rel="section"><i class="ic i-search"></i>搜索</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax"><a href="/posts/dvwabruteforce/" title="上一篇" rel="prev"><i class="ic i-chevron-left"></i></a></li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax"><a href="/posts/2/" title="下一篇" rel="next"><i class="ic i-chevron-right"></i></a></li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          <div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul><li class="item"><div class="breadcrumb"><a href="/categories/debug/" title="分类于 Debug">Debug</a></div>
+<span><a href="/posts/githublocalshell/" title="Github本地上传笔记">Github本地上传笔记</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/3/" title="Web攻防-42天">Web攻防-42天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/cve-2025-55182/" title="CVE-2025-55182">CVE-2025-55182</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/2/" title="Web攻防-41天">Web攻防-41天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a><i class="ic i-angle-right"></i><a href="/categories/%E9%9D%B6%E5%9C%BA/" title="分类于 靶场">靶场</a></div>
+<span><a href="/posts/dvwabruteforce/" title="从DVWA开始学习漏洞原理-Brute Force">从DVWA开始学习漏洞原理-Brute Force</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/4/" title="Web攻防-46天-sqlmap使用">Web攻防-46天-sqlmap使用</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%B5%8B%E8%AF%95/" title="分类于 测试">测试</a></div>
+<span><a href="/posts/test-markdown/" title="Markdown 样式与功能测试">Markdown 样式与功能测试</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="分类于 学习笔记">学习笔记</a></div>
+<span><a href="/posts/rust/" title="Rust学习">Rust学习</a></span>
+      </li></ul>
+</div><div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+        </div>
+        <div class="status">
+  <div class="copyright">
+    &copy;<span itemprop="copyrightYear">2026</span><span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">扬名立万 @ YMLW Shoka</span><br>
+      <span class="copyright-extra">© 2025 扬名立万_ymlw   <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a></span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9nb2h1Z28uaW8=">Hugo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div></div>
+
+      </div>
+    </footer>
+  </div>
+
+  <script data-config type="text/javascript">
+  var CONFIG = {"auto_scroll":true,"css":{"fancybox":"vendor/fancybox.bundle.min.css","katex":"vendor/katex.min.css","mermaid":"css/mermaid.css","valine":"css/comment.css"},"darkmode":false,"favicon":{"hidden":"images/failure.ico","normal":"images/favicon.ico"},"fireworks":["rgba(255,182,185,.9)","rgba(250,227,217,.9)","rgba(187,222,214,.9)","rgba(138,198,209,.9)"],"hostname":"http://localhost:1313","js":{"chart":"vendor/frappe-charts.min.iife.min.js","copy_tex":"vendor/katex-copy-tex.min.js","fancybox":"vendor/fancybox.bundle.min.js","valine":"vendor/minivaline.min.js"},"loader":{"start":true,"switch":true},"quicklink":{"priority":true,"timeout":3000},"root":"/","search":null,"statics":"/","valine":{"NoRecordIP":false,"appId":null,"appKey":null,"avatar":"mp","lang":"en","pageSize":10,"placeholder":"ヽ(○´∀`)ﾉ♪","powerMode":true,"serverURLs":null,"tagColor":{"friend":"var(--color-aqua)","investor":"var(--color-pink)","master":"var(--color-orange)"},"tagMember":{"friend":null,"investor":null,"master":null},"tagMeta":{"friend":"小伙伴","investor":"金主粑粑","master":"主人","visitor":"新朋友"},"visitor":true},"version":"0.2.5"};
+  var LOCAL = {"copyright":"复制成功，转载请遵守 \u003cspan class=\"exturl\" data-url=\"aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo\"\u003e\u003ci class=\"ic i-creative-commons\"\u003e\u003c/i\u003eBY-NC-SA\u003c/span\u003e 协议。","fancybox":true,"favicon":{"hide":"(´Д｀)大変だ！","show":"（●´3｀●）やれやれだぜ"},"path":"posts/rust/","search":{"empty":"关于 「 ${query} 」，什么也没搜到","placeholder":"文章搜索","stats":"${time} ms 内找到 ${hits} 条结果"}};
+  LOCAL.ignores = [
+    function(uri) {
+      return uri.includes('#');
+    },
+    function(uri) {
+      return new RegExp(LOCAL.path + '$').test(uri);
+    }
+  ];
+</script>
+
+
+  <script src="/vendor/pace.min.js"></script><script src="/vendor/pjax.min.js"></script><script src="/vendor/fetch.umd.min.js"></script><script src="/vendor/anime.min.js"></script><script src="/vendor/algoliasearch-lite.umd.js"></script><script src="/vendor/instantsearch.production.min.js"></script><script src="/vendor/lozad.min.js"></script><script src="/vendor/quicklink.umd.js"></script>
+
+  <script src="/js/app.js"></script><script src="/js/fireworks.js"></script>
+
+</body>
+</html>

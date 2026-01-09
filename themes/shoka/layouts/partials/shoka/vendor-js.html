@@ -1,16 +1,29 @@
 {{- $theme := .Site.Data.shoka -}}
-{{- $vendors := $theme.vendors.js -}}
-{{- if $vendors -}}
+{{- $vendors := $theme.vendors | default dict -}}
+{{- $vendorsJs := $vendors.js | default dict -}}
+{{- if $vendorsJs -}}
   {{- $order := slice "pace" "pjax" "fetch" "anime" "algolia" "instantsearch" "lazyload" "quicklink" -}}
   {{- $list := slice -}}
   {{- range $name := $order -}}
-    {{- $val := index $vendors $name -}}
+    {{- $val := index $vendorsJs $name -}}
     {{- if $val -}}
       {{- $list = $list | append $val -}}
     {{- end -}}
   {{- end -}}
   {{- $list = uniq $list -}}
   {{- if gt (len $list) 0 -}}
-    <script src="//cdn.jsdelivr.net/combine/{{ delimit $list "," }}"></script>
+    {{- $local := index $vendors "local" | default false -}}
+    {{- if $local -}}
+      {{- range $list -}}
+        {{- $src := . -}}
+        {{- if or (strings.HasPrefix $src "http") (strings.HasPrefix $src "//") -}}
+          <script src="{{ $src }}"></script>
+        {{- else -}}
+          <script src="{{ $src | relURL }}"></script>
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      <script src="//cdn.jsdelivr.net/combine/{{ delimit $list "," }}"></script>
+    {{- end -}}
   {{- end -}}
 {{- end -}}

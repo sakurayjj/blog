@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>debug on 扬名立万_ymlw</title>
+    <link>http://localhost:1313/categories/debug/</link>
+    <description>Recent content in debug on 扬名立万_ymlw</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <copyright>© 2025 扬名立万_ymlw &amp;nbsp; &lt;a href=&#39;https://beian.miit.gov.cn/&#39; target=&#39;_blank&#39;&gt;苏ICP备2024061653号-1&lt;/a&gt;</copyright>
+    <lastBuildDate>Fri, 12 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/debug/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Github本地上传笔记</title>
+      <link>http://localhost:1313/posts/githublocalshell/</link>
+      <pubDate>Fri, 12 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/githublocalshell/</guid>
+      <description>&lt;h2 id=&#34;0x00本地初始化-git-仓库&#34;&gt;&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#0x00%e6%9c%ac%e5%9c%b0%e5%88%9d%e5%a7%8b%e5%8c%96-git-%e4%bb%93%e5%ba%93&#34; aria-label=&#34;Anchor&#34;&gt;&lt;/a&gt;&#xA;  0x00本地初始化 Git 仓库&#xA;&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;在你本地 &lt;code&gt;test/&lt;/code&gt; 目录中执行：&lt;/p&gt;&#xA;&lt;figure class=&#34;highlight bash&#34;&gt;&#xA;  &lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&#xA;  &lt;table&gt;&lt;tr&gt;&#xA;            &lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&#xA;            &lt;td&gt;&lt;pre&gt;&lt;span&gt;git init&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;          &lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;如果你之前已经 &lt;code&gt;git init&lt;/code&gt; 过，可以跳过这步。&lt;/p&gt;&#xA;&lt;h2 id=&#34;0x01关联远程-github-仓库&#34;&gt;&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#0x01%e5%85%b3%e8%81%94%e8%bf%9c%e7%a8%8b-github-%e4%bb%93%e5%ba%93&#34; aria-label=&#34;Anchor&#34;&gt;&lt;/a&gt;&#xA;  0x01关联远程 GitHub 仓库&#xA;&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;把下面的 URL 换成你自己的：&lt;/p&gt;&#xA;&lt;figure class=&#34;highlight bash&#34;&gt;&#xA;  &lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&#xA;  &lt;table&gt;&lt;tr&gt;&#xA;            &lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&#xA;            &lt;td&gt;&lt;pre&gt;&lt;span&gt;git remote add origin https://github.com/你的用户名/你创建的仓库名.git&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;          &lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;确认是否添加成功:&lt;/p&gt;&#xA;&lt;figure class=&#34;highlight bash&#34;&gt;&#xA;  &lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&#xA;  &lt;table&gt;&lt;tr&gt;&#xA;            &lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&#xA;            &lt;td&gt;&lt;pre&gt;&lt;span&gt;git remote -v&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;          &lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/figure&gt;&#xA;&lt;h2 id=&#34;0x02把本地文件加入-git-并提交&#34;&gt;&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#0x02%e6%8a%8a%e6%9c%ac%e5%9c%b0%e6%96%87%e4%bb%b6%e5%8a%a0%e5%85%a5-git-%e5%b9%b6%e6%8f%90%e4%ba%a4&#34; aria-label=&#34;Anchor&#34;&gt;&lt;/a&gt;&#xA;  0x02把本地文件加入 Git 并提交&#xA;&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;1.查看当前状态:&lt;/p&gt;&#xA;&lt;figure class=&#34;highlight bash&#34;&gt;&#xA;  &lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&#xA;  &lt;table&gt;&lt;tr&gt;&#xA;            &lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&#xA;            &lt;td&gt;&lt;pre&gt;&lt;span&gt;git status&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;          &lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;2.添加所有需要提交的文件:&lt;/p&gt;&#xA;&lt;figure class=&#34;highlight bash&#34;&gt;&#xA;  &lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&#xA;  &lt;table&gt;&lt;tr&gt;&#xA;            &lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&#xA;            &lt;td&gt;&lt;pre&gt;&lt;span&gt;git add .&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;          &lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;3.提交一次（写清楚提交信息）:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
