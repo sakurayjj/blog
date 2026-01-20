@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/小迪web46天sqlmap/index.md",
+                "file": "content/posts/小迪web50天文件包含/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "be13f699e55a7826",
@@ -174,23 +175,27 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:新建数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
-      "command-palette:打开命令面板": false,
-      "bases:创建新数据库": false
+      "command-palette:打开命令面板": false
     }
   },
   "active": "c6f7e5b91ffad36f",
   "lastOpenFiles": [
+    "content/posts/小迪web50天文件包含/1.png",
+    "content/posts/小迪web46天sqlmap/index.md",
+    "content/posts/小迪web50天文件包含/index.md",
+    "content/posts/react2shell/index.md",
+    "content/posts/小迪web50天文件包含",
     "content/posts/小迪web46天sqlmap/3.png",
     "content/posts/小迪web46天sqlmap/2.png",
     "content/posts/小迪web46天sqlmap/1.png",
     "content/posts/小迪web46天sqlmap/未确认 854471.crdownload",
     "content/posts/小迪web攻防42天/index.md",
-    "content/posts/小迪web46天sqlmap/index.md",
     "content/posts/1/index.md",
     "content/categories/学习笔记/cover.jpg",
     "content/posts/小迪web46天sqlmap",
@@ -201,14 +206,12 @@
     "public/tags/rust/page/1/index.html",
     "public/tags/markdown/page/1/index.html",
     "public/tags/github/page/1/index.html",
-    "public/tags/dvwa/page/1/index.html",
     "public/posts/test-markdown/test.jpg",
     "public/posts/rust/2.png",
     "public/posts/rust/1.png",
     "public/posts/3/6.png",
     "public/posts/3/5.png",
     "public/posts/3/4.png",
-    "public/posts/3/3.png",
     "content/categories/靶场/_index.md",
     "content/categories/网络安全/_index.md",
     "content/categories/debug/_index.md",
@@ -218,7 +221,6 @@
     "content/posts/xiaodiweb/index.md",
     "content/posts/test-markdown/index.md",
     "content/posts/rustlearn/index.md",
-    "content/posts/react2shell/index.md",
     "content/posts/githublearn/index.md",
     "content/archives.md",
     "content/tags/_index.md",
