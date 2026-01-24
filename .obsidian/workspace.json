@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/小迪web50天文件包含/index.md",
+                "file": "content/posts/小迪web攻防52-55天XSS跨站/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -186,9 +186,16 @@
   },
   "active": "c6f7e5b91ffad36f",
   "lastOpenFiles": [
+    "content/posts/小迪web攻防52-55天XSS跨站/5.png",
+    "content/posts/小迪web攻防52-55天XSS跨站/4.png",
+    "content/posts/小迪web攻防52-55天XSS跨站/3.png",
+    "content/posts/小迪web攻防52-55天XSS跨站/2.png",
+    "content/posts/小迪web攻防52-55天XSS跨站/1.png",
+    "content/posts/小迪web50天文件包含/index.md",
+    "content/posts/小迪web攻防52-55天XSS跨站/index.md",
+    "content/posts/小迪web攻防52-55天XSS跨站",
     "content/posts/小迪web50天文件包含/1.png",
     "content/posts/小迪web46天sqlmap/index.md",
-    "content/posts/小迪web50天文件包含/index.md",
     "content/posts/react2shell/index.md",
     "content/posts/小迪web50天文件包含",
     "content/posts/小迪web46天sqlmap/3.png",
@@ -205,13 +212,7 @@
     "public/tags/papermod/page/1/index.html",
     "public/tags/rust/page/1/index.html",
     "public/tags/markdown/page/1/index.html",
-    "public/tags/github/page/1/index.html",
     "public/posts/test-markdown/test.jpg",
-    "public/posts/rust/2.png",
-    "public/posts/rust/1.png",
-    "public/posts/3/6.png",
-    "public/posts/3/5.png",
-    "public/posts/3/4.png",
     "content/categories/靶场/_index.md",
     "content/categories/网络安全/_index.md",
     "content/categories/debug/_index.md",
@@ -230,7 +231,6 @@
     "content/posts/CVE-2025-55182/index.md",
     "content/posts/CVE-2025-55182/未命名.md",
     "content/posts/first-post.md",
-    "content/posts/test-markdown.md",
-    "content/posts/test-markdown/test-markdown.md"
+    "content/posts/test-markdown.md"
   ]
 }
