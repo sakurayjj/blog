@@ -28,7 +28,7 @@ home = ["HTML", "RSS", "JSON"]
   keywords = ["网络安全", "取证", "学习笔记", "博客"]
   images = ["/images/avatar.jpg"]
   author = "扬名立万"
-  DateFormat = "2026-01-02"
+  DateFormat = "2006-01-02"
   defaultTheme = "auto" 
   disableThemeToggle = false
 
