@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/小迪web攻防52-55天XSS跨站/index.md",
+                "file": "content/posts/小迪web56天-CSRF/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "be13f699e55a7826",
@@ -186,33 +185,35 @@
   },
   "active": "c6f7e5b91ffad36f",
   "lastOpenFiles": [
+    "content/posts/小迪web56天-CSRF/4.png",
+    "content/posts/小迪web56天-CSRF/3.png",
+    "content/posts/小迪web56天-CSRF/2.png",
+    "content/posts/小迪web56天-CSRF/1.png",
+    "2026-01-20.md",
+    "content/posts/小迪web56天-CSRF/index.md",
+    "content/posts/小迪web攻防52-55天XSS跨站/index.md",
+    "content/posts/小",
+    "content/posts/小迪web56天-CSRF",
     "content/posts/小迪web攻防52-55天XSS跨站/5.png",
     "content/posts/小迪web攻防52-55天XSS跨站/4.png",
     "content/posts/小迪web攻防52-55天XSS跨站/3.png",
     "content/posts/小迪web攻防52-55天XSS跨站/2.png",
     "content/posts/小迪web攻防52-55天XSS跨站/1.png",
     "content/posts/小迪web50天文件包含/index.md",
-    "content/posts/小迪web攻防52-55天XSS跨站/index.md",
     "content/posts/小迪web攻防52-55天XSS跨站",
     "content/posts/小迪web50天文件包含/1.png",
     "content/posts/小迪web46天sqlmap/index.md",
     "content/posts/react2shell/index.md",
     "content/posts/小迪web50天文件包含",
     "content/posts/小迪web46天sqlmap/3.png",
-    "content/posts/小迪web46天sqlmap/2.png",
-    "content/posts/小迪web46天sqlmap/1.png",
     "content/posts/小迪web46天sqlmap/未确认 854471.crdownload",
     "content/posts/小迪web攻防42天/index.md",
     "content/posts/1/index.md",
-    "content/categories/学习笔记/cover.jpg",
     "content/posts/小迪web46天sqlmap",
     "content/posts/小迪web",
     "content/posts/新建文件夹",
     "public/tags/test/page/1/index.html",
     "public/tags/papermod/page/1/index.html",
-    "public/tags/rust/page/1/index.html",
-    "public/tags/markdown/page/1/index.html",
-    "public/posts/test-markdown/test.jpg",
     "content/categories/靶场/_index.md",
     "content/categories/网络安全/_index.md",
     "content/categories/debug/_index.md",
@@ -229,8 +230,6 @@
     "content/posts/test/index.md",
     "content/posts/20251215/index.md",
     "content/posts/CVE-2025-55182/index.md",
-    "content/posts/CVE-2025-55182/未命名.md",
-    "content/posts/first-post.md",
-    "content/posts/test-markdown.md"
+    "content/posts/CVE-2025-55182/未命名.md"
   ]
 }
