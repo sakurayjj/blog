@@ -6,7 +6,7 @@ description: 小迪secWeb攻防学习笔记文件SCRF跨站点请求伪造
 slug: 7
 tags:
   - 
-title: Web攻防-56天CSRF
+title: Web攻防-56天CSRF客户端
 cover:
   image: 1.png
   relative: true
@@ -25,7 +25,7 @@ cover:
 # CSRF-无检测防护=检测&生成&利用
 
 利用：burp专业版：
-![](1.png)
+![](content/posts/小迪web56天-CSRF/1.png)
 
 点击勾选，这个的意思是包含一个自动点击的代码（更方便钓鱼，打开就算点击触发）：
 ![](2.png)

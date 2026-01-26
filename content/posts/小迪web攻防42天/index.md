@@ -106,7 +106,7 @@ MySQL注入查询表：
 
 ![](2.png)
 
-![](1.png)
+![](content/posts/小迪web攻防42天/1.png)
 
 # 以sql-labs less-1为例，学习SQL注入：
 ## 1）第一步：确认“是否可注入”

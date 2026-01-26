@@ -23,7 +23,7 @@ cover:
 Windows 7、 Windows Server 2008 R2、 Windows 8、 Windows Server 2012、Windows 8.1 和 Windows Server 2012 R2且安装了 IIS6.0 以上的版本。
 3、漏洞复现
 扫描发现：
-![](1.png)
+![](content/posts/xiaodiweb/1.png)
 ![](2.png)
 
 # IIS短文件

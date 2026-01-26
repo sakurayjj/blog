@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "4d169bd78cb3fe54",
+        "id": "9ba0869fb778712f",
         "type": "tabs",
         "children": [
           {
-            "id": "c6f7e5b91ffad36f",
+            "id": "2d822dfcc0986a83",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/小迪web56天-CSRF/index.md",
+                "file": "content/posts/kali更新以及磁盘挂载/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -183,37 +183,39 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "c6f7e5b91ffad36f",
+  "active": "2d822dfcc0986a83",
   "lastOpenFiles": [
+    "content/posts/小迪web攻防52-55天XSS跨站/index.md",
+    "content/posts/kali更新以及磁盘挂载/index.md",
+    "content/posts/kali更新以及磁盘挂载/1.jpg",
+    "content/posts/kali更新以及磁盘挂载/未确认 902958.crdownload",
+    "content/posts/小迪web57天-SSRF/index.md",
+    "2026-01-20.md",
+    "content/posts/kali更新以及磁盘挂载",
+    "2026-01-24.md",
+    "未命名 3.base",
+    "未命名 2.base",
+    "未命名 1.base",
+    "未命名.base",
+    "content/posts/小迪web57天-SSRF/4.png",
+    "content/posts/小迪web57天-SSRF/3.png",
+    "content/posts/小迪web56天-CSRF/index.md",
+    "content/posts/小迪web57天-SSRF/2.png",
+    "content/posts/小迪web57天-SSRF/1.png",
+    "content/posts/小迪web57天-SSRF",
     "content/posts/小迪web56天-CSRF/4.png",
     "content/posts/小迪web56天-CSRF/3.png",
     "content/posts/小迪web56天-CSRF/2.png",
     "content/posts/小迪web56天-CSRF/1.png",
-    "2026-01-20.md",
-    "content/posts/小迪web56天-CSRF/index.md",
-    "content/posts/小迪web攻防52-55天XSS跨站/index.md",
     "content/posts/小",
     "content/posts/小迪web56天-CSRF",
     "content/posts/小迪web攻防52-55天XSS跨站/5.png",
-    "content/posts/小迪web攻防52-55天XSS跨站/4.png",
-    "content/posts/小迪web攻防52-55天XSS跨站/3.png",
-    "content/posts/小迪web攻防52-55天XSS跨站/2.png",
-    "content/posts/小迪web攻防52-55天XSS跨站/1.png",
     "content/posts/小迪web50天文件包含/index.md",
     "content/posts/小迪web攻防52-55天XSS跨站",
-    "content/posts/小迪web50天文件包含/1.png",
     "content/posts/小迪web46天sqlmap/index.md",
     "content/posts/react2shell/index.md",
-    "content/posts/小迪web50天文件包含",
-    "content/posts/小迪web46天sqlmap/3.png",
-    "content/posts/小迪web46天sqlmap/未确认 854471.crdownload",
     "content/posts/小迪web攻防42天/index.md",
     "content/posts/1/index.md",
-    "content/posts/小迪web46天sqlmap",
-    "content/posts/小迪web",
-    "content/posts/新建文件夹",
-    "public/tags/test/page/1/index.html",
-    "public/tags/papermod/page/1/index.html",
     "content/categories/靶场/_index.md",
     "content/categories/网络安全/_index.md",
     "content/categories/debug/_index.md",
@@ -227,9 +229,6 @@
     "content/archives.md",
     "content/tags/_index.md",
     "content/posts/cve-2025-55182/index.md",
-    "content/posts/test/index.md",
-    "content/posts/20251215/index.md",
-    "content/posts/CVE-2025-55182/index.md",
-    "content/posts/CVE-2025-55182/未命名.md"
+    "content/posts/test/index.md"
   ]
 }

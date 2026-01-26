@@ -15,7 +15,7 @@ cover:
 # sqlmap使用教程
 进sqlmap目录中，可以增加字典。
 思维导图：
-![](1.png)
+![](content/posts/小迪web46天sqlmap/1.png)
 基本操作：
 ```text
 基本操作笔记：-u  #注入点 
