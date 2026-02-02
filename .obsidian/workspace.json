@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/小迪web57天-SSRF/index.md",
+                "file": "content/posts/小迪web58天-RCE命令执行/index.md",
                 "mode": "source",
                 "source": true
               },
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "be13f699e55a7826",
@@ -185,9 +186,12 @@
   },
   "active": "6a32d36f974e76da",
   "lastOpenFiles": [
+    "content/posts/小迪web58天-RCE命令执行/058-Web攻防-RCE执行&DEMO&异或脚本生成等.zip",
+    "content/posts/小迪web57天-SSRF/index.md",
+    "content/posts/小迪web58天-RCE命令执行/index.md",
+    "content/posts/小迪web58天-RCE命令执行",
     "content/posts/小迪web57天-SSRF/4.png",
     "2026-01-24.md",
-    "content/posts/小迪web57天-SSRF/index.md",
     "content/posts/kali更新以及磁盘挂载/index.md",
     "content/posts/小迪web攻防52-55天XSS跨站/index.md",
     "content/posts/kali更新以及磁盘挂载/1.jpg",
@@ -211,7 +215,6 @@
     "content/posts/小迪web56天-CSRF",
     "content/posts/小迪web攻防52-55天XSS跨站/5.png",
     "content/posts/小迪web50天文件包含/index.md",
-    "content/posts/小迪web攻防52-55天XSS跨站",
     "content/posts/小迪web46天sqlmap/index.md",
     "content/posts/react2shell/index.md",
     "content/posts/小迪web攻防42天/index.md",
@@ -228,7 +231,6 @@
     "content/posts/githublearn/index.md",
     "content/archives.md",
     "content/tags/_index.md",
-    "content/posts/cve-2025-55182/index.md",
-    "content/posts/test/index.md"
+    "content/posts/cve-2025-55182/index.md"
   ]
 }
