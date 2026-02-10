@@ -15,6 +15,7 @@ const sideBar = $('#sidebar');
 const siteBrand = $('#brand');
 var toolBtn = $('#tool'), toolPlayer, backToTop, goToComment, showContents;
 var siteSearch = $('#search');
+var searchTriggerBound = false;
 var siteNavHeight, headerHightInner, headerHight;
 var oWinHeight = window.innerHeight;
 var oWinWidth = window.innerWidth;
@@ -27,6 +28,32 @@ const lazyload = window.lozad
       }
     })
   : { observe: function() {} };
+
+const bindSearchTrigger = function(openHandler) {
+  if (typeof openHandler !== 'function')
+    return;
+
+  window._shokaSearchOpen = openHandler;
+  if (searchTriggerBound)
+    return;
+
+  document.addEventListener('click', function(event) {
+    var target = event.target;
+    while (target && target !== document) {
+      if (target.classList && target.classList.contains('search')) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (window._shokaSearchOpen) {
+          window._shokaSearchOpen();
+        }
+        return;
+      }
+      target = target.parentNode;
+    }
+  });
+
+  searchTriggerBound = true;
+}
 
 const Loader = {
   timer: null,

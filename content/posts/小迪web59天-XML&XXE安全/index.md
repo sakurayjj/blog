@@ -3,7 +3,7 @@ categories:
   - 网络安全
 date: 2026-02-03
 description: 小迪secWeb攻防学习笔记XML&XXE
-slug: 8
+slug: web-59-xml-xxe
 tags:
   - 
 title: Web攻防-59天XML&XXE

@@ -13,6 +13,7 @@
 {{- $vendorsCss := $theme.vendors.css | default dict -}}
 {{- $quicklink := $theme.quicklink | default dict -}}
 {{- $widgets := $theme.widgets | default dict -}}
+{{- $searchConfig := $theme.search | default dict -}}
 {{- $hostname := strings.TrimSuffix "/" .Site.BaseURL -}}
 {{- $config := dict
   "version" $version
@@ -40,9 +41,9 @@
     "timeout" (index $quicklink "timeout")
     "priority" (index $quicklink "priority")
   )
+  "search_hits" (index $searchConfig "hits" | default dict)
 -}}
 {{- $search := (index (dict) "missing") -}}
-{{- $searchConfig := $theme.search | default dict -}}
 {{- with .Site.Params.algolia -}}
   {{- $search = dict "appID" .appId "apiKey" .apiKey "indexName" .indexName "hits" (index $searchConfig "hits" | default dict) -}}
 {{- end -}}

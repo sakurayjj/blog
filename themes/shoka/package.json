@@ -4,5 +4,9 @@
   "description": "",
   "author": "Ruri Shimotsuki",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "sync:app-js": "node tools/sync-app-js.mjs",
+    "check:app-js": "node tools/sync-app-js.mjs --check"
+  }
 }

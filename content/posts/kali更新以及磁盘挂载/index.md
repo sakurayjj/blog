@@ -3,7 +3,7 @@ categories:
   - 网络安全
 date: 2026-01-26
 description: kali系统更新以及共享文件夹挂载
-slug: 9
+slug: kali-update-share-mount
 tags:
   - 
 title: kali系统更新以及共享文件夹挂载

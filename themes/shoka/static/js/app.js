@@ -113,7 +113,7 @@ const transition = function(target, type, complete) {
     return
   }
   if (!window.anime) {
-    if (type === 1 || type === 'shrinkIn' || type === 'bounceUpIn' || type === 'slideRightIn' || type === 'slideLeftIn' || type === 'slideUpIn' || type === 'slideDownIn') {
+    if (type === 1) {
       target.display('block')
     } else if (type === 0) {
       target.display('none')
@@ -428,7 +428,7 @@ const mediaPlayer = function(t, config) {
   t.player = {
     _id: utils.random(999999),
     group: true,
-    // 鍔犺浇鎾斁鍒楄〃
+    // 加载播放列表
     load: function(newList) {
       var d = ""
       var that = this
@@ -437,10 +437,11 @@ const mediaPlayer = function(t, config) {
         if(this.options.rawList !== newList) {
           this.options.rawList = newList;
           playlist.clear()
-          // 鑾峰彇鏂板垪琛?          //this.fetch()
+          // 获取新列表
+          //this.fetch()
         }
       } else {
-        // 娌℃湁鍒楄〃鏃讹紝闅愯棌鎸夐挳
+        // 没有列表时，隐藏按钮
         d = "none"
         this.pause()
       }
@@ -490,7 +491,7 @@ const mediaPlayer = function(t, config) {
           }
         })
     },
-    // 鏍规嵁妯″紡鍒囨崲褰撳墠鏇茬洰index
+    // 根据模式切换当前曲目index
     mode: function() {
       var total = playlist.data.length;
 
@@ -534,7 +535,7 @@ const mediaPlayer = function(t, config) {
 
       this.init()
     },
-    // 鐩存帴璁剧疆褰撳墠鏇茬洰index
+    // 直接设置当前曲目index
     switch: function(index) {
       if(typeof index == 'number'
         && index != playlist.index
@@ -544,7 +545,7 @@ const mediaPlayer = function(t, config) {
         this.init()
       }
     },
-    // 鏇存柊source涓哄綋鍓嶆洸鐩甶ndex
+    // 更新source为当前曲目index
     init: function() {
       var item = playlist.current()
 
@@ -1114,12 +1115,12 @@ const mediaPlayer = function(t, config) {
     t.player.options = Object.assign(option, config);
     t.player.options.mode = store.get('_PlayerMode') || t.player.options.mode
 
-    // 鍒濆鍖朾utton銆乧ontrols浠ュ強click浜嬩欢
+    // 初始化button、controls以及click事件
     buttons.create()
 
-    // 鍒濆鍖朼udio or video
+    // 初始化audio or video
     source = t.createChild(t.player.options.type, events);
-    // 鍒濆鍖栨挱鏀惧垪琛ㄣ€侀瑙堛€佹帶浠舵寜閽瓑
+    // 初始化播放列表、预览、控件按钮等
     info.create();
 
     t.parentNode.addClass(t.player.options.type)
@@ -1549,17 +1550,30 @@ const sidebarTOC = function () {
 
   var sections = Array.prototype.slice.call(navItems) || [];
   var activeLock = null;
+  var getAnchorTarget = function(href) {
+    if (!href)
+      return null;
+    try {
+      return $(decodeURI(href));
+    } catch (e) {
+      return $(href);
+    }
+  }
 
   sections = sections.map(function (element, index) {
     var link = element.child('a.toc-link');
-    var anchor = $(decodeURI(link.attr('href')));
+    if (!link)
+      return null;
+    var anchor = getAnchorTarget(link.attr('href'));
     if(!anchor)
       return
     var alink = anchor.child('a.anchor');
 
     var anchorScroll = function (event) {
       event.preventDefault();
-      var target = $(decodeURI(event.currentTarget.attr('href')));
+      var target = getAnchorTarget(event.currentTarget.attr('href'));
+      if (!target)
+        return;
 
       activeLock = index;
       pageScroll(target, null, function() {
@@ -1605,7 +1619,8 @@ const sidebarTOC = function () {
     while (!parent.matches('.contents')) {
       if (parent.matches('li')) {
         parent.addClass('active');
-        var t = $(parent.child('a.toc-link').attr('href'))
+        var parentLink = parent.child('a.toc-link');
+        var t = getAnchorTarget(parentLink && parentLink.attr('href'));
         if(t) {
           t.addClass('active');
         }
@@ -1741,18 +1756,11 @@ const cardActive = function() {
 
 const registerExtURL = function() {
   $.each('span.exturl', function(element) {
-      if (element.classList && element.classList.contains('search')) {
-        return;
-      }
       var link = document.createElement('a');
       // https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
-      var decoded = decodeURIComponent(atob(element.dataset.url).split('').map(function(c) {
+      link.href = decodeURIComponent(atob(element.dataset.url).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
-      if (decoded.indexOf('javascript:') === 0) {
-        return;
-      }
-      link.href = decoded;
       link.rel = 'noopener external nofollow noreferrer';
       link.target = '_blank';
       link.className = element.className;
@@ -2295,7 +2303,10 @@ const localSearch = function(pjax) {
   var currentKeywords = [];
   var currentQuery = '';
   var currentPage = 1;
-  var hitsPerPage = 10;
+  var hitsPerPage = (CONFIG.search_hits && parseInt(CONFIG.search_hits.per_page, 10)) || 10;
+  if (!hitsPerPage || hitsPerPage < 1) {
+    hitsPerPage = 10;
+  }
   var searchTimer = null;
   var queryId = 0;
 
@@ -2367,7 +2378,21 @@ const localSearch = function(pjax) {
     searchPromise = fetch(url)
       .then(function(res) { return res.json(); })
       .then(function(data) {
-        searchIndex = data || [];
+        searchIndex = (data || []).map(function(item) {
+          var categories = Array.isArray(item.categories) ? item.categories : [];
+          var title = normalizeText(item.title || '');
+          var summary = normalizeText(item.summary || '');
+          var content = normalizeText(item.content || '');
+          var categoryText = normalizeText(categories.join(' '));
+          return {
+            item: item,
+            title: title.toLowerCase(),
+            summary: summary.toLowerCase(),
+            content: content.toLowerCase(),
+            categories: categoryText.toLowerCase(),
+            searchable: (title + ' ' + summary + ' ' + content + ' ' + categoryText).toLowerCase()
+          };
+        });
         return searchIndex;
       })
       .catch(function() {
@@ -2378,18 +2403,20 @@ const localSearch = function(pjax) {
     return searchPromise;
   };
 
-  var calcScore = function(item, keywords) {
+  var calcScore = function(record, keywords) {
     var score = 0;
-    var title = (item.title || '').toLowerCase();
-    var summary = (item.summary || '').toLowerCase();
-    var content = (item.content || '').toLowerCase();
+    var phrase = keywords.join(' ');
 
     keywords.forEach(function(keyword) {
       if (!keyword) return;
-      if (title.indexOf(keyword) !== -1) score += 10;
-      if (summary.indexOf(keyword) !== -1) score += 3;
-      if (content.indexOf(keyword) !== -1) score += 1;
+      if (record.title.indexOf(keyword) !== -1) score += 20;
+      if (record.categories.indexOf(keyword) !== -1) score += 8;
+      if (record.summary.indexOf(keyword) !== -1) score += 4;
+      if (record.content.indexOf(keyword) !== -1) score += 1;
+      if (record.title.indexOf(keyword) === 0) score += 8;
     });
+
+    if (phrase && record.title.indexOf(phrase) !== -1) score += 12;
 
     return score;
   };
@@ -2399,18 +2426,15 @@ const localSearch = function(pjax) {
       return [];
 
     var results = [];
-    data.forEach(function(item) {
-      var haystack = (item.title || '') + ' ' + (item.summary || '') + ' ' + (item.content || '');
-      haystack = haystack.toLowerCase();
-
+    data.forEach(function(record) {
       var matched = keywords.every(function(keyword) {
-        return keyword && haystack.indexOf(keyword) !== -1;
+        return keyword && record.searchable.indexOf(keyword) !== -1;
       });
 
       if (matched) {
         results.push({
-          item: item,
-          score: calcScore(item, keywords)
+          item: record.item,
+          score: calcScore(record, keywords)
         });
       }
     });
@@ -2501,6 +2525,9 @@ const localSearch = function(pjax) {
       var snippet = snippetFrom(item, keywords);
       var snippetHtml = snippet ? '<p class="search-snippet">' + snippet + '</p>' : '';
       var url = item.path || item.permalink || '#';
+      if (url && !/^([a-z]+:)?\/\//i.test(url) && !url.startsWith('/')) {
+        url = CONFIG.root + url.replace(/^\.?\//, '');
+      }
       html += '<div class="item"><a href="' + url + '">' + cats + title + '</a>' + snippetHtml + '</div>';
     });
 
@@ -2530,11 +2557,15 @@ const localSearch = function(pjax) {
     var localId = queryId;
 
     if (!query) {
+      currentHits = [];
+      currentKeywords = [];
       renderHits([], '', []);
       return;
     }
 
-    currentKeywords = query.toLowerCase().split(/\s+/).filter(Boolean);
+    currentKeywords = query.toLowerCase().split(/\s+/).filter(Boolean).filter(function(keyword, index, list) {
+      return list.indexOf(keyword) === index;
+    });
 
     loadIndex().then(function(data) {
       if (localId !== queryId) return;
@@ -2609,6 +2640,8 @@ const localSearch = function(pjax) {
       onPopupClose();
     }
   });
+
+  loadIndex();
 
   if (LOCAL.path && /(^|\/)search\/?$/.test(LOCAL.path)) {
     onPopupOpen();

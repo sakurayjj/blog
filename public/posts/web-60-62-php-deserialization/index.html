@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color=""><meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss&#43;xml" title="扬名立万_ymlw" href="/index.xml"><link rel="alternate" type="application/json" title="扬名立万_ymlw" href="/index.json"><link rel="stylesheet" href="/css/local-fonts.css"><link rel="stylesheet" href="/css/app.css">
+<style>body { font-family: "Mulish", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand .artboard { font-family: "Fredericka the Great", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand h1,
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title { font-family: Mulish, "Noto Serif JP", "Noto Serif SC", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }h1, h2, h3, h4, h5, h6 { font-family: Mulish, "Noto Serif SC", "Noto Serif JP", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }code, pre, kbd, samp, .highlight code, .highlight pre, .code-container { font-family: "Inconsolata", consolas,Menlo,"PingFang SC","Microsoft YaHei",monospace; }</style>
+<style>
+  .highlight pre span[style*="background-color"] {
+    background-color: transparent !important;
+    color: inherit !important;
+  }
+</style>
+
+<style>
+  #search .search-highlight {
+    background: var(--color-red-a1);
+    border-radius: .2rem;
+    color: inherit;
+    font-style: normal;
+    padding: 0 .2rem;
+  }
+
+  #search-hits .search-snippet {
+    color: var(--grey-6);
+    font-size: 80%;
+    line-height: 1.6;
+    margin-top: .2rem;
+  }
+</style>
+
+
+  <meta name="keywords" content=""><link rel="canonical" href="https://www.ctfhub.cn/posts/web-60-62-php-deserialization/"><meta property="og:url" content="https://www.ctfhub.cn/posts/web-60-62-php-deserialization/">
+  <meta property="og:site_name" content="扬名立万_ymlw">
+  <meta property="og:title" content="Web攻防-60-62PHP反序列化">
+  <meta property="og:description" content="小迪secWeb攻防学习笔记-PHP反序列化">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-04T00:00:00+00:00">
+    <meta property="og:image" content="https://www.ctfhub.cn/images/avatar.jpg">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.ctfhub.cn/images/avatar.jpg">
+  <meta name="twitter:title" content="Web攻防-60-62PHP反序列化">
+  <meta name="twitter:description" content="小迪secWeb攻防学习笔记-PHP反序列化">
+
+  <title>Web攻防-60-62PHP反序列化 - 网络安全 |
+YMLW Shoka = 扬名立万_ymlw</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Web攻防-60-62PHP反序列化</h1>
+  <div class="meta"><span class="item" title="创建时间：2026-02-04">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2026-02-04T00:00:00Z">2026-02-04</time>
+  </span></div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">YMLW Shoka</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax"><img src="/posts/web-60-62-php-deserialization/1.png"></div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    <div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" itemprop="item" rel="index" title="分类于 网络安全"><span itemprop="name">网络安全</span></a><meta itemprop="position" content="1"></span></div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-cn">
+  <link itemprop="mainEntityOfPage" href="https://www.ctfhub.cn/posts/web-60-62-php-deserialization/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/1.jpg">
+    <meta itemprop="name" content="扬名立万">
+    <meta itemprop="description" content=", 网安 &amp; 取证的学习笔记">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬名立万_ymlw">
+  </span>
+
+  <div class="body md" itemprop="articleBody"><h1 id="什么是反序列化操作-类型转换">
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96%e6%93%8d%e4%bd%9c-%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2" aria-label="Anchor"></a>
+  什么是反序列化操作？-类型转换
+</h1>
+<p>序列化：对象转换为数组或字符串等格式</p>
+<p>反序列化：将数组或字符串等格式转换为对象</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">serialize</span>() <span style="color:#75715e">//将对象转换成一个字符串</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#75715e"></span><span style="color:#a6e22e">unserialize</span>() <span style="color:#75715e">//将字符串还原成一个对象</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#75715e"></span>    </span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#75715e">// 序列化：将对象/数组 → 字符串（便于存储/传输）</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#75715e"></span>$data <span style="color:#f92672">=</span> <span style="color:#66d9ef">array</span>(<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;admin&#34;</span>, <span style="color:#e6db74">&#34;role&#34;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;user&#34;</span>);</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>$serialized <span style="color:#f92672">=</span> <span style="color:#a6e22e">serialize</span>($data);</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#66d9ef">echo</span> $serialized;</span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span><span style="color:#75715e">// 输出: a:2:{s:4:&#34;name&#34;;s:5:&#34;admin&#34;;s:4:&#34;role&#34;;s:4:&#34;user&#34;;}</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span><span style="color:#75715e">// 反序列化：将字符串 → 对象/数组</span></span></pre></td>
+          </tr><tr>
+            <td data-num="12"></td>
+            <td><pre><span><span style="color:#75715e"></span>$unserialized <span style="color:#f92672">=</span> <span style="color:#a6e22e">unserialize</span>($serialized);</span></pre></td>
+          </tr><tr>
+            <td data-num="13"></td>
+            <td><pre><span><span style="color:#a6e22e">print_r</span>($unserialized);</span></pre></td>
+          </tr></table>
+</figure>
+<p>序列化格式解读：</p>
+<p><img src="/posts/web-60-62-php-deserialization/1.png" data-src="/posts/web-60-62-php-deserialization/1.png" loading="lazy" alt=""></p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">a</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>{<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;name&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;admin&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;role&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;user&#34;</span>;}</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span>     <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>   <span style="color:#a6e22e">│</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span>     <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>   <span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">值内容</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span>     <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">值长度</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span>     <span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">string类型</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">键内容</span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">│</span> <span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">键长度</span></span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">│</span>  <span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">string类型</span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span> <span style="color:#a6e22e">└──</span> <span style="color:#ae81ff">2</span><span style="color:#a6e22e">个元素</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span><span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">array类型</span></span></pre></td>
+          </tr></table>
+</figure>
+<p><strong>类型标识符</strong></p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;hello&#34;</span>    <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">字符串，长度5</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">i</span><span style="color:#f92672">:</span><span style="color:#ae81ff">123</span>          <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">整数</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">b</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>            <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">布尔值</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">=</span><span style="color:#66d9ef">true</span>, <span style="color:#ae81ff">0</span><span style="color:#f92672">=</span><span style="color:#66d9ef">false</span>)</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#a6e22e">N</span>;             <span style="color:#a6e22e">→</span> <span style="color:#66d9ef">NULL</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">a</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>{<span style="color:#f92672">...</span>}      <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">数组，2个元素</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#a6e22e">O</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;User&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>{<span style="color:#f92672">...</span>} <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">对象，类名长度4，2个属性</span></span></pre></td>
+          </tr></table>
+</figure>
+<p><strong>魔术方法</strong></p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">__construct</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">构造函数，在实例化一个对象的时候，首先会去自动执行的一个方法；</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">__destruct</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">析构函数，在对象的所有引用被删除或者当对象被显式销毁时执行的魔术方法。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">__toString</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">echo或者print只能调用字符串的方式去调用对象，即把对象当成字符串使用，此时自动触发toString</span>()</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#a6e22e">__invoke</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">把test对象当成函数test</span>()<span style="color:#a6e22e">来调用</span>,<span style="color:#a6e22e">此时触发invoke</span>()</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span><span style="color:#a6e22e">__call</span>($method, $arguments)<span style="color:#f92672">:</span> <span style="color:#a6e22e">调用的不存在的方法的名称和参数</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span><span style="color:#a6e22e">__sleep</span>()<span style="color:#a6e22e">：在调用</span> <span style="color:#a6e22e">serialize</span>() <span style="color:#a6e22e">函数序列化对象之前被调用</span></span></pre></td>
+          </tr><tr>
+            <td data-num="12"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="13"></td>
+            <td><pre><span><span style="color:#a6e22e">__wakeup</span>()<span style="color:#a6e22e">：调用unserialize</span>()<span style="color:#a6e22e">反序列化函数时反序列化之后调用</span></span></pre></td>
+          </tr><tr>
+            <td data-num="14"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="15"></td>
+            <td><pre><span><span style="color:#a6e22e">__get</span>($property)<span style="color:#f92672">:</span> <span style="color:#a6e22e">调用的成员属性不存在，用于获取对象的属性值。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="16"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="17"></td>
+            <td><pre><span><span style="color:#a6e22e">__set</span>($property, $value)<span style="color:#f92672">:</span> <span style="color:#a6e22e">给不存在的成员属性赋值。用于设置对象的属性值。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="18"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="19"></td>
+            <td><pre><span><span style="color:#a6e22e">__isset</span>($property)<span style="color:#f92672">:</span> <span style="color:#a6e22e">对不可访问属性使用</span> <span style="color:#a6e22e">isset</span>() <span style="color:#a6e22e">或</span> <span style="color:#66d9ef">empty</span>() <span style="color:#a6e22e">时，__isset</span>() <span style="color:#a6e22e">会被调用。用于检测属性是否被设置。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="20"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="21"></td>
+            <td><pre><span><span style="color:#a6e22e">__unset</span>($property)<span style="color:#f92672">:</span> <span style="color:#a6e22e">在使用</span> <span style="color:#a6e22e">unset</span>() <span style="color:#a6e22e">删除一个不可访问属性时自动调用的方法。用于删除对象的属性。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="22"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="23"></td>
+            <td><pre><span><span style="color:#a6e22e">__callStatic</span>($method, $arguments)<span style="color:#f92672">:</span> <span style="color:#a6e22e">静态调用或调用成员常量时使用的方法不存在。用于处理静态方法的调用。</span></span></pre></td>
+          </tr></table>
+</figure>
+<p><strong>常见的魔术方法</strong>：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">__construct</span>()<span style="color:#a6e22e">：对象被创建时触发（反序列化时通常不触发，但在生成Payload脚本时会用到）。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">__destruct</span>()<span style="color:#a6e22e">：对象被销毁时触发（脚本执行结束或对象不再被引用时）。这是最常见的反序列化入口点。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">__wakeup</span>()<span style="color:#a6e22e">：执行</span> <span style="color:#a6e22e">unserialize</span>() <span style="color:#a6e22e">之前触发。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#a6e22e">__sleep</span>()<span style="color:#a6e22e">：执行</span> <span style="color:#a6e22e">serialize</span>() <span style="color:#a6e22e">之前触发。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">__toString</span>()<span style="color:#a6e22e">：把对象当成字符串使用时触发（例如</span> <span style="color:#66d9ef">echo</span> $obj;<span style="color:#a6e22e">）。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#a6e22e">__invoke</span>()<span style="color:#a6e22e">：把对象当成函数调用时触发（例如</span> $obj();<span style="color:#a6e22e">）。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#a6e22e">__call</span>()<span style="color:#a6e22e">：调用不存在的方法时触发。</span></span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#a6e22e">__get</span>() <span style="color:#f92672">/</span> <span style="color:#a6e22e">__set</span>()<span style="color:#a6e22e">：读取或设置不存在</span><span style="color:#f92672">/</span><span style="color:#a6e22e">不可访问的属性时触发。</span></span></pre></td>
+          </tr></table>
+</figure>
+<h1 id="ctf中常见坑点与技巧">
+  <a class="anchor" href="#ctf%e4%b8%ad%e5%b8%b8%e8%a7%81%e5%9d%91%e7%82%b9%e4%b8%8e%e6%8a%80%e5%b7%a7" aria-label="Anchor"></a>
+  CTF中常见坑点与技巧
+</h1>
+<p>1、对象变量属性：</p>
+<p>public（公共的）：在本类内部、外部类、子类都可以访问</p>
+<p>protect（受保护的）：只有本类或子类或父类中可以访问</p>
+<p>private（私人的）：只有本类内部可以使用</p>
+<p>2、序列化数据显示：</p>
+<h4 id="1-属性的可见性public--private--protected">
+  <a class="anchor" href="#1-%e5%b1%9e%e6%80%a7%e7%9a%84%e5%8f%af%e8%a7%81%e6%80%a7public--private--protected" aria-label="Anchor"></a>
+  1. 属性的可见性（Public / Private / Protected）
+</h4>
+<p>这是最容易踩的坑。</p>
+<ul>
+<li><strong>Public</strong>: 序列化出来就是变量名。</li>
+<li><strong>Private</strong>: 序列化出来是 <code>\00类名\00变量名</code> （<code>\00</code> 是空字节 ASCII 0）。</li>
+<li><strong>Protected</strong>: 序列化出来是 <code>\00*\00变量名</code>。</li>
+</ul>
+<p><strong>解决办法</strong>：</p>
+<ul>
+<li>在写 EXP 脚本时，直接把属性都改成 <code>public</code> 通常也能反序列化成功（PHP特性）。</li>
+<li>或者在生成 Payload 后，手动把空字符 <code>%00</code> 进行 URL 编码。</li>
+</ul>
+<h4 id="2-字符串逃逸">
+  <a class="anchor" href="#2-%e5%ad%97%e7%ac%a6%e4%b8%b2%e9%80%83%e9%80%b8" aria-label="Anchor"></a>
+  2. 字符串逃逸
+</h4>
+<p><strong>PHP 在反序列化时，底层解析是严格按照“字符串长度”来读取的。<strong>如果替换操作导致字符串的</strong>实际长度</strong>发生了变化，但序列化字符串头部记录的<strong>长度数值</strong>没有同步变化，就会破坏原本的结构。</p>
+<p>这时候，我们可以利用这个长度差，把我们构造的恶意 Payload “挤”出来，或者把后面的结构“吃”进去，从而改变对象的属性。</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#75715e">// 反序列化引擎按照长度读取字符串，读完就停！</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#75715e"></span>$str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;a:2:{s:4:&#34;name&#34;;s:5:&#34;admin&#34;;s:3:&#34;age&#34;;s:2:&#34;18&#34;;}&#39;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#75715e">//                       ↑ 读5个字符</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#75715e">// 即使后面有垃圾数据也能正常解析</span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#75715e"></span>$str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;a:2:{s:4:&#34;name&#34;;s:5:&#34;admin&#34;;s:3:&#34;age&#34;;s:2:&#34;18&#34;;}xxxxx垃圾数据&#39;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#a6e22e">var_dump</span>(<span style="color:#a6e22e">unserialize</span>($str));  <span style="color:#75715e">// 正常解析！</span></span></pre></td>
+          </tr></table>
+</figure>
+<h5 id="情况一关键词变长增多-把-payload-挤出来">
+  <a class="anchor" href="#%e6%83%85%e5%86%b5%e4%b8%80%e5%85%b3%e9%94%ae%e8%af%8d%e5%8f%98%e9%95%bf%e5%a2%9e%e5%a4%9a-%e6%8a%8a-payload-%e6%8c%a4%e5%87%ba%e6%9d%a5" aria-label="Anchor"></a>
+  情况一：关键词变长（增多）—— 把 Payload “挤”出来
+</h5>
+<p>假设代码中有一个过滤功能，把所有的字符 <code>'x'</code> 替换成 <code>'yy'</code>（1个字符变成2个）</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#75715e">//例题1</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">filter</span>($str){</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">str_replace</span>(<span style="color:#e6db74">&#39;x&#39;</span>, <span style="color:#e6db74">&#39;yy&#39;</span>, $str);</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#75715e">// 原始类</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>    <span style="color:#66d9ef">public</span> $name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;user&#39;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span>    <span style="color:#66d9ef">public</span> $pass <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;123456&#39;</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span>}</span></pre></td>
+          </tr></table>
+</figure>
+<p><strong>目标</strong>：我想把 <code>$pass</code> 修改为 <code>&quot;hacker&quot;</code>。</p>
+<p><strong>逻辑推演</strong>：</p>
+<ol>
+<li>正常序列化结果（假设 name 输入 user）：
+<code>...s:4:&quot;name&quot;;s:4:&quot;user&quot;;s:4:&quot;pass&quot;;s:6:&quot;123456&quot;;}</code></li>
+<li>PHP 解析时，读到 <code>s:4:&quot;user&quot;</code>，它就乖乖往后读4个字符。</li>
+<li><strong>攻击思路</strong>：如果我输入很多 <code>x</code>，经过 <code>filter</code> 后，字符串变长了。原本记录的长度（比如10）不够用了，多出来的字符就会被当作<strong>后面的代码</strong>来解析。</li>
+</ol>
+<p><strong>操作步骤</strong>：
+我们需要构造一个 Payload，使得它正好被“挤”到 <code>$name</code> 值的外面，成为一个新的属性定义。</p>
+<p>我们想要的最终结构（Payload）：
+<code>&quot;;s:4:&quot;pass&quot;;s:6:&quot;hacker&quot;;}</code>
+这段字符串长度是 27。</p>
+<p><strong>计算数学题</strong>：</p>
+<ul>
+<li>我们要逃逸出的字符长度是 27。</li>
+<li>每个 <code>'x'</code> 变成 <code>'yy'</code>，长度增加 1。</li>
+<li>所以我们需要输入 27 个 <code>'x'</code>。</li>
+</ul>
+<p><strong>攻击 Payload</strong>（输入给 name）：
+<code>xxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;;s:4:&quot;pass&quot;;s:6:&quot;hacker&quot;;}</code></p>
+<p><strong>发生过程</strong>：</p>
+<ol>
+<li><strong>序列化</strong>：PHP 记录 name 长度为 27 + 27 = 54。
+<code>...s:54:&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;;s:4:&quot;pass&quot;;s:6:&quot;hacker&quot;;}&quot;;...</code></li>
+<li><strong>过滤（变长）</strong>：27个 x 变成了 54个 y。实际内容变成了 54个y + 我们的Payload。
+<code>...s:54:&quot;yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy&quot;;s:4:&quot;pass&quot;;s:6:&quot;hacker&quot;;}&quot;;...</code></li>
+<li><strong>反序列化</strong>：
+<ul>
+<li>PHP 读到 <code>s:54</code>。</li>
+<li>它往后数 54 个字符，正好读完所有的 <code>y</code>。</li>
+<li>此时，虽然字符串没结束，但 PHP 认为 <code>$name</code> 的值已经读取完毕了！</li>
+<li><strong>关键点</strong>：紧接着的 <code>&quot;;s:4:&quot;pass&quot;;...</code> 本来是字符串内容，现在被 PHP 当作了<strong>代码结构</strong>解析！</li>
+<li>于是，<code>$pass</code> 被成功覆盖为 <code>hacker</code>。后面的原始数据会被忽略或丢弃。</li>
+</ul>
+</li>
+</ol>
+<h5 id="图解">
+  <a class="anchor" href="#%e5%9b%be%e8%a7%a3" aria-label="Anchor"></a>
+  图解：
+</h5>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">a</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>{<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;name&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;admin&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;age&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;18&#34;</span>;}<span style="color:#a6e22e">xxxxx垃圾数据</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span>                                              <span style="color:#a6e22e">│</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">│←────────────</span> <span style="color:#a6e22e">完整的序列化结构</span> <span style="color:#a6e22e">──────────────→│←──</span> <span style="color:#a6e22e">忽略</span> <span style="color:#a6e22e">──→│</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#a6e22e">│</span>                                              <span style="color:#a6e22e">│</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">└──</span> <span style="color:#a6e22e">解析到这个</span> } <span style="color:#a6e22e">就结束了，后面的全部丢弃</span> <span style="color:#a6e22e">──────┘</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>PHP读到 <code>}</code> 后就结束了解析，之后不管后面是什么，都会忽略。这就是 PHP <strong>“读完就停，后面不管”</strong> 的特性。</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">a</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>{<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;name&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;admin&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;age&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;18&#34;</span>;}<span style="color:#a6e22e">xxxxx垃圾数据</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">↓</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">a</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>{ <span style="color:#f92672">...</span> }   <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">这是一个数组，有2个元素，开始解析大括号内容</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>  <span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;name&#34;</span>  <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">第1个键：字符串，长度4，读取</span><span style="color:#e6db74">&#34;name&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span>  <span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;admin&#34;</span> <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">第1个值：字符串，长度5，读取</span><span style="color:#e6db74">&#34;admin&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span>  <span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;age&#34;</span>   <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">第2个键：字符串，长度3，读取</span><span style="color:#e6db74">&#34;age&#34;</span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span>  <span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;18&#34;</span>    <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">第2个值：字符串，长度2，读取</span><span style="color:#e6db74">&#34;18&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span>}             <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">数组结束，解析完成！</span></span></pre></td>
+          </tr><tr>
+            <td data-num="12"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="13"></td>
+            <td><pre><span><span style="color:#a6e22e">xxxxx垃圾数据</span>  <span style="color:#a6e22e">→</span> <span style="color:#a6e22e">直接忽略，不处理，不执行，不报错</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>而针对上面的例题1，我们通过输入很多 <code>x</code> 变成 <code>yy</code>，把字符串挤长了。</p>
+<p><strong>攻击后的字符串看起来是这样的：</strong></p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#f92672">...</span><span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">54</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;yyyy...yyyy&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;pass&#34;</span>;<span style="color:#a6e22e">s</span><span style="color:#f92672">:</span><span style="color:#ae81ff">6</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;hacker&#34;</span>;}<span style="color:#e6db74">&#34;;s:4:&#34;</span><span style="color:#a6e22e">pass</span><span style="color:#e6db74">&#34;;s:6:&#34;</span><span style="color:#ae81ff">123456</span><span style="color:#e6db74">&#34;;}</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>请注意看我用<strong>粗体</strong>标出的部分：</p>
+<ol>
+<li><code>s:54:&quot;yyyy...yyyy&quot;</code>：这是被挤出来的 <code>$name</code>。</li>
+<li><code>;s:4:&quot;pass&quot;;s:6:&quot;hacker&quot;;</code>：这是我们构造的 Payload，成功注入进去了。</li>
+<li><strong><code>}</code></strong>：<strong>这是我们构造的闭合括号！</strong>
+<ul>
+<li>PHP 读到这个括号，认为“对象解析完毕了！”</li>
+</ul>
+</li>
+<li><strong><code>;s:4:&quot;pass&quot;;s:6:&quot;123456&quot;;}</code></strong>：<strong>这是原本正常的代码，变成了垃圾数据。</strong></li>
+</ol>
+<p>正是因为 PHP <strong>“读完就停，后面不管”</strong> 的特性，我们构造的 Payload 里那个提前闭合的 <code>}</code> 才能生效，从而把原本合法的代码（比如原来的密码字段）变成了被遗弃的“垃圾数据”。</p>
+<h1 id="反序列化链项目-phpggcnotsosecure">
+  <a class="anchor" href="#%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96%e9%93%be%e9%a1%b9%e7%9b%ae-phpggcnotsosecure" aria-label="Anchor"></a>
+  反序列化链项目 PHPGGC&amp;NotSoSecure
+</h1>
+<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL05vdFNvU2VjdXJlL1NlcmlhbGl6ZWRQYXlsb2FkR2VuZXJhdG9y">https://github.com/NotSoSecure/SerializedPayloadGenerator</span></p>
+<p>这个是根据框架来生成的，不是原生。（python是原生。）</p>
+<div class="tags"><a href="/tags/" rel="tag"><i class="ic i-tag"></i> </a></div></div>
+
+  <footer>
+    <div class="meta"></div>
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr"><div>
+        <img data-src="/images/alipay.jpg" alt="支付宝">
+        <p>支付宝</p>
+      </div><div>
+        <img data-src="/images/paypal.jpg" alt="贝宝">
+        <p>贝宝</p>
+      </div><div>
+        <img data-src="/images/wechatpay.jpg" alt="微信支付">
+        <p>微信支付</p>
+      </div></div>
+</div><div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>扬名立万 <i class="ic i-at"><em>@</em></i>扬名立万_ymlw
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong><a href="https://www.ctfhub.cn/posts/web-60-62-php-deserialization/" title="Web攻防-60-62PHP反序列化">https://www.ctfhub.cn/posts/web-60-62-php-deserialization/</a></li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div></footer>
+
+</article>
+
+  </div>
+  <div class="post-nav">
+  <div class="item left"><a href="/posts/web-59-xml-xxe/" title="Web攻防-59天XML&amp;XXE" itemprop="url" data-background-image="/posts/web-59-xml-xxe/1.png" rel="prev"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>Web攻防-59天XML&XXE</h3></a></div>
+  <div class="item right"></div>
+</div>
+
+  
+
+        </div>
+        <div id="sidebar">
+          
+  <div class="inner">
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录"><nav id="TableOfContents" class="toc">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      <div class="related panel pjax" data-title="系列文章"><ul><li><a href="/posts/web-59-xml-xxe/" title="Web攻防-59天XML&amp;XXE">Web攻防-59天XML&XXE</a></li><li><a href="/posts/10/" title="Web攻防-58天RCE命令执行">Web攻防-58天RCE命令执行</a></li><li><a href="/posts/kali-update-share-mount/" title="kali系统更新以及共享文件夹挂载">kali系统更新以及共享文件夹挂载</a></li><li><a href="/posts/web-57-ssrf/" title="Web攻防-57天SSRF服务端">Web攻防-57天SSRF服务端</a></li><li><a href="/posts/7/" title="Web攻防-56天CSRF客户端">Web攻防-56天CSRF客户端</a></li></ul></div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="扬名立万"
+      data-src="/images/1.jpg">
+  <p class="name" itemprop="name">扬名立万</p>
+  <div class="description" itemprop="description">网安 &amp; 取证的学习笔记</div>
+</div>
+
+<nav class="state"><div class="item posts">
+      <a href="/archives/">
+        <span class="count">16</span>
+        <span class="name">文章</span>
+      </a>
+    </div><div class="item categories">
+      <a href="/categories/">
+        <span class="count">4</span>
+        <span class="name">分类</span>
+      </a>
+    </div><div class="item tags">
+      <a href="/tags/">
+        <span class="count">4</span>
+        <span class="name">标签</span>
+      </a>
+    </div></nav>
+
+<div class="social"><span class="exturl item email" data-url="bWFpbHRvOnlvdXJuYW1lQG1haWwuY29t" title="mailto:yourname@mail.com"><i class="ic i-envelope"></i></span><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL3lvdXJuYW1l" title="https://github.com/yourname"><i class="ic i-github"></i></span><span class="exturl item instagram" data-url="aHR0cHM6Ly9pbnN0YWdyYW0uY29tL3lvdXJuYW1l" title="https://instagram.com/yourname"><i class="ic i-instagram"></i></span><span class="exturl item x" data-url="aHR0cHM6Ly94LmNvbS95b3VybmFtZQ==" title="https://x.com/yourname"><i class="ic i-x"></i></span></div>
+
+<ul class="menu">
+  <li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="javascript:void(0);" class="search" rel="section"><i class="ic i-search"></i>搜索</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax"><a href="/posts/web-59-xml-xxe/" title="上一篇" rel="prev"><i class="ic i-chevron-left"></i></a></li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax"></li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          <div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/kali-update-share-mount/" title="kali系统更新以及共享文件夹挂载">kali系统更新以及共享文件夹挂载</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/7/" title="Web攻防-56天CSRF客户端">Web攻防-56天CSRF客户端</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/10/" title="Web攻防-58天RCE命令执行">Web攻防-58天RCE命令执行</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/6/" title="Web攻防-52-55天-XSS跨站">Web攻防-52-55天-XSS跨站</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/4/" title="Web攻防-46天-sqlmap使用">Web攻防-46天-sqlmap使用</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-60-62-php-deserialization/" title="Web攻防-60-62PHP反序列化">Web攻防-60-62PHP反序列化</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/3/" title="Web攻防-42天">Web攻防-42天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a><i class="ic i-angle-right"></i><a href="/categories/%E9%9D%B6%E5%9C%BA/" title="分类于 靶场">靶场</a></div>
+<span><a href="/posts/dvwabruteforce/" title="从DVWA开始学习漏洞原理-Brute Force">从DVWA开始学习漏洞原理-Brute Force</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/cve-2025-55182/" title="CVE-2025-55182">CVE-2025-55182</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/2/" title="Web攻防-41天">Web攻防-41天</a></span>
+      </li></ul>
+</div><div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+        </div>
+        <div class="status">
+  <div class="copyright">
+    &copy;<span itemprop="copyrightYear">2026</span><span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">扬名立万 @ YMLW Shoka</span><br>
+      <span class="copyright-extra">© 2025 扬名立万_ymlw   <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a></span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9nb2h1Z28uaW8=">Hugo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div></div>
+
+      </div>
+    </footer>
+  </div>
+
+  <script data-config type="text/javascript">
+  var CONFIG = {"auto_scroll":true,"css":{"fancybox":"vendor/fancybox.bundle.min.css","katex":"vendor/katex.min.css","mermaid":"css/mermaid.css","valine":"css/comment.css"},"darkmode":false,"favicon":{"hidden":"images/failure.ico","normal":"images/favicon.ico"},"fireworks":["rgba(255,182,185,.9)","rgba(250,227,217,.9)","rgba(187,222,214,.9)","rgba(138,198,209,.9)"],"hostname":"https://www.ctfhub.cn","js":{"chart":"vendor/frappe-charts.min.iife.min.js","copy_tex":"vendor/katex-copy-tex.min.js","fancybox":"vendor/fancybox.bundle.min.js","valine":"vendor/minivaline.min.js"},"loader":{"start":true,"switch":false},"quicklink":{"priority":true,"timeout":3000},"root":"/","search":null,"search_hits":{"per_page":10},"statics":"/","valine":{"NoRecordIP":false,"appId":null,"appKey":null,"avatar":"mp","lang":"en","pageSize":10,"placeholder":"ヽ(○´∀`)ﾉ♪","powerMode":true,"serverURLs":null,"tagColor":{"friend":"var(--color-aqua)","investor":"var(--color-pink)","master":"var(--color-orange)"},"tagMember":{"friend":null,"investor":null,"master":null},"tagMeta":{"friend":"小伙伴","investor":"金主粑粑","master":"主人","visitor":"新朋友"},"visitor":true},"version":"0.2.5"};
+  var LOCAL = {"copyright":"复制成功，转载请遵守 \u003cspan class=\"exturl\" data-url=\"aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo\"\u003e\u003ci class=\"ic i-creative-commons\"\u003e\u003c/i\u003eBY-NC-SA\u003c/span\u003e 协议。","fancybox":true,"favicon":{"hide":"(´Д｀)大変だ！","show":"（●´3｀●）やれやれだぜ"},"path":"posts/web-60-62-php-deserialization/","search":{"empty":"关于 「 ${query} 」，什么也没搜到","placeholder":"文章搜索","stats":"${time} ms 内找到 ${hits} 条结果"}};
+  LOCAL.ignores = [
+    function(uri) {
+      return uri.includes('#');
+    },
+    function(uri) {
+      return new RegExp(LOCAL.path + '$').test(uri);
+    }
+  ];
+</script>
+
+
+  <script src="/vendor/pace.min.js"></script><script src="/vendor/pjax.min.js"></script><script src="/vendor/fetch.umd.min.js"></script><script src="/vendor/anime.min.js"></script><script src="/vendor/algoliasearch-lite.umd.js"></script><script src="/vendor/instantsearch.production.min.js"></script><script src="/vendor/lozad.min.js"></script><script src="/vendor/quicklink.umd.js"></script>
+
+  <script src="/js/app.js"></script><script src="/js/fireworks.js"></script>
+
+</body>
+</html>

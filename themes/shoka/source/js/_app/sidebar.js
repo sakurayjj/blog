@@ -97,17 +97,30 @@ const sidebarTOC = function () {
 
   var sections = Array.prototype.slice.call(navItems) || [];
   var activeLock = null;
+  var getAnchorTarget = function(href) {
+    if (!href)
+      return null;
+    try {
+      return $(decodeURI(href));
+    } catch (e) {
+      return $(href);
+    }
+  }
 
   sections = sections.map(function (element, index) {
     var link = element.child('a.toc-link');
-    var anchor = $(decodeURI(link.attr('href')));
+    if (!link)
+      return null;
+    var anchor = getAnchorTarget(link.attr('href'));
     if(!anchor)
       return
     var alink = anchor.child('a.anchor');
 
     var anchorScroll = function (event) {
       event.preventDefault();
-      var target = $(decodeURI(event.currentTarget.attr('href')));
+      var target = getAnchorTarget(event.currentTarget.attr('href'));
+      if (!target)
+        return;
 
       activeLock = index;
       pageScroll(target, null, function() {
@@ -153,7 +166,8 @@ const sidebarTOC = function () {
     while (!parent.matches('.contents')) {
       if (parent.matches('li')) {
         parent.addClass('active');
-        var t = $(parent.child('a.toc-link').attr('href'))
+        var parentLink = parent.child('a.toc-link');
+        var t = getAnchorTarget(parentLink && parentLink.attr('href'));
         if(t) {
           t.addClass('active');
         }

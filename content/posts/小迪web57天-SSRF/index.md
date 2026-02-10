@@ -3,7 +3,7 @@ categories:
   - 网络安全
 date: 2026-01-25
 description: 小迪secWeb攻防学习笔记文件SSRF
-slug: 8
+slug: web-57-ssrf
 tags:
   - 
 title: Web攻防-57天SSRF服务端

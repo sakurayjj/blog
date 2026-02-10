@@ -1,0 +1,8 @@
+{{- $ctx := .ctx | default . -}}
+{{- $lang := .lang | default $ctx.Site.Language.Lang | default $ctx.Site.LanguageCode | default "en" -}}
+{{- $path := partialCached "shoka/lang-file.html" (dict "lang" $lang "ctx" $ctx) $lang -}}
+{{- $data := dict -}}
+{{- if and $path (fileExists $path) -}}
+  {{- $data = (readFile $path | transform.Unmarshal) -}}
+{{- end -}}
+{{- return $data -}}

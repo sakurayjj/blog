@@ -2,11 +2,7 @@
 {{- $key := .key | default "" -}}
 {{- $count := .count | default 0 -}}
 {{- $lang := $ctx.Site.Language.Lang | default $ctx.Site.LanguageCode | default "en" -}}
-{{- $path := partial "shoka/lang-file.html" (dict "lang" $lang "ctx" $ctx) -}}
-{{- $data := dict -}}
-{{- if and $path (fileExists $path) -}}
-  {{- $data = (readFile $path | transform.Unmarshal) -}}
-{{- end -}}
+{{- $data := partialCached "shoka/lang-data.html" (dict "lang" $lang "ctx" $ctx) $lang -}}
 {{- $value := $data -}}
 {{- range (split $key ".") -}}
   {{- if $value -}}

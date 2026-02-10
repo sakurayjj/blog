@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/小迪web59天-XML&XXE安全/index.md",
+                "file": "content/posts/小迪web60-62-PHP反序列化/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "be13f699e55a7826",
@@ -186,10 +185,12 @@
   },
   "active": "6a32d36f974e76da",
   "lastOpenFiles": [
+    "content/posts/小迪web59天-XML&XXE安全/index.md",
+    "content/posts/小迪web60-62-PHP反序列化/index.md",
+    "content/posts/小迪web60-62-PHP反序列化",
     "content/posts/小迪web59天-XML&XXE安全/2.png",
     "content/posts/小迪web59天-XML&XXE安全/1.png",
     "content/posts/小迪web57天-SSRF/index.md",
-    "content/posts/小迪web59天-XML&XXE安全/index.md",
     "content/posts/小迪web58天-RCE命令执行/index.md",
     "content/posts/小迪web59天-XML&XXE安全",
     "content/posts/小迪web58天-RCE命令执行/058-Web攻防-RCE执行&DEMO&异或脚本生成等.zip",
@@ -210,11 +211,9 @@
     "content/posts/小迪web56天-CSRF/index.md",
     "content/posts/小迪web57天-SSRF/2.png",
     "content/posts/小迪web57天-SSRF/1.png",
-    "content/posts/小迪web57天-SSRF",
     "content/posts/小迪web56天-CSRF/4.png",
     "content/posts/小迪web56天-CSRF/3.png",
     "content/posts/小迪web56天-CSRF/2.png",
-    "content/posts/小迪web56天-CSRF/1.png",
     "content/posts/小迪web50天文件包含/index.md",
     "content/posts/小迪web46天sqlmap/index.md",
     "content/posts/react2shell/index.md",

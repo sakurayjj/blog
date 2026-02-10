@@ -1,4 +1,4 @@
-const cardActive = function() {
+﻿const cardActive = function() {
   if(!$('.index.wrap'))
     return
 
@@ -529,15 +529,24 @@ const algoliaSearch = function(pjax) {
 
   search.start();
 
+  const onPopupOpen = function() {
+    document.body.style.overflow = 'hidden';
+    transition(siteSearch, 'shrinkIn', function() {
+      $('.search-input').focus();
+    }) // transition.shrinkIn
+  };
+
   // Handle and trigger popup window
   $.each('.search', function(element) {
-    element.addEventListener('click', function() {
-      document.body.style.overflow = 'hidden';
-      transition(siteSearch, 'shrinkIn', function() {
-          $('.search-input').focus();
-        }) // transition.shrinkIn
+    element.addEventListener('click', function(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      onPopupOpen();
     });
   });
+  bindSearchTrigger(onPopupOpen);
 
   // Monitor main search box
   const onPopupClose = function() {
@@ -557,4 +566,380 @@ const algoliaSearch = function(pjax) {
       onPopupClose();
     }
   });
+}
+
+const localSearch = function(pjax) {
+  if(CONFIG.search !== null && window.instantsearch && window.algoliasearch)
+    return
+
+  if(!siteSearch) {
+    siteSearch = BODY.createChild('div', {
+      id: 'search',
+      innerHTML: '<div class="inner"><div class="header"><span class="icon"><i class="ic i-search"></i></span><div class="search-input-container"></div><span class="close-btn"><i class="ic i-times-circle"></i></span></div><div class="results"><div class="inner"><div id="search-stats"></div><div id="search-hits"></div><div id="search-pagination"></div></div></div></div>'
+    });
+  }
+
+  var inputContainer = $('.search-input-container', siteSearch);
+  if (inputContainer && !$('.search-input', inputContainer)) {
+    inputContainer.innerHTML = '';
+    var input = document.createElement('input');
+    input.type = 'search';
+    input.className = 'search-input';
+    input.placeholder = LOCAL.search.placeholder || '';
+    inputContainer.appendChild(input);
+  }
+
+  var searchInput = $('.search-input', siteSearch);
+  if (!searchInput)
+    return
+
+  var searchIndex = null;
+  var searchPromise = null;
+  var currentHits = [];
+  var currentKeywords = [];
+  var currentQuery = '';
+  var currentPage = 1;
+  var hitsPerPage = (CONFIG.search_hits && parseInt(CONFIG.search_hits.per_page, 10)) || 10;
+  if (!hitsPerPage || hitsPerPage < 1) {
+    hitsPerPage = 10;
+  }
+  var searchTimer = null;
+  var queryId = 0;
+
+  var escapeRegExp = function(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  };
+
+  var escapeHtml = function(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
+  var normalizeText = function(text) {
+    return (text || '').replace(/\s+/g, ' ').trim();
+  };
+
+  var highlight = function(text, keywords) {
+    var output = escapeHtml(text);
+    if (!keywords.length)
+      return output;
+
+    keywords.forEach(function(keyword) {
+      if (!keyword) return;
+      var reg = new RegExp(escapeRegExp(keyword), 'gi');
+      output = output.replace(reg, '<em class="search-highlight">$&</em>');
+    });
+
+    return output;
+  };
+
+  var snippetFrom = function(item, keywords) {
+    var text = normalizeText(item.summary || item.content || '');
+    if (!text)
+      return '';
+
+    var lower = text.toLowerCase();
+    var index = -1;
+    keywords.forEach(function(keyword) {
+      if (index === -1 && keyword) {
+        var idx = lower.indexOf(keyword);
+        if (idx !== -1) index = idx;
+      }
+    });
+
+    if (index === -1)
+      index = 0;
+
+    var start = Math.max(0, index - 30);
+    var end = Math.min(text.length, start + 120);
+    var snippet = text.substring(start, end);
+
+    if (start > 0)
+      snippet = '...' + snippet;
+    if (end < text.length)
+      snippet = snippet + '...';
+
+    return highlight(snippet, keywords);
+  };
+
+  var loadIndex = function() {
+    if (searchPromise)
+      return searchPromise;
+
+    var url = CONFIG.root + 'index.json';
+    searchPromise = fetch(url)
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        searchIndex = (data || []).map(function(item) {
+          var categories = Array.isArray(item.categories) ? item.categories : [];
+          var title = normalizeText(item.title || '');
+          var summary = normalizeText(item.summary || '');
+          var content = normalizeText(item.content || '');
+          var categoryText = normalizeText(categories.join(' '));
+          return {
+            item: item,
+            title: title.toLowerCase(),
+            summary: summary.toLowerCase(),
+            content: content.toLowerCase(),
+            categories: categoryText.toLowerCase(),
+            searchable: (title + ' ' + summary + ' ' + content + ' ' + categoryText).toLowerCase()
+          };
+        });
+        return searchIndex;
+      })
+      .catch(function() {
+        searchIndex = [];
+        return searchIndex;
+      });
+
+    return searchPromise;
+  };
+
+  var calcScore = function(record, keywords) {
+    var score = 0;
+    var phrase = keywords.join(' ');
+
+    keywords.forEach(function(keyword) {
+      if (!keyword) return;
+      if (record.title.indexOf(keyword) !== -1) score += 20;
+      if (record.categories.indexOf(keyword) !== -1) score += 8;
+      if (record.summary.indexOf(keyword) !== -1) score += 4;
+      if (record.content.indexOf(keyword) !== -1) score += 1;
+      if (record.title.indexOf(keyword) === 0) score += 8;
+    });
+
+    if (phrase && record.title.indexOf(phrase) !== -1) score += 12;
+
+    return score;
+  };
+
+  var buildHits = function(keywords, data) {
+    if (!keywords.length)
+      return [];
+
+    var results = [];
+    data.forEach(function(record) {
+      var matched = keywords.every(function(keyword) {
+        return keyword && record.searchable.indexOf(keyword) !== -1;
+      });
+
+      if (matched) {
+        results.push({
+          item: record.item,
+          score: calcScore(record, keywords)
+        });
+      }
+    });
+
+    results.sort(function(a, b) {
+      return b.score - a.score;
+    });
+
+    return results.map(function(entry) {
+      return entry.item;
+    });
+  };
+
+  var renderStats = function(total, time) {
+    var statsEl = $('#search-stats');
+    if (!statsEl)
+      return;
+    var stats = (LOCAL.search.stats || '${hits} results found in ${time} ms')
+      .replace(/\$\{hits}/, total)
+      .replace(/\$\{time}/, Math.max(1, Math.round(time || 0)));
+    statsEl.innerHTML = stats + '<hr>';
+  };
+
+  var renderPagination = function(totalPages) {
+    var container = $('#search-pagination');
+    if (!container)
+      return;
+    container.innerHTML = '';
+    if (totalPages <= 1)
+      return;
+
+    var list = document.createElement('ul');
+    list.className = 'pagination';
+
+    var addItem = function(page, label, disabled, current) {
+      var item = document.createElement('li');
+      item.className = 'pagination-item';
+      if (current) item.className += ' current';
+      if (disabled) item.className += ' disabled-item';
+      var link = document.createElement('a');
+      link.className = 'page-number';
+      link.innerHTML = label;
+      if (!disabled) {
+        link.dataset.page = page;
+      }
+      item.appendChild(link);
+      list.appendChild(item);
+    };
+
+    addItem(currentPage - 1, '<i class="ic i-angle-left"></i>', currentPage <= 1, false);
+    for (var i = 1; i <= totalPages; i++) {
+      addItem(i, i, false, i === currentPage);
+    }
+    addItem(currentPage + 1, '<i class="ic i-angle-right"></i>', currentPage >= totalPages, false);
+
+    container.appendChild(list);
+  };
+
+  var renderHits = function(hits, query, keywords) {
+    var hitsEl = $('#search-hits');
+    if (!hitsEl)
+      return;
+
+    if (!query) {
+      hitsEl.innerHTML = '';
+      $('#search-pagination').innerHTML = '';
+      $('#search-stats').innerHTML = '';
+      return;
+    }
+
+    if (!hits.length) {
+      hitsEl.innerHTML = '<div id="hits-empty">' +
+        (LOCAL.search.empty || '').replace(/\$\{query}/, escapeHtml(query)) +
+        '</div>';
+      $('#search-pagination').innerHTML = '';
+      return;
+    }
+
+    var html = '';
+    hits.forEach(function(item) {
+      var cats = '';
+      if (item.categories && item.categories.length) {
+        cats = '<span>' + item.categories.map(function(cat) {
+          return escapeHtml(cat);
+        }).join('<i class="ic i-angle-right"></i>') + '</span>';
+      }
+      var title = highlight(item.title || '', keywords);
+      var snippet = snippetFrom(item, keywords);
+      var snippetHtml = snippet ? '<p class="search-snippet">' + snippet + '</p>' : '';
+      var url = item.path || item.permalink || '#';
+      if (url && !/^([a-z]+:)?\/\//i.test(url) && !url.startsWith('/')) {
+        url = CONFIG.root + url.replace(/^\.?\//, '');
+      }
+      html += '<div class="item"><a href="' + url + '">' + cats + title + '</a>' + snippetHtml + '</div>';
+    });
+
+    hitsEl.innerHTML = html;
+    if (pjax && pjax.refresh) {
+      pjax.refresh(hitsEl);
+    }
+  };
+
+  var renderPage = function(time) {
+    var total = currentHits.length;
+    var totalPages = Math.max(1, Math.ceil(total / hitsPerPage));
+    if (currentPage > totalPages)
+      currentPage = totalPages;
+    var start = (currentPage - 1) * hitsPerPage;
+    var pageHits = currentHits.slice(start, start + hitsPerPage);
+    renderHits(pageHits, currentQuery, currentKeywords);
+    renderStats(total, time);
+    renderPagination(totalPages);
+  };
+
+  var runSearch = function() {
+    var query = searchInput.value.trim();
+    currentQuery = query;
+    currentPage = 1;
+    queryId += 1;
+    var localId = queryId;
+
+    if (!query) {
+      currentHits = [];
+      currentKeywords = [];
+      renderHits([], '', []);
+      return;
+    }
+
+    currentKeywords = query.toLowerCase().split(/\s+/).filter(Boolean).filter(function(keyword, index, list) {
+      return list.indexOf(keyword) === index;
+    });
+
+    loadIndex().then(function(data) {
+      if (localId !== queryId) return;
+      var startTime = (window.performance && performance.now) ? performance.now() : Date.now();
+      currentHits = buildHits(currentKeywords, data);
+      var endTime = (window.performance && performance.now) ? performance.now() : Date.now();
+      renderPage(endTime - startTime);
+    });
+  };
+
+  var paginationEl = $('#search-pagination');
+  if (paginationEl) {
+    paginationEl.addEventListener('click', function(event) {
+      var target = event.target;
+      if (target.tagName === 'I') {
+        target = target.parentNode;
+      }
+      if (!target || !target.dataset.page)
+        return;
+      var page = parseInt(target.dataset.page, 10);
+      if (!page || page === currentPage)
+        return;
+      currentPage = page;
+      renderPage(0);
+    });
+  }
+
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(runSearch, 200);
+  });
+
+  searchInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  });
+
+  const onPopupClose = function() {
+    document.body.style.overflow = '';
+    transition(siteSearch, 0);
+  };
+
+  const onPopupOpen = function() {
+    document.body.style.overflow = 'hidden';
+    transition(siteSearch, 'shrinkIn', function() {
+      searchInput.focus();
+    });
+  };
+
+  $.each('.search', function(element) {
+    element.addEventListener('click', function(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      onPopupOpen();
+    });
+  });
+  bindSearchTrigger(onPopupOpen);
+
+  siteSearch.addEventListener('click', function(event) {
+    if (event.target === siteSearch) {
+      onPopupClose();
+    }
+  });
+
+  $('.close-btn', siteSearch).addEventListener('click', onPopupClose);
+  window.addEventListener('pjax:success', onPopupClose);
+  window.addEventListener('keyup', function(event) {
+    if (event.key === 'Escape') {
+      onPopupClose();
+    }
+  });
+
+  loadIndex();
+
+  if (LOCAL.path && /(^|\/)search\/?$/.test(LOCAL.path)) {
+    onPopupOpen();
+  }
 }

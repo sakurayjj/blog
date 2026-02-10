@@ -1,21 +1,24 @@
 .reward {
-  margin: 1.25rem auto;
-  padding: .625rem 0;
+  margin: 1.5rem auto;
+  padding: .75rem 0 0;
   text-align: center;
 
   button {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--color-pink) 0, var(--primary-color) 100%);
     border: 0;
-    border-radius: .3125rem;
+    border-radius: .5rem;
     color: var(--grey-0);
     cursor: pointer;
     line-height: 2;
     outline: 0;
     padding: 0 .9375rem;
+    box-shadow: 0 .625rem 1.25rem -.875rem var(--color-red-a3);
+    transition: transform .2s ease, box-shadow .2s ease;
     vertical-align: text-top;
 
     &:hover {
-      background: var(--primary-color);
+      transform: translateY(-.0625rem);
+      box-shadow: 0 .875rem 1.5rem -1rem var(--color-red-a3);
     }
 
     i {
@@ -26,25 +29,65 @@
   p {
     font-size: $font-size-smaller;
     color: var(--grey-5);
-    margin: 0;
+    margin: .25rem 0 0;
   }
 }
 
 #qr {
-  padding-top: 1.25rem;
+  padding-top: 1rem;
   display: none;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: .875rem;
+
+  > div {
+    width: 9.5rem;
+    padding: .5rem .5rem .375rem;
+    border: .0625rem solid var(--grey-2);
+    border-radius: .75rem;
+    background: var(--grey-0);
+    box-shadow: 0 .625rem 1.25rem -.9375rem var(--box-bg-shadow);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  > div:hover {
+    transform: translateY(-.125rem);
+    box-shadow: 0 .875rem 1.5rem -1rem var(--box-bg-shadow);
+  }
 
   a {
     border: 0;
   }
 
   img {
-    display: inline-block;
-    max-width: 100%;
+    display: block;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: .5rem;
+    border: .0625rem solid var(--grey-3);
+    background: var(--grey-1);
+    padding: .25rem;
   }
 
   p {
     text-align: center;
+    margin: .375rem 0 0;
+    font-size: .75em;
+    line-height: 1.5;
+    color: var(--grey-6);
+  }
+
+  @media (max-width: 767px) {
+    gap: .625rem;
+
+    > div {
+      width: calc(50% - .5rem);
+      max-width: 9rem;
+    }
   }
 
 }

@@ -2,80 +2,92 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://www.ctfhub.cn/posts/</loc>
+    <lastmod>2026-02-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/web-60-62-php-deserialization/</loc>
+    <lastmod>2026-02-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2026-02-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/categories/</loc>
+    <lastmod>2026-02-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/</loc>
+    <lastmod>2026-02-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/web-59-xml-xxe/</loc>
+    <lastmod>2026-02-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/10/</loc>
+    <lastmod>2026-01-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/kali-update-share-mount/</loc>
+    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/web-57-ssrf/</loc>
+    <lastmod>2026-01-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/7/</loc>
+    <lastmod>2026-01-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/6/</loc>
+    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/web-js/</loc>
+    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/5/</loc>
+    <lastmod>2026-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.ctfhub.cn/posts/4/</loc>
     <lastmod>2026-01-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/4/</loc>
-    <lastmod>2026-01-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2026-01-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-01-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2026-01-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/3/</loc>
+    <loc>https://www.ctfhub.cn/posts/3/</loc>
     <lastmod>2025-12-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/2/</loc>
+    <loc>https://www.ctfhub.cn/posts/2/</loc>
     <lastmod>2025-12-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/rust/</loc>
+    <loc>https://www.ctfhub.cn/tags/rust/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/rust/</loc>
+    <loc>https://www.ctfhub.cn/posts/rust/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://www.ctfhub.cn/tags/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://www.ctfhub.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/dvwa/</loc>
+    <loc>https://www.ctfhub.cn/tags/dvwa/</loc>
     <lastmod>2025-12-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E9%9D%B6%E5%9C%BA/</loc>
+    <loc>https://www.ctfhub.cn/categories/%E9%9D%B6%E5%9C%BA/</loc>
     <lastmod>2025-12-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/dvwabruteforce/</loc>
+    <loc>https://www.ctfhub.cn/posts/dvwabruteforce/</loc>
     <lastmod>2025-12-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/cve/</loc>
+    <loc>https://www.ctfhub.cn/tags/cve/</loc>
     <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/cve-2025-55182/</loc>
+    <loc>https://www.ctfhub.cn/posts/cve-2025-55182/</loc>
     <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/markdown/</loc>
-    <lastmod>2025-12-13T09:55:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/test-markdown/</loc>
-    <lastmod>2025-12-13T09:55:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/papermod/</loc>
-    <lastmod>2025-12-13T09:55:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/test/</loc>
-    <lastmod>2025-12-13T09:55:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2025-12-13T09:55:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/debug/</loc>
+    <loc>https://www.ctfhub.cn/categories/debug/</loc>
     <lastmod>2025-12-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/github/</loc>
+    <loc>https://www.ctfhub.cn/tags/github/</loc>
     <lastmod>2025-12-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/githublocalshell/</loc>
+    <loc>https://www.ctfhub.cn/posts/githublocalshell/</loc>
     <lastmod>2025-12-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>https://www.ctfhub.cn/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>https://www.ctfhub.cn/search/</loc>
   </url>
 </urlset>

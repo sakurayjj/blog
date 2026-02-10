@@ -1,9 +1,20 @@
 {{- $version := "0.0.0" -}}
-{{- $path := "themes/shoka/package.json" -}}
-{{- if fileExists $path -}}
-  {{- $pkg := readFile $path | transform.Unmarshal -}}
-  {{- with (index $pkg "version") -}}
-    {{- $version = . -}}
+{{- $candidates := slice -}}
+{{- if fileExists "themes" -}}
+  {{- range readDir "themes" -}}
+    {{- if .IsDir -}}
+      {{- $candidates = $candidates | append (printf "themes/%s/package.json" .Name) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $candidates = $candidates | append "package.json" -}}
+
+{{- range $candidates -}}
+  {{- if and (eq $version "0.0.0") (fileExists .) -}}
+    {{- $pkg := readFile . | transform.Unmarshal -}}
+    {{- with (index $pkg "version") -}}
+      {{- $version = printf "%v" . -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- $version -}}

