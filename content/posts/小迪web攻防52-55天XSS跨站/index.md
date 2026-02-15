@@ -37,7 +37,7 @@ echo $code;
 ?>
 ```
 传参`?x=<script>alert('xss')</script>`就会触发js语句：
-![](content/posts/小迪web攻防52-55天XSS跨站/1.png)
+![](1.png)
 
 如果是嵌套了别的域名：`http://127.0.0.1/xss-demo/xss.php?x=<iframe src="https://www.baidu.com">test</iframe>`就会让浏览器不经意间执行访问这个域名：
 ![](2.png)
